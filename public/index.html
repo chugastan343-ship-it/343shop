@@ -134,6 +134,30 @@
 @media(max-width:650px){.marketplace-section{padding:48px 0}.marketplace-head{align-items:start;flex-direction:column}.marketplace-feed-count{min-width:0}.marketplace-grid{gap:9px}.marketplace-card{padding:14px;min-height:228px}.marketplace-brand{font-size:18px}.market-search{grid-template-columns:1fr 1fr}.market-search input{grid-column:1/-1}.market-search .btn{grid-column:1/-1}.marketplace-results{grid-template-columns:1fr 1fr;gap:9px}.market-result-image{height:125px}.market-result-info{padding:11px}.market-result-info h3{font-size:12px}}
 @media(max-width:390px){.marketplace-grid,.marketplace-results{grid-template-columns:1fr}}
 
+
+/* Owner-approved AI sourced products: distinct from the existing WhatsApp bag. */
+.ai-products{display:none;padding:66px 0 72px;background:#f8f8f3;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ai-products.is-visible{display:block}
+.ai-products-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px}
+.ai-products-head h2{font:500 clamp(30px,4vw,43px)/1.05 Georgia,serif;color:var(--forest);letter-spacing:-.04em;margin:9px 0}
+.ai-products-head p{max-width:570px;color:var(--muted);font-size:11px;line-height:1.7;margin:0}
+.ai-product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.ai-product-card{min-width:0;background:#fff;border:1px solid #e5e8e0;border-radius:15px;overflow:hidden}
+.ai-product-card .ai-product-image{height:190px;background:#eef0e9;display:grid;place-items:center;overflow:hidden}
+.ai-product-image img{width:100%;height:100%;object-fit:contain}
+.ai-product-image span{font:500 34px Georgia,serif;color:#a8b2a7}
+.ai-product-copy{padding:14px}
+.ai-product-source{font-size:8px;letter-spacing:.13em;text-transform:uppercase;color:#8b7957;font-weight:900}
+.ai-product-copy h3{font:600 14px/1.35 Arial,sans-serif;color:var(--forest);margin:8px 0}
+.ai-product-copy p{font-size:10px;line-height:1.6;color:#7c857b;min-height:48px;margin:0 0 10px}
+.ai-product-price{font:600 15px Georgia,serif;color:var(--forest);margin:8px 0}
+.ai-product-availability{font-size:9px;color:#7a8479;margin:5px 0 12px}
+.ai-product-link{display:inline-flex;padding:10px 13px;border-radius:8px;background:var(--forest);color:#fff;font-size:9px;font-weight:900}
+.ai-product-footnote{font-size:9px;line-height:1.7;color:#858d83;margin:16px 0 0}
+@media(max-width:900px){.ai-product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.ai-products{padding:48px 0}.ai-products-head{align-items:start;flex-direction:column}.ai-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.ai-product-card .ai-product-image{height:145px}.ai-product-copy{padding:11px}.ai-product-copy h3{font-size:12px}.ai-product-copy p{font-size:9px;min-height:54px}}
+@media(max-width:390px){.ai-product-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -291,6 +315,20 @@
       </article>
     </div>
     <p class="marketplace-legal" data-sw="Muhimu: 343SHOP ni dalali/kiunganishi, si mmiliki wa bidhaa za marketplaces hizi. Bei, stock, delivery, kodi na masharti ya muuzaji lazima yathibitishwe kwenye chanzo husika kabla ya malipo. Oda za marketplace za nje hukamilishwa kwa muuzaji au marketplace husika; 343SHOP haipokei malipo ya kadi kwa bidhaa hizo." data-en="Important: 343SHOP is a broker/connector, not the owner of products on these marketplaces. Price, stock, delivery, taxes and seller terms must be confirmed at the source before payment. External marketplace purchases are completed with the seller or marketplace; 343SHOP does not collect card payments for those listings.">Muhimu: 343SHOP ni dalali/kiunganishi, si mmiliki wa bidhaa za marketplaces hizi. Bei, stock, delivery, kodi na masharti ya muuzaji lazima yathibitishwe kwenye chanzo husika kabla ya malipo. Oda za marketplace za nje hukamilishwa kwa muuzaji au marketplace husika; 343SHOP haipokei malipo ya kadi kwa bidhaa hizo.</p>
+  </div>
+</section>
+
+<section class="ai-products" id="ai-products" aria-labelledby="aiProductsTitle">
+  <div class="wrap">
+    <div class="ai-products-head">
+      <div>
+        <span class="section-kicker">343SHOP · AI SOURCED & OWNER APPROVED</span>
+        <h2 id="aiProductsTitle" data-sw="Bidhaa zilizochaguliwa duniani." data-en="Discoveries from around the world.">Bidhaa zilizochaguliwa duniani.</h2>
+        <p data-sw="Bidhaa hizi zimehifadhiwa na AI na kuidhinishwa na mmiliki kabla ya kuonekana hapa. Bei na upatikanaji ni taarifa za chanzo na lazima zithibitishwe tena kwa muuzaji." data-en="These products were saved by AI and approved by the owner before appearing here. Prices and availability are source-reported and must be reconfirmed with the seller.">Bidhaa hizi zimehifadhiwa na AI na kuidhinishwa na mmiliki kabla ya kuonekana hapa. Bei na upatikanaji ni taarifa za chanzo na lazima zithibitishwe tena kwa muuzaji.</p>
+      </div>
+    </div>
+    <div class="ai-product-grid" id="aiProductGrid"></div>
+    <p class="ai-product-footnote" data-sw="343SHOP ni dalali. Ununuzi wa bidhaa hizi unakamilishwa kwenye tovuti ya muuzaji. 343SHOP haikusanyi malipo ya bidhaa za nje." data-en="343SHOP is a broker. Purchases are completed on the source seller's website. 343SHOP does not collect payment for external listings.">343SHOP ni dalali. Ununuzi wa bidhaa hizi unakamilishwa kwenye tovuti ya muuzaji. 343SHOP haikusanyi malipo ya bidhaa za nje.</p>
   </div>
 </section>
 <section class="about" id="about"><div class="wrap about-inner"><div class="about-mark">343</div><div><span class="section-kicker">A LITTLE ABOUT US</span><h2 data-sw="Wazo lako. Mguso wetu. Kitu cha kukumbukwa." data-en="Your idea. Our craft. Something to remember.">Wazo lako. Mguso wetu. Kitu cha kukumbukwa.</h2><p data-sw="343SHOP ni marketplace ya udalali inayokuunganisha na maduka, suppliers na huduma mbalimbali. Tunakusaidia kupata bidhaa kutoka kwa wauzaji washirika, kuthibitisha bei na upatikanaji, kisha kupanga oda kwa mawasiliano ya moja kwa moja. Pia tunatoa zawadi binafsi na huduma za ubunifu." data-en="343SHOP is a brokerage marketplace connecting buyers with independent shops, suppliers and service providers. We help you discover offers, confirm price and availability with the seller, then coordinate the order directly. We also offer personalised gifts and creative services.">343SHOP inaleta pamoja zawadi binafsi na huduma za ubunifu. Tunapenda vitu vinavyosimulia hadithi, kubeba kumbukumbu na kuifanya chapa yako ionekane tofauti. Chagua bidhaa, weka maelezo yako, kisha tuma oda kupitia WhatsApp ili tukuhudumie.</p><a class="btn" href="#shop"><span data-sw="Anza kuchagua" data-en="Start exploring">Anza kuchagua</span> ↗</a></div></div></section>
@@ -500,6 +538,44 @@ function renderMarketplaceResults(payload){
   }
   root.appendChild(fragment);
 }
+
+async function loadPublishedStoreProducts(){
+  const section=$("ai-products"),grid=$("aiProductGrid");
+  if(!section||!grid)return;
+  try{
+    const response=await fetch("/api/store/products",{headers:{"Accept":"application/json"},cache:"no-store"});
+    if(!response.ok)throw new Error("products_unavailable");
+    const data=await response.json();
+    const products=Array.isArray(data.products)?data.products:[];
+    if(!products.length)return;
+    const fragment=document.createDocumentFragment();
+    for(const product of products){
+      const card=document.createElement("article");card.className="ai-product-card";
+      const visual=document.createElement("div");visual.className="ai-product-image";
+      if(typeof product.image_url==="string"&&product.image_url.startsWith("https://")){
+        const image=document.createElement("img");image.src=product.image_url;image.alt=String(product.product_name||"Product");
+        image.loading="lazy";image.referrerPolicy="no-referrer";visual.appendChild(image);
+      }else{const mark=document.createElement("span");mark.textContent="343";visual.appendChild(mark)}
+      const copy=document.createElement("div");copy.className="ai-product-copy";
+      const source=document.createElement("div");source.className="ai-product-source";
+      source.textContent=String(product.source_marketplace||"Verified source");
+      const title=document.createElement("h3");title.textContent=String(product.product_name||"Product");
+      const description=document.createElement("p");description.textContent=String(product.description||"");
+      const price=document.createElement("div");price.className="ai-product-price";
+      price.textContent=tr("Bei iliyoripotiwa na chanzo: ","Source-listed price: ")+new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(Number(product.source_price))+" "+String(product.currency||"");
+      const availability=document.createElement("div");availability.className="ai-product-availability";
+      availability.textContent=product.availability==="in_stock"?tr("Muuzaji ameripoti ipo; thibitisha kabla ya kulipa.","Seller reports in stock; reconfirm before paying."):tr("Upatikanaji uthibitishwe na muuzaji.","Availability must be confirmed with the seller.");
+      const href=typeof product.source_url==="string"&&product.source_url.startsWith("https://")?product.source_url:"";
+      copy.append(source,title,description,price,availability);
+      if(href){const link=document.createElement("a");link.className="ai-product-link";link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent=tr("ANGALIA KWA MUUZAJI ↗","VIEW AT SOURCE ↗");copy.appendChild(link)}
+      card.append(visual,copy);fragment.appendChild(card);
+    }
+    grid.replaceChildren(fragment);section.classList.add("is-visible");
+  }catch{
+    section.classList.remove("is-visible");
+  }
+}
+
 $("marketSearchForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const query=$("marketSearchInput").value.trim();
@@ -562,6 +638,7 @@ $("aiForm").addEventListener("submit",async e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();closeAi();$("checkoutModal").classList.remove("show")}});
 updateCount();renderCats();renderProducts();loadAiProviders();loadMarketplaceStatus();
+loadPublishedStoreProducts();
 })();
 </script>
 </body>
