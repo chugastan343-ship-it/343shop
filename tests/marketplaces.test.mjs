@@ -120,3 +120,43 @@ test("homepage inline JavaScript parses and existing cart/WhatsApp checkout rema
   assert.match(html, /WHATSAPP_NUMBER="255695981035"/);
   assert.match(html, /id="marketplaces"/);
 });
+
+
+test("AI assistant receives live global brokerage context without claiming live search", async () => {
+  const originalFetch = globalThis.fetch;
+  let upstreamBody = null;
+  globalThis.fetch = async (input, init = {}) => {
+    assert.equal(String(input), "https://api.openai.com/v1/responses");
+    upstreamBody = JSON.parse(init.body);
+    return new Response(JSON.stringify({ output_text: "Use the Global Market search to check connected listings." }), {
+      status: 200, headers: { "content-type": "application/json" }
+    });
+  };
+
+  try {
+    const env = {
+      OPENAI_API_KEY: "test-only-key",
+      PARTNER_SHOPS_JSON: JSON.stringify([{
+        id: "partner-test",
+        name: "Partner Test",
+        city: "Dar es Salaam",
+        categories: ["electronics"],
+        catalog_url: "https://partner.example/catalog.json"
+      }])
+    };
+    const response = await worker.fetch(new Request(origin + "/api/ai/chat", {
+      method: "POST",
+      headers: { "Origin": origin, "Content-Type": "application/json" },
+      body: JSON.stringify({ provider: "openai", messages: [{ role: "user", content: "Nawezaje kutafuta iPhone?" }] })
+    }), env);
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).reply, "Use the Global Market search to check connected listings.");
+    assert.match(upstreamBody.instructions, /global shopping and brokerage marketplace/i);
+    assert.match(upstreamBody.instructions, /The chat assistant itself does not run live product searches/i);
+    assert.match(upstreamBody.instructions, /Approved partner catalogue count: 1/);
+    assert.match(upstreamBody.instructions, /Marketplace APIs with credentials configured: none/);
+    assert.match(upstreamBody.instructions, /external marketplace listings/i);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
