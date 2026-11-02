@@ -796,7 +796,7 @@ function validateStoreProductDraft(args) {
 }
 
 function slugifyStoreProduct(value, id) {
-  const base = String(value).toLowerCase().normalize("NFD").replace(/[^\\x00-\\x7F]/g, "")
+  const base = String(value).toLowerCase()
     .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "product";
   return base + "-" + id.slice(0, 8);
 }
