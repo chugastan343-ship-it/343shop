@@ -1,6 +1,6 @@
 # 343SHOP
 
-Premium bilingual storefront for personalised gifts and creative services.
+Bilingual global shopping and brokerage marketplace connecting buyers with external marketplaces and approved supplier catalogues.
 
 ## Live order flow
 
@@ -39,7 +39,7 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `get_marketplace_profile` — explains the broker/agent workflow and policies.
 - `list_partner_shops` — lists only partner shops configured by the owner.
 - `get_partner_integration_guide` — explains the public supplier catalogue API.
-- `search_marketplace_products` — searches the 343SHOP showcase catalogue and registered partner catalogues.
+- `search_marketplace_products` — searches the 343SHOP showcase catalogue, registered partner catalogues and eBay when its official API credentials are configured.
 - `compare_partner_offers` — compares supplier offers only within the same currency.
 - `calculate_brokerage_margin` — calculates an owner-supplied commission proposal.
 - `create_whatsapp_quote_link` — prepares a WhatsApp link; it does not send a message or create an order.
@@ -47,6 +47,7 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `draft_product_ad` — prepares Swahili and English ad copy; it does not publish ads or spend money.
 - `check_partner_catalogue_health` — checks whether registered public partner catalogues respond with usable product data.
 - `prepare_partner_shop_application` — prepares a WhatsApp application message for a shop that wants to join; it does not approve or connect the shop.
+- `get_marketplace_integrations_status` — reports Amazon, Alibaba.com, eBay and KiKUU integration readiness without treating pending approvals as live connections.
 
 ### Registering other shops
 
@@ -96,6 +97,43 @@ The server supports Streamable HTTP, validates browser origins, limits request s
 ### Connecting an AI client
 
 Add a custom remote MCP connector using the endpoint above. It can be connected to clients that support remote MCP, subject to each client's account-plan and authentication requirements. In ChatGPT, custom MCP access and write permissions depend on the workspace plan; read-only access is the safe starting point. Claude and other clients may ask you to choose OAuth or fixed request-header authentication.
+
+## Global marketplace integrations
+
+The storefront includes a **Global Market** area and these server routes:
+
+- `GET /api/marketplaces/status` — reports integration readiness without exposing secrets or claiming pending sources are connected.
+- `GET /api/marketplaces/search?q=iphone&source=all&limit=12` — searches connected read-only partner catalogues and eBay when configured. Allowed sources: `all`, `ebay`, `partners`, `343shop`.
+- The MCP tool `get_marketplace_integrations_status` exposes the same readiness report to supported AI clients. `search_marketplace_products` can also include eBay results when the API is configured.
+
+### eBay Browse API (implemented; requires owner credentials)
+
+Configure these on the Cloudflare Worker named `343shop`:
+
+- Secret `EBAY_CLIENT_ID`
+- Secret `EBAY_CLIENT_SECRET`
+- Optional Worker Variable `EBAY_CAMPAIGN_ID` (the approved 10-digit eBay Partner Network campaign ID)
+- Optional Worker Variable `EBAY_MARKETPLACE_ID` (defaults to `EBAY_US`)
+
+The Worker obtains an OAuth client-credentials token server-side and calls the eBay Browse API. The client secret is never sent to the browser. Search can work when the developer application has the required API access; affiliate attribution is only reported as configured when a valid campaign ID is present. Production access to eBay Buy APIs may require approval. Without credentials, eBay is shown as **not connected** and no eBay products are fabricated.
+
+### Amazon (onboarding target; not live yet)
+
+Use the official [Amazon Creators API documentation](https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction). Amazon requires enrollment and final acceptance in the Associates program for the target marketplace, at least 10 qualifying sales in the previous 30 days for Creators API access, and API credentials. 343SHOP does not currently have those credentials. Do not copy or scrape Amazon listings into the catalogue.
+
+### Alibaba.com (affiliate onboarding; not live yet)
+
+Apply through the official [Alibaba.com Affiliate portal](https://ads.alibaba.com/). Approval and the relevant approved offers, API tools or data feeds are required before products can be displayed with affiliate attribution. Alibaba's [registration guidance](https://ads.alibaba.com/help/register.htm) explains the publisher application and agreement approval. 343SHOP does not currently have an approved Alibaba affiliate account or feed.
+
+### KiKUU Tanzania (partnership required; not live yet)
+
+The [KiKUU Tanzania storefront](https://www.kikuu.co.tz/) is listed as a marketplace source. A written business partnership and an authorised product catalogue/feed are required before its listings can be imported. No public product-search API is configured in this release, so the site is linked rather than scraped.
+
+### Other approved sellers and feeds
+
+Use `PARTNER_SHOPS_JSON` for seller-approved, read-only HTTPS JSON catalogue endpoints. A public endpoint must return a `products` array; the exact schema and example are documented above. An affiliate feed may be added only when the marketplace's terms permit it and its tracking URLs are preserved. Do not put API secrets, cookies, passwords or private access tokens inside `PARTNER_SHOPS_JSON`.
+
+**Important:** only connected feeds and the configured eBay API are searchable. Amazon, Alibaba.com and KiKUU appear as onboarding targets, not active connections. Every external product result keeps its source URL and currency. Unknown stock is never treated as confirmed. Buyers must verify stock, final price, shipping, taxes and seller terms with the seller or marketplace before payment. External marketplace orders are completed at the source; 343SHOP does not collect card payments for them.
 
 ## Google AdSense Auto ads
 

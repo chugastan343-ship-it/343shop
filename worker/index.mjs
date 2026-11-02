@@ -180,6 +180,10 @@ const MCP_RATE_WINDOW_MS = 60_000;
 const MCP_RATE_MAX = 30;
 const PARTNER_CATALOGUE_CACHE = new Map();
 const PARTNER_CACHE_TTL_MS = 45_000;
+const EBAY_TOKEN_CACHE = new Map();
+const MARKETPLACE_RATE_LIMIT = new Map();
+const MARKETPLACE_RATE_WINDOW_MS = 60_000;
+const MARKETPLACE_RATE_MAX = 18;
 
 const MARKETPLACE_CATALOGUE = [
   { id: "custom-photo-print", name: "Custom Photo Print", name_sw: "Printi ya Picha Binafsi", category: "prints", description: "High-quality photo print on premium paper.", price: 15, currency: "USD" },
@@ -201,11 +205,11 @@ const MCP_TOOLS = [
   { name: "get_partner_integration_guide", description: "Returns the public JSON catalogue API format a partner shop must expose to be searchable.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } },
   {
     name: "search_marketplace_products",
-    description: "Searches 343SHOP showcase listings and configured partner shop catalogues. Reports source shop, currency and stock-verification status.",
+    description: "Searches 343SHOP showcase listings, configured partner catalogues and eBay Browse API when official credentials are configured. Returns source attribution and stock-verification status.",
     inputSchema: { type: "object", properties: {
       query: { type: "string", maxLength: 100, description: "Product name or keyword; empty means browse." },
       category: { type: "string", maxLength: 60 },
-      source: { type: "string", enum: ["all", "343shop", "partners"] },
+      source: { type: "string", enum: ["all", "343shop", "partners", "ebay"] },
       limit: { type: "integer", minimum: 1, maximum: 25 }
     }, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true }
   },
@@ -287,6 +291,12 @@ const MCP_TOOLS = [
       categories: { type: "string", minLength: 2, maxLength: 220 },
       catalogue_url: { type: "string", maxLength: 300 }
     }, required: ["shop_name", "location", "contact_name", "phone", "categories"], additionalProperties: false },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  },
+  {
+    name: "get_marketplace_integrations_status",
+    description: "Reports official marketplace integration readiness for Amazon, Alibaba.com, eBay and KiKUU, plus configured read-only partner catalogues. Never claims an unapproved source is connected.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }
 ];
@@ -405,19 +415,200 @@ async function fetchPartnerCatalogue(shop) {
     return value;
   }
 }
+
+function marketplaceIntegrationsStatus(env) {
+  const partners = parsePartnerShops(env);
+  const ebayConfigured = Boolean(env.EBAY_CLIENT_ID && env.EBAY_CLIENT_SECRET);
+  const ebayAffiliate = Boolean(ebayConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
+  return {
+    checked_at: new Date().toISOString(),
+    marketplace_count: 4,
+    configured_partner_catalogue_count: partners.length,
+    configured_partner_catalogues: partners.map(({ id, name, city, categories }) => ({ id, name, city, categories })),
+    marketplaces: [
+      {
+        id: "amazon", name: "Amazon", website: "https://www.amazon.com",
+        integration: "creators_api", state: "approval_required", api_configured: false, affiliate_tracking: false,
+        next_step: "Join Amazon Associates for the target marketplace, obtain final acceptance and Creators API access, then configure the official credentials."
+      },
+      {
+        id: "alibaba", name: "Alibaba.com", website: "https://www.alibaba.com",
+        integration: "affiliate_portal_and_approved_feeds", state: "affiliate_approval_required", api_configured: false, affiliate_tracking: false,
+        next_step: "Apply through the official Alibaba Affiliates portal. Use only approved offers, data feeds or API material provided in the affiliate account."
+      },
+      {
+        id: "ebay", name: "eBay", website: "https://www.ebay.com",
+        integration: "browse_api", state: ebayAffiliate ? "api_and_affiliate_configured" : ebayConfigured ? "api_credentials_configured" : "api_credentials_required",
+        api_configured: ebayConfigured, affiliate_tracking: ebayAffiliate,
+        next_step: ebayConfigured
+          ? (ebayAffiliate ? "eBay Browse API credentials and a 10-digit Partner Network campaign ID are configured." : "Add the approved 10-digit eBay Partner Network campaign ID to enable affiliate tracking.")
+          : "Create an eBay developer application and configure EBAY_CLIENT_ID and EBAY_CLIENT_SECRET as Worker Secrets."
+      },
+      {
+        id: "kikuu", name: "KiKUU Tanzania", website: "https://www.kikuu.co.tz/",
+        integration: "business_partnership", state: "partnership_contact_required", api_configured: false, affiliate_tracking: false,
+        next_step: "Contact KiKUU through its official business/support channels and request a written partnership plus an approved product catalogue/feed. No public product-search API has been configured."
+      }
+    ],
+    note: "Only eBay is supported as a live search API in this release, and only after its credentials are configured. Amazon, Alibaba.com and KiKUU are listed as official onboarding targets, not as connected product sources. Approved supplier feeds can be added through PARTNER_SHOPS_JSON."
+  };
+}
+
+function marketplaceRateLimited(ip) {
+  const now = Date.now();
+  const current = MARKETPLACE_RATE_LIMIT.get(ip);
+  if (current && current.resetAt > now) {
+    if (current.count >= MARKETPLACE_RATE_MAX) return true;
+    current.count += 1;
+  } else {
+    MARKETPLACE_RATE_LIMIT.set(ip, { count: 1, resetAt: now + MARKETPLACE_RATE_WINDOW_MS });
+  }
+  if (MARKETPLACE_RATE_LIMIT.size > 2500) {
+    for (const [key, value] of MARKETPLACE_RATE_LIMIT) {
+      if (value.resetAt <= now) MARKETPLACE_RATE_LIMIT.delete(key);
+    }
+  }
+  return false;
+}
+
+async function getEbayAccessToken(env) {
+  const clientId = env.EBAY_CLIENT_ID;
+  const clientSecret = env.EBAY_CLIENT_SECRET;
+  if (!clientId || !clientSecret) throw new Error("ebay_not_configured");
+  const cached = EBAY_TOKEN_CACHE.get(clientId);
+  if (cached && cached.expiresAt > Date.now() + 30_000) return cached.token;
+
+  const auth = btoa(clientId + ":" + clientSecret);
+  const response = await fetch("https://api.ebay.com/identity/v1/oauth2/token", {
+    method: "POST",
+    headers: {
+      "Authorization": "Basic " + auth,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept": "application/json"
+    },
+    body: "grant_type=client_credentials&scope=" + encodeURIComponent("https://api.ebay.com/oauth/api_scope"),
+    redirect: "error",
+    signal: AbortSignal.timeout(8000)
+  });
+  if (!response.ok) throw new Error("ebay_token_failed");
+  const data = await response.json();
+  if (typeof data.access_token !== "string" || !data.access_token || !Number.isFinite(Number(data.expires_in))) {
+    throw new Error("ebay_token_invalid");
+  }
+  const expiresAt = Date.now() + Math.max(60, Number(data.expires_in) - 60) * 1000;
+  EBAY_TOKEN_CACHE.set(clientId, { token: data.access_token, expiresAt });
+  return data.access_token;
+}
+
+async function searchEbayProducts(query, env, limit = 12) {
+  if (!env.EBAY_CLIENT_ID || !env.EBAY_CLIENT_SECRET) {
+    return { status: "not_configured", affiliate_tracking: false, results: [] };
+  }
+  const term = String(query || "").trim();
+  if (term.length < 2 || term.length > 100) {
+    return { status: "query_required", affiliate_tracking: false, results: [] };
+  }
+  try {
+    const token = await getEbayAccessToken(env);
+    const params = new URLSearchParams({ q: term, limit: String(Math.min(20, Math.max(1, limit))) });
+    const headers = {
+      "Authorization": "Bearer " + token,
+      "Accept": "application/json",
+      "X-EBAY-C-MARKETPLACE-ID": String(env.EBAY_MARKETPLACE_ID || "EBAY_US")
+    };
+    const campaign = String(env.EBAY_CAMPAIGN_ID || "");
+    const affiliateTracking = /^[0-9]{10}$/.test(campaign);
+    if (affiliateTracking) {
+      headers["X-EBAY-C-ENDUSERCTX"] = "affiliateCampaignId=" + campaign + ",affiliateReferenceId=343SHOP";
+    }
+    const response = await fetch("https://api.ebay.com/buy/browse/v1/item_summary/search?" + params.toString(), {
+      method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(9000)
+    });
+    if (!response.ok) throw new Error("ebay_search_failed");
+    const payload = await response.json();
+    const items = Array.isArray(payload.itemSummaries) ? payload.itemSummaries : [];
+    const results = items.map((item) => {
+      const price = Number(item.price?.value);
+      const currency = String(item.price?.currency || "").toUpperCase();
+      const imageUrl = safeHttpsLink(item.image?.imageUrl || item.thumbnailImages?.[0]?.imageUrl);
+      const productUrl = safeHttpsLink(affiliateTracking ? (item.itemAffiliateWebUrl || item.itemWebUrl) : item.itemWebUrl);
+      if (!item.title || !Number.isFinite(price) || price < 0 || !/^[A-Z]{3}$/.test(currency) || !productUrl) return null;
+      return {
+        id: String(item.itemId || item.legacyItemId || item.title).slice(0, 120),
+        name: String(item.title).slice(0, 180),
+        description: "",
+        category: Array.isArray(item.categories) && item.categories[0]?.categoryName ? String(item.categories[0].categoryName).slice(0, 80) : "marketplace",
+        price, currency,
+        source_type: "external_marketplace",
+        source_shop_id: "ebay",
+        source_shop: "eBay",
+        city: "International",
+        availability: "unknown",
+        stock_last_updated: null,
+        image_url: imageUrl,
+        product_url: productUrl
+      };
+    }).filter(Boolean);
+    return { status: "available", affiliate_tracking: affiliateTracking, results };
+  } catch {
+    return { status: "temporarily_unavailable", affiliate_tracking: false, results: [] };
+  }
+}
+
+async function handleMarketplaceSearch(request, env, url) {
+  if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405, { "Allow": "GET" });
+  const origin = request.headers.get("Origin");
+  if (origin && origin !== url.origin) return json({ error: "origin_not_allowed" }, 403);
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  if (marketplaceRateLimited(ip)) return json({ error: "rate_limited" }, 429);
+  const query = String(url.searchParams.get("q") || "").trim();
+  const source = String(url.searchParams.get("source") || "all");
+  const limitValue = Number(url.searchParams.get("limit") || 12);
+  const limit = Number.isInteger(limitValue) ? Math.min(20, Math.max(1, limitValue)) : 12;
+  if (query.length < 2 || query.length > 100) {
+    return json({ error: "query_length_invalid", message: "Search query must be between 2 and 100 characters." }, 400);
+  }
+  if (!["all", "ebay", "partners", "343shop"].includes(source)) {
+    return json({ error: "invalid_source" }, 400);
+  }
+
+  const base = source === "ebay"
+    ? { results: [], connected_partner_count: 0 }
+    : await searchMarketplaceProducts({ query, source: source === "all" ? "partners" : source, limit }, env);
+  const ebay = source === "partners" || source === "343shop"
+    ? { status: "not_requested", affiliate_tracking: false, results: [] }
+    : await searchEbayProducts(query, env, limit);
+  const results = [...base.results, ...ebay.results].slice(0, limit);
+  const providers = marketplaceIntegrationsStatus(env).marketplaces;
+  const ebayProvider = providers.find((p) => p.id === "ebay");
+  return json({
+    ok: true, query, checked_at: new Date().toISOString(), result_count: results.length,
+    results,
+    sources: {
+      partner_catalogues: { status: base.connected_partner_count ? "checked" : "none_configured", count: base.connected_partner_count },
+      ebay: { status: ebay.status, count: ebay.results.length, affiliate_tracking: ebay.affiliate_tracking }
+    },
+    note: "These are external seller listings, not stock owned by 343SHOP. Confirm current price, stock, shipping, taxes, seller reliability and final terms with the seller before paying. Follow the source marketplace or seller checkout; 343SHOP does not collect payment for these external listings.",
+    integration_status: ebayProvider
+  });
+}
+
 async function searchMarketplaceProducts(args, env) {
   const query = normaliseSearchText(args.query || "");
   const category = normaliseSearchText(args.category || "");
   const source = args.source || "all";
   const limit = Number.isInteger(args.limit) ? Math.min(25, Math.max(1, args.limit)) : 15;
-  const own = source === "partners" ? [] : MARKETPLACE_CATALOGUE.map(p => ({
+  const own = ["partners", "ebay"].includes(source) ? [] : MARKETPLACE_CATALOGUE.map(p => ({
     ...p, source_type: "343shop_showcase", source_shop_id: "343shop",
     source_shop: "343SHOP curated catalogue", city: "Online",
     availability: "confirm_with_supplier", stock_last_updated: null, image_url: null, product_url: null
   }));
-  const shops = source === "343shop" ? [] : parsePartnerShops(env);
+  const shops = ["343shop", "ebay"].includes(source) ? [] : parsePartnerShops(env);
   const partnerLists = await Promise.all(shops.map(async shop => (await fetchPartnerCatalogue(shop)).products));
-  const combined = [...own, ...partnerLists.flat()];
+  const ebayResult = source === "all" || source === "ebay"
+    ? await searchEbayProducts(args.query || "", env, limit)
+    : { status: "not_requested", affiliate_tracking: false, results: [] };
+  const combined = [...own, ...partnerLists.flat(), ...ebayResult.results];
   const filtered = combined.filter(p => {
     const text = normaliseSearchText([p.name, p.description, p.category, p.source_shop].join(" "));
     return (!query || text.includes(query)) && (!category || normaliseSearchText(p.category).includes(category));
@@ -425,15 +616,19 @@ async function searchMarketplaceProducts(args, env) {
   return {
     query: args.query || "", checked_at: new Date().toISOString(),
     result_count: Math.min(filtered.length, limit), connected_partner_count: shops.length,
+    connected_marketplace_count: ebayResult.status === "available" ? 1 : 0,
+    external_sources: { ebay: { status: ebayResult.status, affiliate_tracking: ebayResult.affiliate_tracking } },
     results: filtered.slice(0, limit),
-    note: shops.length === 0
-      ? "No partner shops are connected yet. Results contain only 343SHOP showcase listings. Configure partner public catalogue endpoints in Cloudflare PARTNER_SHOPS_JSON to search other shops."
-      : "Partner data is supplied by partner shops. Confirm current stock, final price, delivery, seller terms and brokerage commission before accepting an order."
+    note: shops.length === 0 && ebayResult.status !== "available"
+      ? "No external product catalogue is connected yet. Results may contain 343SHOP showcase listings only. Configure approved public supplier feeds in PARTNER_SHOPS_JSON or official eBay API credentials."
+      : "External product data is supplied by the source marketplace or partner seller. Confirm current stock, final price, delivery, seller terms and brokerage commission before accepting an order."
   };
 }
 
 async function runMcpTool(name, args, env) {
   if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Tool arguments must be a JSON object.");
+
+  if (name === "get_marketplace_integrations_status") return marketplaceIntegrationsStatus(env);
 
   if (name === "get_marketplace_profile") return {
     marketplace: "343SHOP", business_model: "brokerage_and_marketplace",
@@ -474,7 +669,7 @@ async function runMcpTool(name, args, env) {
   };
 
   if (name === "search_marketplace_products") {
-    if (!["all", "343shop", "partners", undefined].includes(args.source)) throw new Error("Invalid source filter.");
+    if (!["all", "343shop", "partners", "ebay", undefined].includes(args.source)) throw new Error("Invalid source filter.");
     if (args.query !== undefined && (typeof args.query !== "string" || args.query.length > 100)) throw new Error("Invalid search query.");
     if (args.category !== undefined && (typeof args.category !== "string" || args.category.length > 60)) throw new Error("Invalid category.");
     if (args.limit !== undefined && (!Number.isInteger(args.limit) || args.limit < 1 || args.limit > 25)) throw new Error("Limit must be between 1 and 25.");
@@ -683,7 +878,7 @@ async function handleMcp(request, env, url) {
     return mcpJson(mcpResult(id, {
       protocolVersion: negotiated, capabilities: { tools: { listChanged: false } },
       serverInfo: { name: "343SHOP Marketplace", version: "1.0.0" },
-      instructions: "343SHOP is a brokerage marketplace. Search only configured partner catalogues; never invent suppliers or stock. This read-only server cannot publish listings, submit orders or spend advertising money."
+      instructions: "343SHOP is a brokerage marketplace. Search only official configured sources (partner catalogues and eBay API when enabled); never invent suppliers, listings or stock. This read-only server cannot publish listings, submit orders or spend advertising money."
     }), 200, cors);
   }
   if (body.method === "ping") return mcpJson(mcpResult(id, {}), 200, cors);
@@ -709,6 +904,7 @@ function mcpStatus(env) {
     ok: true, name: "343SHOP Marketplace MCP", endpoint: "/mcp",
     transport: "Streamable HTTP", supported_protocols: [MCP_PROTOCOL_MODERN, MCP_PROTOCOL_LEGACY, "2025-06-18", "2025-03-26"],
     tool_count: MCP_TOOLS.length, connected_partner_shops: parsePartnerShops(env).length,
+    configured_marketplace_apis: marketplaceIntegrationsStatus(env).marketplaces.filter((p) => p.api_configured).map((p) => p.id),
     access_token_required: Boolean(env.MCP_ACCESS_TOKEN),
     mode: "read-only discovery and owner-reviewed drafts", writes_enabled: false, ad_spend_enabled: false
   };
@@ -720,6 +916,14 @@ export default {
 
     if (url.pathname === "/api/mcp/status") {
       return json(mcpStatus(env));
+    }
+
+    if (url.pathname === "/api/marketplaces/status") {
+      return json(marketplaceIntegrationsStatus(env));
+    }
+
+    if (url.pathname === "/api/marketplaces/search") {
+      return handleMarketplaceSearch(request, env, url);
     }
 
     if (url.pathname === "/mcp") {
