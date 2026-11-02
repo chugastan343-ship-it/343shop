@@ -127,7 +127,7 @@ async function handleAIChat(request, env, url) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "gpt-6-luna",
+          model: "gpt-5.6-luna",
           instructions: STORE_SYSTEM_PROMPT,
           input: messages,
           max_output_tokens: 350,
