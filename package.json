@@ -2,7 +2,7 @@
   "name": "343shop",
   "version": "1.2.0",
   "private": true,
-  "description": "343SHOP premium bilingual online storefront",
+  "description": "Bilingual global shopping and brokerage marketplace",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
