@@ -678,8 +678,8 @@ async function handleMcp(request, env, url) {
 
   if (body.method === "initialize") {
     const requested = body.params?.protocolVersion;
-    const legacyVersions = [MCP_PROTOCOL_LEGACY, "2025-06-18", "2025-03-26"];
-    const negotiated = legacyVersions.includes(requested) ? requested : MCP_PROTOCOL_LEGACY;
+    const supportedVersions = [MCP_PROTOCOL_MODERN, MCP_PROTOCOL_LEGACY, "2025-06-18", "2025-03-26"];
+    const negotiated = supportedVersions.includes(requested) ? requested : MCP_PROTOCOL_LEGACY;
     return mcpJson(mcpResult(id, {
       protocolVersion: negotiated, capabilities: { tools: { listChanged: false } },
       serverInfo: { name: "343SHOP Marketplace", version: "1.0.0" },
