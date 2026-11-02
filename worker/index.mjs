@@ -14,8 +14,9 @@ const STORE_SYSTEM_PROMPT = [
   "343SHOP is a broker/agent (winga) that connects buyers to independent sellers and international marketplaces. Do not imply 343SHOP owns third-party stock.",
   "Be warm, concise and useful. Reply in Swahili by default; use English when the customer uses English.",
   "Explain the difference between 343SHOP showcase services/products and external marketplace listings. External listings remain owned, priced and fulfilled by their source seller or marketplace.",
-  "The website Global Market search displays only results from sources that are actually configured. The chat assistant itself does not run live product searches; direct customers to the Global Market search section for connected-source results.",
-  "Never claim Amazon, Alibaba.com, eBay, KiKUU or a supplier is connected unless the live integration context below explicitly says it is enabled. Never invent product offers, prices, sellers, stock or trends.",
+  "The website Global Market search displays live product results only from configured sources, and it also offers official website search links for other marketplaces. The chat assistant itself does not run live product searches; direct customers to the Global Market section for live results or direct source searches.",
+  "The marketplace directory includes Amazon, Alibaba.com, AliExpress, eBay, KiKUU Tanzania, Jumia Tanzania, Etsy, Temu, Made-in-China.com and DHgate. Directory membership only means a source website is listed; it does not mean an API, affiliate programme or partnership is connected.",
+  "Never claim any marketplace or supplier is connected unless the live integration context below explicitly says its API credentials are configured. Never invent product offers, prices, sellers, stock or trends.",
   "Do not claim that stock, availability, delivery dates, customs/tax costs, seller quality or final delivery prices are confirmed. Seller-reported stock must still be confirmed before payment.",
   "The showcase catalogue prices are displayed in USD. Never convert to TZS unless a current exchange rate is supplied; tell customers to confirm the final total and currency with the seller.",
   "For 343SHOP showcase items and services, customers may add items to the bag and submit an order request through WhatsApp. An order is not submitted until the customer presses Send in WhatsApp.",
@@ -742,13 +743,16 @@ async function runMcpTool(name, args, env) {
   if (name === "get_marketplace_integrations_status") return marketplaceIntegrationsStatus(env);
 
   if (name === "get_marketplace_profile") return {
-    marketplace: "343SHOP", business_model: "brokerage_and_marketplace",
-    role: "Connects buyers with independent shops, suppliers and service providers. The owner acts as a broker/agent (winga), not as the assumed stock owner.",
-    customer_flow: ["discover a product", "identify the supplying partner shop", "confirm stock and final price", "agree agent commission and delivery", "complete the order through the agreed contact channel"],
+    marketplace: "343SHOP", business_model: "global_brokerage_marketplace",
+    role: "Connects buyers with global marketplaces, independent shops and suppliers. The owner acts as a broker/agent (winga), not as the assumed stock owner.",
+    marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
+    live_external_sources_supported_in_this_release: ["configured partner catalogue feeds", "eBay Browse API when credentials are configured"],
+    discovery_sources: GLOBAL_MARKETPLACE_DIRECTORY.map(({ id, name, website, integration_status }) => ({ id, name, website, integration_status })),
+    customer_flow: ["search the global marketplace directory or connected live feeds", "identify the source seller", "confirm current stock, price, delivery, customs and seller terms", "agree any brokerage or affiliate attribution before purchase", "complete external purchases at the source marketplace or through an owner-approved process"],
     order_contact_whatsapp: "+255695981035",
-    payment: "The current site does not collect card payments. Do not claim that any order or payment is complete.",
-    inventory_policy: "343SHOP showcase listings do not prove stock. Partner stock must be confirmed with the source shop.",
-    commission_policy: "No default commission rate has been set. Use calculate_brokerage_margin only after the owner supplies the agreed figures."
+    payment: "The current site does not collect card payments. Do not claim that any external order or payment is complete.",
+    inventory_policy: "343SHOP showcase listings do not prove stock. Partner and marketplace stock must be confirmed with the source seller.",
+    commission_policy: "No broker commission is assumed. Affiliate commissions require separate programme approval and valid tracking links."
   };
 
   if (name === "list_partner_shops") {
