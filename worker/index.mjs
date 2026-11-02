@@ -327,6 +327,43 @@ const MCP_TOOLS = [
     }, required: ["partner_shop", "product_name", "description", "category", "supplier_price", "currency"], additionalProperties: false },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
+
+  {
+    name: "save_product_draft",
+    description: "Saves a sourced product into the private 343SHOP D1 draft catalogue. Use only product facts from an actual source result or supplier-provided information. Never invent the source URL, image URL, price, currency or seller. Requires the owner's MCP_WRITE_TOKEN.",
+    inputSchema: { type: "object", properties: {
+      product_name: { type: "string", minLength: 2, maxLength: 120 },
+      description: { type: "string", minLength: 5, maxLength: 700 },
+      category: { type: "string", minLength: 2, maxLength: 60 },
+      source_marketplace: { type: "string", minLength: 2, maxLength: 80 },
+      source_seller: { type: "string", maxLength: 120 },
+      source_url: { type: "string", minLength: 10, maxLength: 500 },
+      source_price: { type: "number", minimum: 0 },
+      currency: { type: "string", minLength: 3, maxLength: 3 },
+      image_url: { type: "string", maxLength: 500 },
+      availability: { type: "string", enum: ["in_stock", "out_of_stock", "limited", "unknown"] }
+    }, required: ["product_name", "description", "category", "source_marketplace", "source_url", "source_price", "currency"], additionalProperties: false },
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+  },
+  {
+    name: "list_product_drafts",
+    description: "Lists privately saved 343SHOP product drafts for the owner to review. Requires the owner's MCP_WRITE_TOKEN.",
+    inputSchema: { type: "object", properties: { limit: { type: "integer", minimum: 1, maximum: 50 } }, additionalProperties: false },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  },
+  {
+    name: "publish_store_product",
+    description: "Publishes one saved product draft to the public 343SHOP storefront. Only call after the owner explicitly approves and confirms source/listing rights, current price/stock and seller terms. Use confirmation_phrase PUBLISH and all required owner confirmation booleans. Requires the owner's MCP_WRITE_TOKEN.",
+    inputSchema: { type: "object", properties: {
+      product_id: { type: "string", minLength: 8, maxLength: 80 },
+      confirmation_phrase: { type: "string", enum: ["PUBLISH"] },
+      owner_confirmed_source_rights: { type: "boolean" },
+      owner_confirmed_price_and_stock: { type: "boolean" },
+      owner_confirmed_seller_terms: { type: "boolean" },
+      owner_confirmed_image_rights: { type: "boolean" }
+    }, required: ["product_id", "confirmation_phrase", "owner_confirmed_source_rights", "owner_confirmed_price_and_stock", "owner_confirmed_seller_terms"], additionalProperties: false },
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+  },
   {
     name: "draft_product_ad",
     description: "Creates Swahili and English promotional copy. Does not publish an advert or spend money.",
@@ -712,6 +749,151 @@ async function searchMarketplaceProducts(args, env) {
   };
 }
 
+
+const OWNER_MCP_TOOLS = new Set(["save_product_draft", "list_product_drafts", "publish_store_product"]);
+
+function requireProductDatabase(env) {
+  if (!env?.DB || typeof env.DB.prepare !== "function") {
+    throw new Error("product_database_not_configured: create a Cloudflare D1 database and bind it to this Worker as DB.");
+  }
+  return env.DB;
+}
+
+function validateStoreProductDraft(args) {
+  const textFields = ["product_name", "description", "category", "source_marketplace", "currency"];
+  for (const key of textFields) {
+    if (typeof args[key] !== "string" || !args[key].trim()) throw new Error("Missing or invalid " + key + ".");
+  }
+  const productName = args.product_name.trim();
+  const description = args.description.trim();
+  const category = args.category.trim();
+  const sourceMarketplace = args.source_marketplace.trim();
+  const currency = args.currency.trim().toUpperCase();
+  const sourcePrice = Number(args.source_price);
+  const sourceUrl = safeHttpsLink(args.source_url);
+  const imageUrl = args.image_url ? safeHttpsLink(args.image_url) : null;
+  const availability = args.availability || "unknown";
+  if (productName.length > 120 || description.length > 700 || category.length > 60 || sourceMarketplace.length > 80) {
+    throw new Error("One or more product fields exceed the allowed length.");
+  }
+  if (!Number.isFinite(sourcePrice) || sourcePrice < 0 || sourcePrice > 1_000_000_000_000) {
+    throw new Error("Source price must be a valid non-negative number.");
+  }
+  if (!/^[A-Z]{3}$/.test(currency)) throw new Error("Currency must be a three-letter ISO code.");
+  if (!sourceUrl) throw new Error("Source product URL must be a valid HTTPS link.");
+  if (args.image_url && !imageUrl) throw new Error("Image URL must be a valid HTTPS link.");
+  if (args.source_seller !== undefined && (typeof args.source_seller !== "string" || args.source_seller.length > 120)) {
+    throw new Error("Source seller must be text up to 120 characters.");
+  }
+  if (!["in_stock", "out_of_stock", "limited", "unknown"].includes(availability)) {
+    throw new Error("Availability must be in_stock, out_of_stock, limited or unknown.");
+  }
+  return {
+    product_name: productName, description, category, source_marketplace: sourceMarketplace,
+    source_seller: String(args.source_seller || "").trim().slice(0, 120) || "Not supplied",
+    source_url: sourceUrl, source_price: sourcePrice, currency, image_url: imageUrl, availability
+  };
+}
+
+function slugifyStoreProduct(value, id) {
+  const base = String(value).toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "product";
+  return base + "-" + id.slice(0, 8);
+}
+
+async function saveStoreProductDraft(args, env) {
+  const db = requireProductDatabase(env);
+  const product = validateStoreProductDraft(args);
+  const id = crypto.randomUUID();
+  const slug = slugifyStoreProduct(product.product_name, id);
+  const now = new Date().toISOString();
+  try {
+    await db.prepare(`
+      INSERT INTO store_products
+      (id, slug, product_name, description, category, source_marketplace, source_seller,
+       source_url, source_price, currency, image_url, availability, status, created_at, updated_at, published_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, NULL)
+    `).bind(id, slug, product.product_name, product.description, product.category, product.source_marketplace,
+      product.source_seller, product.source_url, product.source_price, product.currency, product.image_url,
+      product.availability, now, now).run();
+  } catch (error) {
+    const detail = String(error?.message || "").toLowerCase();
+    if (detail.includes("unique") || detail.includes("constraint")) {
+      throw new Error("duplicate_product_source: this source URL may already exist in the 343SHOP catalogue.");
+    }
+    throw new Error("product_draft_save_failed: check the D1 migration and DB binding.");
+  }
+  return {
+    status: "draft_saved",
+    product: { id, slug, ...product, status: "draft", created_at: now },
+    published: false,
+    next_step: "Ask the owner to review the source, price, stock, listing rights and seller terms. Do not publish until the owner explicitly approves."
+  };
+}
+
+async function listStoreProductDrafts(args, env) {
+  const db = requireProductDatabase(env);
+  const limit = Number.isInteger(args.limit) ? Math.min(50, Math.max(1, args.limit)) : 30;
+  const result = await db.prepare(
+    "SELECT id, slug, product_name, description, category, source_marketplace, source_seller, source_url, source_price, currency, image_url, availability, status, created_at, updated_at, published_at FROM store_products WHERE status = 'draft' ORDER BY created_at DESC LIMIT ?"
+  ).bind(limit).all();
+  const products = Array.isArray(result?.results) ? result.results : [];
+  return {
+    draft_count: products.length,
+    products,
+    note: "Private owner review list. Draft products are not visible in the public storefront."
+  };
+}
+
+async function publishStoreProduct(args, env) {
+  const db = requireProductDatabase(env);
+  if (args.confirmation_phrase !== "PUBLISH") throw new Error("Explicit publication confirmation is required. Set confirmation_phrase to PUBLISH only after the owner approves.");
+  if (args.owner_confirmed_source_rights !== true || args.owner_confirmed_price_and_stock !== true ||
+      args.owner_confirmed_seller_terms !== true) {
+    throw new Error("Owner must confirm source/listing rights, current price and stock, and seller terms before publication.");
+  }
+  if (typeof args.product_id !== "string" || args.product_id.length < 8 || args.product_id.length > 80) {
+    throw new Error("A valid product_id is required.");
+  }
+  const current = await db.prepare("SELECT id, product_name, image_url, status FROM store_products WHERE id = ?")
+    .bind(args.product_id).first();
+  if (!current) throw new Error("product_not_found: the draft does not exist.");
+  if (current.status !== "draft") throw new Error("product_not_draft: only a draft can be published.");
+  if (current.image_url && args.owner_confirmed_image_rights !== true) {
+    throw new Error("Owner must also confirm image usage rights or remove the image before publication.");
+  }
+  const now = new Date().toISOString();
+  const update = await db.prepare(
+    "UPDATE store_products SET status = 'published', updated_at = ?, published_at = ? WHERE id = ? AND status = 'draft'"
+  ).bind(now, now, args.product_id).run();
+  if (update?.meta?.changes === 0) throw new Error("product_publish_conflict: refresh the draft and try again.");
+  const published = await db.prepare(
+    "SELECT id, slug, product_name, description, category, source_marketplace, source_seller, source_url, source_price, currency, image_url, availability, status, created_at, updated_at, published_at FROM store_products WHERE id = ?"
+  ).bind(args.product_id).first();
+  if (!published || published.status !== "published") throw new Error("product_publish_failed: publication could not be verified.");
+  return {
+    status: "published",
+    product: published,
+    public_product_url: "https://343shop.chugastan343.workers.dev/#ai-products",
+    note: "Product is now listed in the public 343SHOP sourced-products section. External checkout remains with the source seller; 343SHOP does not collect payment for it."
+  };
+}
+
+async function handlePublishedStoreProducts(request, env) {
+  if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+  if (!env?.DB || typeof env.DB.prepare !== "function") {
+    return json({ error: "product_database_not_configured", products: [] }, 503);
+  }
+  try {
+    const result = await env.DB.prepare(
+      "SELECT id, slug, product_name, description, category, source_marketplace, source_seller, source_url, source_price, currency, image_url, availability, published_at FROM store_products WHERE status = 'published' ORDER BY published_at DESC LIMIT 60"
+    ).all();
+    return json({ ok: true, products: Array.isArray(result?.results) ? result.results : [] });
+  } catch {
+    return json({ error: "product_storage_unavailable", products: [] }, 503);
+  }
+}
+
 async function runMcpTool(name, args, env) {
   if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Tool arguments must be a JSON object.");
 
@@ -741,6 +923,9 @@ async function runMcpTool(name, args, env) {
   }
 
   if (name === "get_marketplace_integrations_status") return marketplaceIntegrationsStatus(env);
+  if (name === "save_product_draft") return saveStoreProductDraft(args, env);
+  if (name === "list_product_drafts") return listStoreProductDrafts(args, env);
+  if (name === "publish_store_product") return publishStoreProduct(args, env);
 
   if (name === "get_marketplace_profile") return {
     marketplace: "343SHOP", business_model: "global_brokerage_marketplace",
@@ -953,7 +1138,10 @@ async function handleMcp(request, env, url) {
   } : {};
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: { ...SECURITY_HEADERS, ...cors } });
   if (request.method !== "POST") return mcpJson({ error: "method_not_allowed", endpoint: "/mcp", allowed: ["POST", "OPTIONS"] }, 405, { "Allow": "POST, OPTIONS", ...cors });
-  if (env.MCP_ACCESS_TOKEN && !safeEqual(request.headers.get("Authorization") || "", "Bearer " + env.MCP_ACCESS_TOKEN)) {
+  const authorization = request.headers.get("Authorization") || "";
+  const validGeneralToken = env.MCP_ACCESS_TOKEN && safeEqual(authorization, "Bearer " + env.MCP_ACCESS_TOKEN);
+  const validWriteToken = env.MCP_WRITE_TOKEN && safeEqual(authorization, "Bearer " + env.MCP_WRITE_TOKEN);
+  if (env.MCP_ACCESS_TOKEN && !validGeneralToken && !validWriteToken) {
     return mcpJson({ error: "unauthorized" }, 401, { "WWW-Authenticate": "Bearer", ...cors });
   }
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
@@ -993,7 +1181,7 @@ async function handleMcp(request, env, url) {
     return mcpJson(mcpResult(id, {
       protocolVersion: negotiated, capabilities: { tools: { listChanged: false } },
       serverInfo: { name: "343SHOP Marketplace", version: "1.0.0" },
-      instructions: "343SHOP is a global brokerage marketplace. Use configured partner catalogues and eBay API (when credentials are set) only for live product data. Use list_global_marketplaces and prepare_global_marketplace_search for direct official website search links. Never present those links as live product feeds or imply affiliate approval. Never invent suppliers, listings or stock. This read-only server cannot publish listings, submit orders or spend advertising money."
+      instructions: "343SHOP is a global brokerage marketplace. Use configured partner catalogues and eBay API (when credentials are set) only for live product data; official marketplace search links are not live feeds. Never invent suppliers, listings, prices, stock or seller claims. To add a product, obtain real source data, then call save_product_draft. Drafts stay private. Use list_product_drafts for owner review. Publish only after the owner explicitly approves and confirms source/listing rights, current price and stock, seller terms and image rights when an image is used; then call publish_store_product with confirmation_phrase PUBLISH and all required confirmations. Write tools require the owner-only MCP_WRITE_TOKEN. External listings still check out with their source seller; the Worker does not spend advertising money or collect external marketplace payments."
     }), 200, cors);
   }
   if (body.method === "ping") return mcpJson(mcpResult(id, {}), 200, cors);
@@ -1002,6 +1190,11 @@ async function handleMcp(request, env, url) {
     const name = body.params?.name;
     if (typeof name !== "string") return mcpJson(mcpError(id, -32602, "Tool name is required."), 400, cors);
     try {
+      if (OWNER_MCP_TOOLS.has(name)) {
+        if (!env.MCP_WRITE_TOKEN || !safeEqual(authorization, "Bearer " + env.MCP_WRITE_TOKEN)) {
+          throw new Error("owner_authorization_required: configure MCP_WRITE_TOKEN as a Cloudflare Worker Secret and connect the MCP client with Authorization: Bearer <token>.");
+        }
+      }
       const result = await runMcpTool(name, body.params?.arguments || {}, env);
       return mcpJson(mcpResult(id, { content: [{ type: "text", text: JSON.stringify(result, null, 2) }], isError: false }), 200, cors);
     } catch (error) {
@@ -1019,10 +1212,13 @@ function mcpStatus(env) {
     ok: true, name: "343SHOP Marketplace MCP", endpoint: "/mcp",
     transport: "Streamable HTTP", supported_protocols: [MCP_PROTOCOL_MODERN, MCP_PROTOCOL_LEGACY, "2025-06-18", "2025-03-26"],
     tool_count: MCP_TOOLS.length, connected_partner_shops: parsePartnerShops(env).length,
+    product_database_configured: Boolean(env.DB && typeof env.DB.prepare === "function"),
     marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
     configured_marketplace_apis: marketplaceIntegrationsStatus(env).marketplaces.filter((p) => p.api_configured).map((p) => p.id),
     access_token_required: Boolean(env.MCP_ACCESS_TOKEN),
-    mode: "read-only discovery and owner-reviewed drafts", writes_enabled: false, ad_spend_enabled: false
+    mode: "marketplace discovery + owner-authenticated product drafts and publishing",
+    writes_enabled: Boolean(env.DB && typeof env.DB.prepare === "function" && env.MCP_WRITE_TOKEN),
+    write_authentication_required: true, ad_spend_enabled: false
   };
 }
 
@@ -1032,6 +1228,10 @@ export default {
 
     if (url.pathname === "/api/mcp/status") {
       return json(mcpStatus(env));
+    }
+
+    if (url.pathname === "/api/store/products") {
+      return handlePublishedStoreProducts(request, env);
     }
 
     if (url.pathname === "/api/marketplaces/status") {
@@ -1052,7 +1252,7 @@ export default {
         app: "343SHOP",
         orderFlow: "whatsapp",
         payment: "manual-confirmation",
-        storage: "not-required"
+        storage: env.DB ? "cloudflare-d1" : "not-configured"
       });
     }
 
