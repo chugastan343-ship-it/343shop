@@ -876,7 +876,7 @@ async function handleMcp(request, env, url) {
     return mcpJson(mcpResult(id, {
       protocolVersion: negotiated, capabilities: { tools: { listChanged: false } },
       serverInfo: { name: "343SHOP Marketplace", version: "1.0.0" },
-      instructions: "343SHOP is a brokerage marketplace. Search only configured partner catalogues; never invent suppliers or stock. This read-only server cannot publish listings, submit orders or spend advertising money."
+      instructions: "343SHOP is a brokerage marketplace. Search only official configured sources (partner catalogues and eBay API when enabled); never invent suppliers, listings or stock. This read-only server cannot publish listings, submit orders or spend advertising money."
     }), 200, cors);
   }
   if (body.method === "ping") return mcpJson(mcpResult(id, {}), 200, cors);
