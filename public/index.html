@@ -91,9 +91,11 @@
 .marketplace-head>div{max-width:620px}
 .marketplace-head h2{font:500 clamp(34px,4vw,48px)/1.05 Georgia,serif;letter-spacing:-.045em;color:var(--forest);margin:12px 0}
 .marketplace-head p{font-size:12px;line-height:1.8;color:#727a70;max-width:580px}
-.marketplace-feed-count{border:1px solid #dfe3da;border-radius:13px;padding:12px 15px;min-width:145px;background:#fff}
+.marketplace-stats{display:flex;gap:9px;flex-wrap:wrap}
+.marketplace-feed-count{border:1px solid #dfe3da;border-radius:13px;padding:12px 15px;min-width:125px;background:#fff}
 .marketplace-feed-count strong{display:block;font:500 26px Georgia,serif;color:var(--forest)}
 .marketplace-feed-count span{display:block;font-size:9px;color:#7e877d;letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+.marketplace-feed-count small{display:block;font-size:8px;color:#91998f;margin-top:4px;line-height:1.4}
 .market-search{display:grid;grid-template-columns:1fr 155px auto;gap:9px;background:#fff;border:1px solid #e1e4da;border-radius:17px;padding:10px;box-shadow:0 12px 35px rgba(25,42,32,.05)}
 .market-search input,.market-search select{border:0;background:#f5f6f2;border-radius:10px;min-width:0;padding:0 15px;min-height:47px;color:var(--forest);font:inherit;font-size:12px;outline:none}
 .market-search .btn{border:0;min-height:47px;white-space:nowrap}
@@ -106,7 +108,16 @@
 .marketplace-state{font-size:9px;font-weight:800;letter-spacing:.02em;color:#8b5a22;margin-top:auto;padding:8px 9px;border-radius:8px;background:#fff4e7}
 .marketplace-state[data-ready="true"]{color:#276347;background:#eaf5ed}
 .marketplace-card a{font-size:10px;font-weight:800;color:var(--forest);text-decoration:none;margin-top:13px;align-self:flex-start}
+.marketplace-card a+a{margin-top:8px;color:#8a744f}
 .marketplace-results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:16px}
+.marketplace-link-section{grid-column:1/-1;margin-top:5px}
+.marketplace-link-heading{font:500 21px Georgia,serif;color:var(--forest);margin:8px 0 12px}
+.marketplace-link-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.marketplace-search-link{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;padding:12px 13px;border:1px solid #e5e8e0;border-radius:11px;background:#fff;color:var(--forest);font-size:10px;font-weight:800;text-decoration:none}
+.marketplace-search-link:hover{border-color:#b8c4b4;background:#f4f6f0}
+.marketplace-search-link span{overflow-wrap:anywhere}
+@media(max-width:900px){.marketplace-link-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.marketplace-link-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .market-result{background:#fff;border:1px solid #e5e8e0;border-radius:15px;overflow:hidden;min-width:0}
 .market-result-image{height:165px;background:#edf0e9;display:grid;place-items:center;overflow:hidden}
 .market-result-image img{width:100%;height:100%;object-fit:contain}
@@ -116,7 +127,8 @@
 .market-result-info h3{font:600 13px/1.4 Arial,sans-serif;color:var(--forest);margin:7px 0;overflow-wrap:anywhere}
 .market-result-price{font:600 15px Georgia,serif;color:var(--forest)}
 .market-result-note{font-size:9px;line-height:1.6;color:#879086;margin:7px 0 12px}
-.market-result-info a{font-size:9px;font-weight:900;letter-spacing:.03em;text-decoration:none;color:#fff;background:var(--forest);display:inline-flex;padding:10px 13px;border-radius:8px}
+.market-result-info a{font-size:9px;font-weight:900;letter-spacing:.03em;text-decoration:none;color:#fff;background:var(--forest);display:inline-flex;padding:10px 13px;border-radius:8px;margin:4px 5px 0 0}
+.market-result-info a.source-request{background:#eee9dd;color:#4e5d4f}
 .marketplace-legal{font-size:9px;line-height:1.7;color:#838b80;margin-top:18px;max-width:900px}
 @media(max-width:900px){.marketplace-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.marketplace-results{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.marketplace-section{padding:48px 0}.marketplace-head{align-items:start;flex-direction:column}.marketplace-feed-count{min-width:0}.marketplace-grid{gap:9px}.marketplace-card{padding:14px;min-height:228px}.marketplace-brand{font-size:18px}.market-search{grid-template-columns:1fr 1fr}.market-search input{grid-column:1/-1}.market-search .btn{grid-column:1/-1}.marketplace-results{grid-template-columns:1fr 1fr;gap:9px}.market-result-image{height:125px}.market-result-info{padding:11px}.market-result-info h3{font-size:12px}}
@@ -195,7 +207,11 @@
         <h2 data-sw="Tafuta bidhaa duniani." data-en="Search the global market.">Tafuta bidhaa duniani.</h2>
         <p data-sw="Gundua vyanzo vikubwa vya bidhaa na catalogue za wauzaji walioidhinishwa. Matokeo yanayoonekana hapa hutoka kwenye integrations zilizounganishwa kweli; tovuti nyingine zinaonyeshwa kama vyanzo vya kujiunga au kutembelea." data-en="Discover major product sources and approved seller catalogues. Search results shown here come only from genuinely connected integrations; other marketplaces are listed as sources to join or browse.">Gundua vyanzo vikubwa vya bidhaa na catalogue za wauzaji walioidhinishwa. Matokeo yanayoonekana hapa hutoka kwenye integrations zilizounganishwa kweli; tovuti nyingine zinaonyeshwa kama vyanzo vya kujiunga au kutembelea.</p>
       </div>
-      <div class="marketplace-feed-count"><strong id="marketplaceFeedCount">0</strong><span data-sw="Feeds za wauzaji" data-en="Supplier feeds">Feeds za wauzaji</span></div>
+      <div class="marketplace-stats">
+        <div class="marketplace-feed-count"><strong id="marketplaceDirectoryCount">10</strong><span data-sw="Masoko kwenye directory" data-en="Marketplaces listed">Masoko kwenye directory</span><small data-sw="Tovuti rasmi za kutafuta" data-en="Official websites to search">Tovuti rasmi za kutafuta</small></div>
+        <div class="marketplace-feed-count"><strong id="marketplaceFeedCount">0</strong><span data-sw="Feeds za wauzaji" data-en="Supplier feeds">Feeds za wauzaji</span><small data-sw="Catalogue zilizounganishwa" data-en="Connected catalogues">Catalogue zilizounganishwa</small></div>
+        <div class="marketplace-feed-count"><strong id="marketplaceApiCount">0</strong><span data-sw="API zilizowekwa" data-en="APIs configured">API zilizowekwa</span><small data-sw="Bado zinahitaji majaribio ya live" data-en="Still require live testing">Bado zinahitaji majaribio ya live</small></div>
+      </div>
     </div>
     <form class="market-search" id="marketSearchForm" role="search">
       <input id="marketSearchInput" type="search" minlength="2" maxlength="100" required placeholder="Mf. iPhone, laptop, viatu, blender..." aria-label="Search global products">
@@ -211,27 +227,67 @@
     <div class="marketplace-grid">
       <article class="marketplace-card" data-marketplace="amazon">
         <div class="marketplace-brand amazon">amazon</div>
-        <p data-sw="Bidhaa za kimataifa. Muunganisho wa catalogue unahitaji kuidhinishwa kwenye Amazon Associates na Creators API." data-en="Global product selection. Catalogue access requires Amazon Associates approval and Creators API eligibility.">Bidhaa za kimataifa. Muunganisho wa catalogue unahitaji kuidhinishwa kwenye Amazon Associates na Creators API.</p>
+        <p data-sw="Retail ya kimataifa. Live product feed inahitaji Amazon Associates + Creators API approval na vigezo vya akaunti." data-en="Global retail. A live product feed requires Amazon Associates + Creators API approval and account eligibility.">Retail ya kimataifa. Live product feed inahitaji Amazon Associates + Creators API approval na vigezo vya akaunti.</p>
         <div class="marketplace-state" id="marketplaceStatusAmazon">Inahitaji idhini rasmi</div>
+        <a href="https://www.amazon.com/" target="_blank" rel="noopener noreferrer">Tafuta Amazon ↗</a>
         <a href="https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction" target="_blank" rel="noopener noreferrer" data-sw="Masharti ya API ↗" data-en="API requirements ↗">Masharti ya API ↗</a>
       </article>
       <article class="marketplace-card" data-marketplace="alibaba">
         <div class="marketplace-brand alibaba">Alibaba.com</div>
-        <p data-sw="Wholesale na suppliers. Tunaunganisha approved affiliate offers au product feeds baada ya akaunti na masharti kuidhinishwa." data-en="Wholesale suppliers and offers. Approved affiliate offers or product feeds can be connected after account approval.">Wholesale na suppliers. Tunaunganisha approved affiliate offers au product feeds baada ya akaunti na masharti kuidhinishwa.</p>
+        <p data-sw="Wholesale na suppliers wa B2B. Affiliate feeds au Open Platform zinahitaji akaunti na idhini." data-en="B2B wholesale suppliers. Affiliate feeds or Open Platform access require account approval.">Wholesale na suppliers wa B2B. Affiliate feeds au Open Platform zinahitaji akaunti na idhini.</p>
         <div class="marketplace-state" id="marketplaceStatusAlibaba">Inahitaji approval ya affiliate</div>
+        <a href="https://www.alibaba.com/" target="_blank" rel="noopener noreferrer">Tafuta Alibaba ↗</a>
         <a href="https://ads.alibaba.com/" target="_blank" rel="noopener noreferrer" data-sw="Alibaba Affiliate ↗" data-en="Alibaba Affiliate ↗">Alibaba Affiliate ↗</a>
       </article>
       <article class="marketplace-card" data-marketplace="ebay">
         <div class="marketplace-brand ebay">eBay</div>
-        <p data-sw="Search ya bidhaa inaweza kutumia Browse API baada ya kuweka developer credentials. Commission tracking huhitaji EPN campaign ID." data-en="Product search can use the Browse API after developer credentials are configured. Commission tracking needs an EPN campaign ID.">Search ya bidhaa inaweza kutumia Browse API baada ya kuweka developer credentials. Commission tracking huhitaji EPN campaign ID.</p>
+        <p data-sw="Browse API tayari imeandaliwa kwenye Worker. Inahitaji developer credentials; EPN campaign ID ni kwa affiliate tracking." data-en="Browse API adapter is implemented in the Worker. Developer credentials are required; an EPN campaign ID enables affiliate tracking.">Browse API tayari imeandaliwa kwenye Worker. Inahitaji developer credentials; EPN campaign ID ni kwa affiliate tracking.</p>
         <div class="marketplace-state" id="marketplaceStatusEbay">API credentials hazijawekwa</div>
+        <a href="https://www.ebay.com/" target="_blank" rel="noopener noreferrer">Tafuta eBay ↗</a>
         <a href="https://developer.ebay.com/" target="_blank" rel="noopener noreferrer" data-sw="eBay Developers ↗" data-en="eBay Developers ↗">eBay Developers ↗</a>
       </article>
       <article class="marketplace-card" data-marketplace="kikuu">
         <div class="marketplace-brand kikuu">KiKUU</div>
-        <p data-sw="KiKUU Tanzania. Tunahitaji makubaliano ya biashara na catalogue/feed iliyoidhinishwa; hatuvuti bidhaa kwa scraping." data-en="KiKUU Tanzania. A business agreement and approved catalogue/feed are required; we do not scrape its website.">KiKUU Tanzania. Tunahitaji makubaliano ya biashara na catalogue/feed iliyoidhinishwa; hatuvuti bidhaa kwa scraping.</p>
+        <p data-sw="Tovuti rasmi ya Tanzania ipo. Tunaomba partnership na catalogue/feed iliyoidhinishwa; hakuna scraping." data-en="Official Tanzania storefront is available. A business partnership and approved catalogue/feed are required; no scraping.">Tovuti rasmi ya Tanzania ipo. Tunaomba partnership na catalogue/feed iliyoidhinishwa; hakuna scraping.</p>
         <div class="marketplace-state" id="marketplaceStatusKikuu">Inahitaji mawasiliano ya partnership</div>
         <a href="https://www.kikuu.co.tz/" target="_blank" rel="noopener noreferrer" data-sw="Fungua KiKUU Tanzania ↗" data-en="Open KiKUU Tanzania ↗">Fungua KiKUU Tanzania ↗</a>
+        <a href="https://vendor.kikuu.com/" target="_blank" rel="noopener noreferrer" data-sw="Sehemu ya wauzaji ↗" data-en="Seller portal ↗">Sehemu ya wauzaji ↗</a>
+      </article>
+      <article class="marketplace-card" data-marketplace="aliexpress">
+        <div class="marketplace-brand">AliExpress</div>
+        <p data-sw="Retail ya kimataifa. Link ya kutafuta inapatikana; API/affiliate ya sasa inahitaji kuthibitishwa kabla ya kuunganishwa." data-en="Global retail. Direct search is available; current API/affiliate access must be verified before integration.">Retail ya kimataifa. Link ya kutafuta inapatikana; API/affiliate ya sasa inahitaji kuthibitishwa kabla ya kuunganishwa.</p>
+        <div class="marketplace-state">Website search · API pending</div>
+        <a href="https://www.aliexpress.com/" target="_blank" rel="noopener noreferrer">Fungua AliExpress ↗</a>
+      </article>
+      <article class="marketplace-card" data-marketplace="jumia-tanzania">
+        <div class="marketplace-brand">Jumia Tanzania</div>
+        <p data-sw="Soko la Tanzania. Link ya tovuti rasmi ipo; live catalogue au affiliate access haijaunganishwa." data-en="Tanzania marketplace. Official website link is available; no live catalogue or affiliate feed is connected.">Soko la Tanzania. Link ya tovuti rasmi ipo; live catalogue au affiliate access haijaunganishwa.</p>
+        <div class="marketplace-state">Website search · feed pending</div>
+        <a href="https://www.jumia.co.tz/" target="_blank" rel="noopener noreferrer">Fungua Jumia Tanzania ↗</a>
+      </article>
+      <article class="marketplace-card" data-marketplace="etsy">
+        <div class="marketplace-brand">Etsy</div>
+        <p data-sw="Bidhaa za handmade, vintage na ubunifu. Live catalogue inahitaji developer access iliyoidhinishwa." data-en="Handmade, vintage and creative goods. A live catalogue requires approved developer access.">Bidhaa za handmade, vintage na ubunifu. Live catalogue inahitaji developer access iliyoidhinishwa.</p>
+        <div class="marketplace-state">Website search · API pending</div>
+        <a href="https://www.etsy.com/" target="_blank" rel="noopener noreferrer">Fungua Etsy ↗</a>
+      </article>
+      <article class="marketplace-card" data-marketplace="temu">
+        <div class="marketplace-brand">Temu</div>
+        <p data-sw="Retail ya kimataifa. Tovuti inapatikana kwa kutafuta; shipping na masharti ya kila bidhaa yahakikiwe." data-en="Global retail. Browse the website and verify shipping and item terms for each listing.">Retail ya kimataifa. Tovuti inapatikana kwa kutafuta; shipping na masharti ya kila bidhaa yahakikiwe.</p>
+        <div class="marketplace-state">Website search · no live feed</div>
+        <a href="https://www.temu.com/" target="_blank" rel="noopener noreferrer">Fungua Temu ↗</a>
+      </article>
+      <article class="marketplace-card" data-marketplace="made-in-china">
+        <div class="marketplace-brand">Made-in-China</div>
+        <p data-sw="B2B sourcing kwa viwanda na wholesalers. Omba quotation, samples na uhakiki supplier kabla ya kulipa." data-en="B2B sourcing for factories and wholesalers. Request quotations and samples, and verify suppliers before paying.">B2B sourcing kwa viwanda na wholesalers. Omba quotation, samples na uhakiki supplier kabla ya kulipa.</p>
+        <div class="marketplace-state">Supplier discovery · no live feed</div>
+        <a href="https://www.made-in-china.com/" target="_blank" rel="noopener noreferrer">Tafuta suppliers ↗</a>
+      </article>
+      <article class="marketplace-card" data-marketplace="dhgate">
+        <div class="marketplace-brand">DHgate</div>
+        <p data-sw="Marketplace ya jumla na retail. Link ya kuvinjari inapatikana; hakuna product feed iliyoidhinishwa iliyounganishwa." data-en="Wholesale and retail marketplace. Browsing is available; no approved product feed is connected.">Marketplace ya jumla na retail. Link ya kuvinjari inapatikana; hakuna product feed iliyoidhinishwa iliyounganishwa.</p>
+        <div class="marketplace-state">Website search · no live feed</div>
+        <a href="https://www.dhgate.com/" target="_blank" rel="noopener noreferrer">Fungua DHgate ↗</a>
       </article>
     </div>
     <p class="marketplace-legal" data-sw="Muhimu: 343SHOP ni dalali/kiunganishi, si mmiliki wa bidhaa za marketplaces hizi. Bei, stock, delivery, kodi na masharti ya muuzaji lazima yathibitishwe kwenye chanzo husika kabla ya malipo. Oda za marketplace za nje hukamilishwa kwa muuzaji au marketplace husika; 343SHOP haipokei malipo ya kadi kwa bidhaa hizo." data-en="Important: 343SHOP is a broker/connector, not the owner of products on these marketplaces. Price, stock, delivery, taxes and seller terms must be confirmed at the source before payment. External marketplace purchases are completed with the seller or marketplace; 343SHOP does not collect card payments for those listings.">Muhimu: 343SHOP ni dalali/kiunganishi, si mmiliki wa bidhaa za marketplaces hizi. Bei, stock, delivery, kodi na masharti ya muuzaji lazima yathibitishwe kwenye chanzo husika kabla ya malipo. Oda za marketplace za nje hukamilishwa kwa muuzaji au marketplace husika; 343SHOP haipokei malipo ya kadi kwa bidhaa hizo.</p>
@@ -376,36 +432,71 @@ async function loadMarketplaceStatus(){
       el.dataset.ready=String(Boolean(item.api_configured&&item.affiliate_tracking));
     }
     $("marketplaceFeedCount").textContent=String(data.configured_partner_catalogue_count||0);
+    $("marketplaceDirectoryCount").textContent=String(data.marketplace_directory_count||10);
+    $("marketplaceApiCount").textContent=String((data.marketplaces||[]).filter(item=>item.api_configured).length);
   }catch{
     $("marketSearchNotice").textContent=tr("Hali ya integrations haikupatikana. Tafadhali jaribu tena.","Marketplace integration status could not be loaded. Please try again.");
   }
 }
 function renderMarketplaceResults(payload){
   const root=$("marketSearchResults");root.replaceChildren();
-  const sources=payload.sources||{};
-  if(!payload.results||!payload.results.length){
-    const empty=document.createElement("p");empty.className="market-search-note";
-    empty.textContent=tr("Hakuna matokeo kutoka vyanzo vilivyounganishwa. Angalia hali ya integrations au jaribu neno jingine.","No results from connected sources. Check integration status or try another search term.");
-    root.appendChild(empty);return;
-  }
   const fragment=document.createDocumentFragment();
-  for(const product of payload.results){
-    const card=document.createElement("article");card.className="market-result";
-    const visual=document.createElement("div");visual.className="market-result-image";
-    const imageUrl=typeof product.image_url==="string"&&product.image_url.startsWith("https://")?product.image_url:"";
-    if(imageUrl){const image=document.createElement("img");image.src=imageUrl;image.alt=String(product.name||"Product");image.loading="lazy";image.referrerPolicy="no-referrer";visual.appendChild(image)}
-    else{const placeholder=document.createElement("span");placeholder.textContent="343";visual.appendChild(placeholder)}
-    const info=document.createElement("div");info.className="market-result-info";
-    const source=document.createElement("div");source.className="market-result-source";source.textContent=String(product.source_shop||product.source_type||"Marketplace");
-    const title=document.createElement("h3");title.textContent=String(product.name||"Unnamed product");
-    const price=document.createElement("div");price.className="market-result-price";
-    price.textContent=Number.isFinite(Number(product.price))?new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(Number(product.price))+" "+String(product.currency||"") : tr("Bei haijathibitishwa","Price not confirmed");
-    const note=document.createElement("p");note.className="market-result-note";
-    note.textContent=product.availability==="in_stock"?tr("Muuzaji ameripoti stock; thibitisha kabla ya kulipa.","Seller reports stock; confirm before payment."):tr("Stock, delivery na gharama za mwisho lazima zithibitishwe na muuzaji.","Stock, delivery and final costs must be confirmed by the seller.");
-    info.append(source,title,price,note);
-    const href=typeof product.product_url==="string"&&product.product_url.startsWith("https://")?product.product_url:"";
-    if(href){const link=document.createElement("a");link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent=tr("ANGALIA KWA MUUZAJI ↗","VIEW AT SELLER ↗");info.appendChild(link)}
-    card.append(visual,info);fragment.appendChild(card);
+  const products=Array.isArray(payload.results)?payload.results:[];
+  if(products.length){
+    for(const product of products){
+      const card=document.createElement("article");card.className="market-result";
+      const visual=document.createElement("div");visual.className="market-result-image";
+      const imageUrl=typeof product.image_url==="string"&&product.image_url.startsWith("https://")?product.image_url:"";
+      if(imageUrl){const image=document.createElement("img");image.src=imageUrl;image.alt=String(product.name||"Product");image.loading="lazy";image.referrerPolicy="no-referrer";visual.appendChild(image)}
+      else{const placeholder=document.createElement("span");placeholder.textContent="343";visual.appendChild(placeholder)}
+      const info=document.createElement("div");info.className="market-result-info";
+      const source=document.createElement("div");source.className="market-result-source";source.textContent=String(product.source_shop||product.source_type||"Marketplace");
+      const title=document.createElement("h3");title.textContent=String(product.name||"Unnamed product");
+      const price=document.createElement("div");price.className="market-result-price";
+      price.textContent=Number.isFinite(Number(product.price))?new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(Number(product.price))+" "+String(product.currency||"") : tr("Bei haijathibitishwa","Price not confirmed");
+      const note=document.createElement("p");note.className="market-result-note";
+      note.textContent=product.availability==="in_stock"?tr("Muuzaji ameripoti stock; thibitisha kabla ya kulipa.","Seller reports stock; confirm before payment."):tr("Stock, delivery na gharama za mwisho lazima zithibitishwe na muuzaji.","Stock, delivery and final costs must be confirmed by the seller.");
+      info.append(source,title,price,note);
+      const href=typeof product.product_url==="string"&&product.product_url.startsWith("https://")?product.product_url:"";
+      if(href){const link=document.createElement("a");link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent=tr("ANGALIA KWA MUUZAJI ↗","VIEW AT SELLER ↗");info.appendChild(link)}
+      const requestLines=[
+        "Habari 343SHOP, naomba msaada wa kupata bidhaa hii kupitia udalali:",
+        "Bidhaa: "+String(product.name||"Bidhaa"),
+        "Chanzo/muuzaji: "+String(product.source_shop||"Marketplace"),
+        Number.isFinite(Number(product.price))?"Bei iliyoonekana: "+Number(product.price)+" "+String(product.currency||""):"",
+        href?"Link ya bidhaa: "+href:"",
+        "Naomba uthibitisho wa stock, bei ya mwisho, delivery, kodi/gharama za kuingiza na makubaliano ya udalali kabla ya kuendelea. Huu ni ujumbe wa kuulizia tu, si oda wala malipo."
+      ].filter(Boolean).join("\n");
+      const request=document.createElement("a");request.className="source-request";
+      request.href="https://wa.me/255695981035?text="+encodeURIComponent(requestLines);
+      request.target="_blank";request.rel="noopener noreferrer";
+      request.textContent=tr("OMBA 343SHOP IKUSAIDIE ↗","ASK 343SHOP TO SOURCE ↗");
+      info.appendChild(request);
+      card.append(visual,info);fragment.appendChild(card);
+    }
+  }else{
+    const empty=document.createElement("p");empty.className="market-search-note";
+    empty.textContent=tr("Hakuna matokeo kutoka live feeds zilizounganishwa. Endelea kutafuta kwenye tovuti rasmi hapa chini.","No results from connected live feeds. Continue your search on the official websites below.");
+    fragment.appendChild(empty);
+  }
+
+  const links=Array.isArray(payload.external_marketplace_search_links)?payload.external_marketplace_search_links:[];
+  if(links.length){
+    const section=document.createElement("section");section.className="marketplace-link-section";
+    const heading=document.createElement("h3");heading.className="marketplace-link-heading";
+    heading.textContent=tr("Endelea kutafuta kwenye marketplaces hizi","Continue searching on these marketplaces");
+    section.appendChild(heading);
+    const grid=document.createElement("div");grid.className="marketplace-link-grid";
+    for(const item of links){
+      const href=typeof item.search_url==="string"&&item.search_url.startsWith("https://")?item.search_url:"";
+      if(!href)continue;
+      const link=document.createElement("a");link.className="marketplace-search-link";
+      link.href=href;link.target="_blank";link.rel="noopener noreferrer";
+      const name=document.createElement("span");name.textContent=String(item.name||"Marketplace");
+      const arrow=document.createElement("span");arrow.textContent="↗";
+      link.append(name,arrow);grid.appendChild(link);
+    }
+    section.appendChild(grid);fragment.appendChild(section);
   }
   root.appendChild(fragment);
 }
@@ -421,7 +512,7 @@ $("marketSearchForm").addEventListener("submit",async e=>{
     const data=await response.json().catch(()=>({}));
     if(!response.ok)throw new Error(data.message||data.error||"search_failed");
     renderMarketplaceResults(data);
-    $("marketSearchNotice").textContent=(data.result_count||0)+" "+tr("matokeo · ","results · ")+tr("Bei na stock lazima vithibitishwe kwa muuzaji.","Price and stock must be confirmed by the seller.");
+    $("marketSearchNotice").textContent=(data.result_count||0)+" "+tr("matokeo ya live · ","live results · ")+tr("Links za tovuti rasmi pia zimeongezwa; thibitisha bei na stock kwa muuzaji.","official website search links are also included; confirm price and stock with the seller.");
   }catch(error){
     $("marketSearchNotice").textContent=tr("Search haikufanikiwa. Jaribu tena baada ya muda.","Search failed. Please try again shortly.");
   }
