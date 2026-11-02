@@ -572,7 +572,9 @@ async function handleMarketplaceSearch(request, env, url) {
     return json({ error: "invalid_source" }, 400);
   }
 
-  const base = await searchMarketplaceProducts({ query, source: source === "all" ? "partners" : source, limit }, env);
+  const base = source === "ebay"
+    ? { results: [], connected_partner_count: 0 }
+    : await searchMarketplaceProducts({ query, source: source === "all" ? "partners" : source, limit }, env);
   const ebay = source === "partners" || source === "343shop"
     ? { status: "not_requested", affiliate_tracking: false, results: [] }
     : await searchEbayProducts(query, env, limit);
