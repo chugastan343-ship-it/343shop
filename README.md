@@ -39,7 +39,7 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `get_marketplace_profile` — explains the broker/agent workflow and policies.
 - `list_partner_shops` — lists only partner shops configured by the owner.
 - `get_partner_integration_guide` — explains the public supplier catalogue API.
-- `search_marketplace_products` — searches the 343SHOP showcase catalogue and registered partner catalogues.
+- `search_marketplace_products` — searches the 343SHOP showcase catalogue, registered partner catalogues and eBay when its official API credentials are configured.
 - `compare_partner_offers` — compares supplier offers only within the same currency.
 - `calculate_brokerage_margin` — calculates an owner-supplied commission proposal.
 - `create_whatsapp_quote_link` — prepares a WhatsApp link; it does not send a message or create an order.
@@ -47,6 +47,7 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `draft_product_ad` — prepares Swahili and English ad copy; it does not publish ads or spend money.
 - `check_partner_catalogue_health` — checks whether registered public partner catalogues respond with usable product data.
 - `prepare_partner_shop_application` — prepares a WhatsApp application message for a shop that wants to join; it does not approve or connect the shop.
+- `get_marketplace_integrations_status` — reports Amazon, Alibaba.com, eBay and KiKUU integration readiness without treating pending approvals as live connections.
 
 ### Registering other shops
 
