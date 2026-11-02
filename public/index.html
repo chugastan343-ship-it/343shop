@@ -426,7 +426,8 @@ $("marketSearchForm").addEventListener("submit",async e=>{
     $("marketSearchNotice").textContent=tr("Search haikufanikiwa. Jaribu tena baada ya muda.","Search failed. Please try again shortly.");
   }
 });
-\n$("langBtn").onclick=()=>{lang=lang==="sw"?"en":"sw";applyLang()};
+
+$("langBtn").onclick=()=>{lang=lang==="sw"?"en":"sw";applyLang()};
 
 document.querySelectorAll("[data-inspire-cat]").forEach(tile=>tile.addEventListener("click",()=>{activeCat=tile.dataset.inspireCat;renderCats();renderProducts()}));
 
