@@ -269,6 +269,25 @@ const MCP_TOOLS = [
       contact_url: { type: "string", maxLength: 500 }
     }, required: ["product_name", "key_benefit"], additionalProperties: false },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  },
+  {
+    name: "check_partner_catalogue_health",
+    description: "Checks the public catalogue endpoints of registered partner shops and reports which ones respond with a valid product catalogue.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true }
+  },
+  {
+    name: "prepare_partner_shop_application",
+    description: "Prepares a WhatsApp application message for a shop that wants to join the 343SHOP brokerage partner network. It does not approve, register or connect the shop.",
+    inputSchema: { type: "object", properties: {
+      shop_name: { type: "string", minLength: 2, maxLength: 100 },
+      location: { type: "string", minLength: 2, maxLength: 100 },
+      contact_name: { type: "string", minLength: 2, maxLength: 80 },
+      phone: { type: "string", minLength: 7, maxLength: 25 },
+      categories: { type: "string", minLength: 2, maxLength: 220 },
+      catalogue_url: { type: "string", maxLength: 300 }
+    }, required: ["shop_name", "location", "contact_name", "phone", "categories"], additionalProperties: false },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }
 ];
 
@@ -527,6 +546,70 @@ async function runMcpTool(name, args, env) {
       listing: { partner_shop: args.partner_shop.trim(), product_name: args.product_name.trim(), description: args.description.trim(), category: args.category.trim(), supplier_price: price, currency, image_url: image, supplier_product_url: productUrl, availability: "must_be_confirmed_with_supplier" },
       required_owner_checks: ["confirm supplier identity", "confirm stock", "agree agent commission", "confirm buyer price and delivery", "approve publication"],
       note: "Draft only. The current Worker has no product database/write integration."
+    };
+  }
+
+  if (name === "check_partner_catalogue_health") {
+    const shops = parsePartnerShops(env);
+    const results = await Promise.all(shops.map(async (shop) => {
+      const catalogue = await fetchPartnerCatalogue(shop);
+      return {
+        shop_id: shop.id,
+        shop_name: shop.name,
+        city: shop.city,
+        status: catalogue.status,
+        product_count: catalogue.products.length,
+        check_note: catalogue.status === "connected"
+          ? "Public catalogue responded with valid product data."
+          : "Could not read a valid public JSON catalogue. Confirm the HTTPS URL, response format and availability."
+      };
+    }));
+    return {
+      checked_at: new Date().toISOString(),
+      registered_partner_count: shops.length,
+      connected_count: results.filter(x => x.status === "connected").length,
+      unavailable_count: results.filter(x => x.status !== "connected").length,
+      partners: results,
+      note: shops.length ? "A successful technical check does not guarantee stock. Confirm each seller's current stock and terms before quoting a buyer."
+        : "No partner shops have been registered yet. Invite suppliers through the partner application form and add their public catalogue endpoint after verification."
+    };
+  }
+
+  if (name === "prepare_partner_shop_application") {
+    for (const key of ["shop_name", "location", "contact_name", "phone", "categories"]) {
+      if (typeof args[key] !== "string" || args[key].trim().length < 2) {
+        throw new Error("Missing or invalid " + key + ".");
+      }
+    }
+    const trimmed = {
+      shop_name: args.shop_name.trim().slice(0, 100),
+      location: args.location.trim().slice(0, 100),
+      contact_name: args.contact_name.trim().slice(0, 80),
+      phone: args.phone.trim().slice(0, 25),
+      categories: args.categories.trim().slice(0, 220)
+    };
+    let catalogue = "";
+    if (args.catalogue_url) {
+      catalogue = safeHttpsLink(args.catalogue_url);
+      if (!catalogue) throw new Error("Catalogue URL must be a valid HTTPS link.");
+    }
+    const message = [
+      "Habari 343SHOP, naomba kujiunga kama duka mshirika kwenye marketplace ya udalali.",
+      "Jina la duka: " + trimmed.shop_name,
+      "Eneo: " + trimmed.location,
+      "Mtu wa mawasiliano: " + trimmed.contact_name,
+      "Simu: " + trimmed.phone,
+      "Bidhaa/huduma: " + trimmed.categories,
+      catalogue ? "Catalogue/website: " + catalogue : "",
+      "Naomba maelezo ya verification na makubaliano ya commission/udalali."
+    ].filter(Boolean).join("\\n");
+    return {
+      status: "application_message_prepared_not_sent",
+      whatsapp_url: "https://wa.me/255695981035?text=" + encodeURIComponent(message),
+      message,
+      shop_registered: false,
+      catalogue_connected: false,
+      note: "The shop must send the WhatsApp application. 343SHOP must verify the business and catalogue, then the owner registers the partner endpoint in Cloudflare."
     };
   }
 
