@@ -193,7 +193,7 @@ async function handleAIChat(request, env, url) {
   }
 }
 
-// 343SHOP Marketplace MCP: read-only partner discovery and owner-reviewed drafts.
+// 343SHOP Marketplace MCP: live discovery plus owner-authenticated product catalogue management.
 const MCP_PROTOCOL_LEGACY = "2025-11-25";
 const MCP_PROTOCOL_MODERN = "2026-07-28";
 const MCP_RATE_LIMIT = new Map();
@@ -796,7 +796,7 @@ function validateStoreProductDraft(args) {
 }
 
 function slugifyStoreProduct(value, id) {
-  const base = String(value).toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
+  const base = String(value).toLowerCase().normalize("NFD").replace(/[^\\x00-\\x7F]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "product";
   return base + "-" + id.slice(0, 8);
 }
