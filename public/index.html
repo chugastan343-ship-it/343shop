@@ -37,6 +37,32 @@
 @media(max-width:650px){.ai-launch{right:14px;bottom:14px}.ai-panel{right:14px;bottom:74px;width:calc(100vw - 28px);height:min(560px,calc(100dvh - 96px))}}
 @media(max-width:900px){.hero{gap:25px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.visual{height:170px}}
 @media(max-width:650px){.wrap{width:min(100% - 28px,500px)}.header{height:67px}.nav{display:none}.hero{padding:38px 0 35px;grid-template-columns:1fr;gap:25px}.hero-art{min-height:270px}.hero-art .art-card.main{width:146px;height:188px;font-size:58px}.hero-art .art-card.side{height:125px;width:95px}.hero-art .art-card.low{width:82px;height:82px;font-size:30px}.hero h1{font-size:54px}.trust{grid-template-columns:1fr 1fr}.trust-item{font-size:9px}.shop{padding:54px 0}.section-top{align-items:start;flex-direction:column}.section-top h2{font-size:35px}.search{width:100%}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.visual{height:145px;margin:6px}.visual .symbol{font-size:52px}.product-info{padding:9px 10px 12px}.product h3{font-size:16px;min-height:40px}.product p{font-size:9px}.price{font-size:12px}.about-inner{grid-template-columns:1fr;gap:25px}.about-mark{height:150px;font-size:75px}.footer-top,.footer-bottom{flex-direction:column}.footer-bottom{gap:9px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.modal-card{padding:20px}.brand{font-size:19px}.brand-mark{width:35px;height:35px}}
+
+/* Pinterest-inspired editorial product gallery */
+.inspiration{padding:38px 0 62px}
+.inspiration-head{display:flex;align-items:end;justify-content:space-between;gap:22px;margin-bottom:20px}
+.inspiration-kicker{display:block;color:#9b7a47;font-size:9px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}
+.inspiration-head h2{font:500 clamp(30px,4vw,43px)/1.02 Georgia,serif;letter-spacing:-.045em;color:var(--forest);margin:10px 0 7px}
+.inspiration-head p{max-width:520px;color:var(--muted);font-size:11px;line-height:1.7;margin:0}
+.inspiration-link{flex:none;color:var(--forest);font-size:10px;font-weight:900;border-bottom:1px solid #c7a76a;padding:0 0 7px}
+.inspiration-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr;grid-template-rows:repeat(2,minmax(190px,1fr));gap:14px}
+.inspiration-tile{position:relative;isolation:isolate;display:block;overflow:hidden;min-width:0;min-height:190px;border-radius:17px;background:#e6e4dc;color:#fff;box-shadow:0 10px 28px rgba(23,48,38,.08)}
+.inspiration-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .55s ease}
+.inspiration-tile:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(17,34,25,.02) 25%,rgba(17,34,25,.72) 100%)}
+.inspiration-tile:hover img{transform:scale(1.045)}
+.inspiration-tile:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.tile--lead{grid-column:1;grid-row:1 / span 2;min-height:394px}
+.tile--brand{grid-column:2;grid-row:1}
+.tile--mug{grid-column:3;grid-row:1}
+.tile--books{grid-column:2;grid-row:2}
+.tile--phone{grid-column:3;grid-row:2}
+.inspiration-copy{position:absolute;left:17px;right:16px;bottom:17px;display:flex;flex-direction:column;gap:5px}
+.inspiration-copy small{font-size:8px;letter-spacing:.18em;font-weight:900;color:#f0d9a9}
+.inspiration-copy strong{font:500 clamp(16px,1.8vw,23px)/1.12 Georgia,serif;max-width:95%}
+.inspiration-copy em{font-style:normal;font-size:9px;color:rgba(255,255,255,.83)}
+@media(max-width:900px){.inspiration-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:190px}.tile--lead{grid-column:span 2;grid-row:auto;min-height:255px}.tile--brand,.tile--mug,.tile--books,.tile--phone{grid-column:auto;grid-row:auto}}
+@media(max-width:650px){.inspiration{padding:31px 0 46px}.inspiration-head{align-items:start;flex-direction:column;gap:12px}.inspiration-head h2{font-size:34px}.inspiration-grid{gap:10px;grid-auto-rows:165px}.tile--lead{min-height:225px}.inspiration-tile{border-radius:13px}.inspiration-copy{left:12px;right:11px;bottom:12px}.inspiration-copy strong{font-size:17px}.inspiration-copy em{font-size:8px}}
+
 </style>
 </head>
 <body>
@@ -61,6 +87,40 @@
 <div class="trust-item"><span class="trust-icon">↗</span><span><strong data-sw="Oda rahisi" data-en="Easy ordering">Oda rahisi</strong><span data-sw="Wasiliana nasi moja kwa moja" data-en="Talk to us directly">Wasiliana nasi moja kwa moja</span></span></div>
 <div class="trust-item"><span class="trust-icon">♡</span><span><strong data-sw="Huduma ya karibu" data-en="Personal service">Huduma ya karibu</strong><span data-sw="Tupo kukusaidia" data-en="Here to help">Tupo kukusaidia</span></span></div>
 </div>
+
+<section class="inspiration" aria-labelledby="inspirationTitle">
+  <div class="inspiration-head">
+    <div>
+      <span class="inspiration-kicker">THE 343 EDIT · MADE PERSONAL</span>
+      <h2 id="inspirationTitle" data-sw="Wazo lako, liwe la kuonekana." data-en="Your ideas, beautifully seen.">Wazo lako, liwe la kuonekana.</h2>
+      <p data-sw="Pata msukumo wa zawadi, printi na ubunifu unaobeba mguso wako." data-en="Find inspiration for thoughtful gifts, prints and creative pieces made around you.">Pata msukumo wa zawadi, printi na ubunifu unaobeba mguso wako.</p>
+    </div>
+    <a class="inspiration-link" href="#shop" data-sw="Chunguza bidhaa ↗" data-en="Explore the collection ↗">Chunguza bidhaa ↗</a>
+  </div>
+  <div class="inspiration-grid">
+    <a class="inspiration-tile tile--lead" href="#shop" data-inspire-cat="prints" aria-label="Explore photo prints">
+      <img src="https://images.pexels.com/photos/7319336/pexels-photo-7319336.jpeg?cs=srgb&amp;dl=pexels-angela-roma-7319336.jpg&amp;fm=jpg" alt="Sunlit wooden table with a blank photo frame and ceramic mug" loading="lazy" decoding="async">
+      <span class="inspiration-copy"><small>PHOTO PRINTS</small><strong data-sw="Picha zinazogeuka kumbukumbu." data-en="Turn your moments into keepsakes.">Picha zinazogeuka kumbukumbu.</strong><em data-sw="Printi na picha zenye maana ↗" data-en="Personal photo prints ↗">Printi na picha zenye maana ↗</em></span>
+    </a>
+    <a class="inspiration-tile tile--brand" href="#shop" data-inspire-cat="branding" aria-label="Explore branding services">
+      <img src="https://images.pexels.com/photos/7598018/pexels-photo-7598018.jpeg?cs=srgb&amp;dl=pexels-leeloothefirst-7598018.jpg&amp;fm=jpg" alt="Warm neutral brand strategy mood board and colour palette" loading="lazy" decoding="async">
+      <span class="inspiration-copy"><small>BRANDING &amp; DESIGN</small><strong data-sw="Utambulisho wa brand yako." data-en="A look that feels like you.">Utambulisho wa brand yako.</strong><em data-sw="Logo na brand kit ↗" data-en="Logo and brand kits ↗">Logo na brand kit ↗</em></span>
+    </a>
+    <a class="inspiration-tile tile--mug" href="#shop" data-inspire-cat="mugs" aria-label="Explore personalised mugs">
+      <img src="https://images.pexels.com/photos/6786613/pexels-photo-6786613.jpeg?cs=srgb&amp;dl=pexels-artempodrez-6786613.jpg&amp;fm=jpg" alt="Person holding a clean white ceramic mug in soft natural light" loading="lazy" decoding="async">
+      <span class="inspiration-copy"><small>PERSONAL GIFTS</small><strong data-sw="Zawadi yenye mguso wako." data-en="A gift with your touch.">Zawadi yenye mguso wako.</strong><em data-sw="Vikombe na zawadi ↗" data-en="Mugs and keepsakes ↗">Vikombe na zawadi ↗</em></span>
+    </a>
+    <a class="inspiration-tile tile--books" href="#shop" data-inspire-cat="books" aria-label="Explore books and printed stories">
+      <img src="https://images.pexels.com/photos/32055406/pexels-photo-32055406.jpeg?cs=srgb&amp;dl=pexels-nurbis-32055406.jpg&amp;fm=jpg" alt="Book, notebook and coffee arranged on a warm wooden desk" loading="lazy" decoding="async">
+      <span class="inspiration-copy"><small>BOOKS &amp; STORIES</small><strong data-sw="Hadithi zako, kwa namna yako." data-en="Your story, your way.">Hadithi zako, kwa namna yako.</strong><em data-sw="Vitabu na hadithi ↗" data-en="Books and stories ↗">Vitabu na hadithi ↗</em></span>
+    </a>
+    <a class="inspiration-tile tile--phone" href="#shop" data-inspire-cat="accessories" aria-label="Explore personalised phone accessories">
+      <img src="https://images.pexels.com/photos/7742503/pexels-photo-7742503.jpeg?cs=srgb&amp;dl=pexels-rann-vijay-677553-7742503.jpg&amp;fm=jpg" alt="Modern smartphone and transparent protective cases arranged on a clean surface" loading="lazy" decoding="async">
+      <span class="inspiration-copy"><small>EVERYDAY ACCESSORIES</small><strong data-sw="Binafsisha vitu vya kila siku." data-en="Personalise the everyday.">Binafsisha vitu vya kila siku.</strong><em data-sw="Vifaa na kava za simu ↗" data-en="Accessories and phone cases ↗">Vifaa na kava za simu ↗</em></span>
+    </a>
+  </div>
+</section>
+
 <section class="shop" id="shop">
 <div class="section-top"><div><span class="section-kicker">THE 343 EDIT</span><h2 data-sw="Chagua kitu chako." data-en="Find your something.">Chagua kitu chako.</h2><p data-sw="Bidhaa na huduma zilizochaguliwa kwa ajili ya mawazo yako." data-en="A considered collection for your ideas and everyday moments.">Bidhaa na huduma zilizochaguliwa kwa ajili ya mawazo yako.</p></div><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Tafuta bidhaa..." aria-label="Search products"></label></div>
 <div class="categories" id="categories"></div>
@@ -127,6 +187,9 @@ function renderCart(){const rows=Object.entries(cart).filter(([slug,n])=>n>0).ma
 $("cartLines").innerHTML=rows.map(({p,n})=>'<div class="cart-line"><div><strong>'+(lang==="sw"?p.sw:p.en)+'</strong><small>'+money(p.price)+' · '+(lang==="sw"?p.catSw:p.catEn)+'</small><div class="qty"><button data-dec="'+p.slug+'">−</button><b>'+n+'</b><button data-inc="'+p.slug+'">+</button></div></div><b>'+money(p.price*n)+'</b></div>').join("");$("cartLines").querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{cart[b.dataset.dec]=Math.max(0,(cart[b.dataset.dec]||0)-1);if(!cart[b.dataset.dec])delete cart[b.dataset.dec];save();renderCart()});$("cartLines").querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{if((cart[b.dataset.inc]||0)>=MAX_QTY){toast(tr("Kikomo ni bidhaa 10 kwa kila aina.","Limit is 10 per product."));return}cart[b.dataset.inc]=(cart[b.dataset.inc]||0)+1;save();renderCart()});const t=totals();$("cartTotal").innerHTML='<div class="total-row"><span>'+tr("Jumla ndogo","Subtotal")+'</span><b>'+money(t.subtotal)+'</b></div><div class="total-row"><span>'+tr("Usafirishaji","Delivery")+'</span><b>'+(t.shipping?money(t.shipping):tr("Bure","Complimentary"))+'</b></div><div class="total-row grand"><span>'+tr("Jumla","Total")+'</span><b>'+money(t.total)+'</b></div><button class="btn" id="checkoutBtn">'+tr("Endelea kulipia","Continue to checkout")+' ↗</button>';$("checkoutBtn").onclick=()=>{closeCart();$("checkoutModal").classList.add("show")}}
 function applyLang(){$("langBtn").textContent=lang==="sw"?"EN":"SW";document.documentElement.lang=lang;document.querySelectorAll("[data-sw][data-en]").forEach(el=>{el.textContent=lang==="sw"?el.dataset.sw:el.dataset.en});document.querySelectorAll("[data-html-sw][data-html-en]").forEach(el=>{el.innerHTML=lang==="sw"?el.dataset.htmlSw:el.dataset.htmlEn});$("search").placeholder=tr("Tafuta bidhaa...","Search products...");renderCats();renderProducts();if($("drawer").classList.contains("show"))renderCart()}
 $("langBtn").onclick=()=>{lang=lang==="sw"?"en":"sw";applyLang()};
+
+document.querySelectorAll("[data-inspire-cat]").forEach(tile=>tile.addEventListener("click",()=>{activeCat=tile.dataset.inspireCat;renderCats();renderProducts()}));
+
 $("cartBtn").onclick=openCart;$("closeCart").onclick=closeCart;$("overlay").onclick=closeCart;$("closeCheckout").onclick=()=>$("checkoutModal").classList.remove("show");
 $("search").addEventListener("input",e=>{query=e.target.value.toLowerCase().trim();renderProducts()});
 $("checkoutForm").addEventListener("submit",e=>{e.preventDefault();if(!e.currentTarget.reportValidity())return;const hasItems=Object.entries(cart).some(([slug,qty])=>PRODUCTS.some(p=>p.slug===slug)&&Number.isSafeInteger(qty)&&qty>0);if(!hasItems){$("checkoutModal").classList.remove("show");toast(tr("Kikapu hakina bidhaa. Chagua bidhaa kwanza.","Your bag is empty. Add an item first."));return}const data=Object.fromEntries(new FormData(e.currentTarget).entries());const ref="343-"+Date.now().toString(36).toUpperCase();const t=totals();const items=Object.entries(cart).filter(([k,n])=>n>0).map(([k,n])=>{const p=PRODUCTS.find(x=>x.slug===k);return p?"• "+(lang==="sw"?p.sw:p.en)+" × "+n+" — "+money(p.price*n):""}).filter(Boolean);const msg=["*343SHOP — ORDER REQUEST*","Reference: "+ref,"","*ITEMS*",...items,"","Subtotal: "+money(t.subtotal),"Delivery: "+(t.shipping?money(t.shipping):"Complimentary"),"*TOTAL: "+money(t.total),"","*CUSTOMER*","Name: "+data.name,"Phone: "+data.phone,"Email: "+(data.email||"Not provided"),"Area: "+data.city,"Address: "+data.address,"Extra notes: "+(data.notes||"None"),"","Please confirm availability, final delivery cost and payment instructions."];const url="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg.join("\n"));const opened=window.open("about:blank","_blank");if(opened){opened.opener=null;opened.location=url}else window.location.href=url;$("checkoutModal").classList.remove("show");toast(tr("WhatsApp imefunguliwa. Bonyeza Send kutuma oda.","WhatsApp opened. Press Send to submit your order."))});
