@@ -219,6 +219,51 @@ const MARKETPLACE_CATALOGUE = [
   { id: "memory-phone-case", name: "Memory Lane Phone Case", name_sw: "Kava la Simu", category: "accessories", description: "A durable phone case with your photo or design.", price: 29, currency: "USD" }
 ];
 
+const GLOBAL_MARKETPLACE_DIRECTORY = [
+  { id: "amazon", name: "Amazon", region: "Global", type: "Retail", website: "https://www.amazon.com/", search_prefix: "https://www.amazon.com/s?k=", mode: "keyword", integration: "Creators API", integration_status: "approval_required", integration_note: "Live product data requires Amazon Associates approval in an eligible marketplace, Creators API eligibility and valid credentials." },
+  { id: "alibaba", name: "Alibaba.com", region: "Global · Wholesale", type: "B2B", website: "https://www.alibaba.com/", search_prefix: "https://www.alibaba.com/trade/search?SearchText=", mode: "keyword", integration: "Affiliate feeds / Open Platform", integration_status: "affiliate_approval_required", integration_note: "Affiliate deep links and approved feeds require account approval. Open Platform API access requires developer application and granted permissions." },
+  { id: "aliexpress", name: "AliExpress", region: "Global", type: "Retail", website: "https://www.aliexpress.com/", search_prefix: "https://www.aliexpress.com/w/wholesale.html?SearchText=", mode: "keyword", integration: "Approved affiliate/API feed", integration_status: "access_not_verified", integration_note: "Direct website search is available. Confirm current affiliate programme and API documentation before implementing product feeds; older API guides may be deprecated." },
+  { id: "ebay", name: "eBay", region: "Global", type: "Retail", website: "https://www.ebay.com/", search_prefix: "https://www.ebay.com/sch/i.html?_nkw=", mode: "keyword", integration: "Browse API + Partner Network", integration_status: "api_credentials_required", integration_note: "Live search is implemented but needs EBAY_CLIENT_ID and EBAY_CLIENT_SECRET. Affiliate tracking additionally needs an approved 10-digit EPN campaign ID." },
+  { id: "kikuu", name: "KiKUU Tanzania", region: "Tanzania", type: "Retail", website: "https://www.kikuu.co.tz/", search_prefix: null, mode: "manual", integration: "Business partnership / approved feed", integration_status: "partnership_contact_required", integration_note: "Official Tanzania storefront. No public product-search API has been verified; request written partnership and an authorized catalogue/feed." },
+  { id: "jumia-tanzania", name: "Jumia Tanzania", region: "Tanzania", type: "Retail", website: "https://www.jumia.co.tz/", search_prefix: null, mode: "manual", integration: "Authorized affiliate/feed access", integration_status: "website_only", integration_note: "Official Tanzania storefront link. Use the website search manually until a current authorized affiliate/API feed is confirmed." },
+  { id: "etsy", name: "Etsy", region: "Global · Handmade", type: "Retail", website: "https://www.etsy.com/", search_prefix: "https://www.etsy.com/search?q=", mode: "keyword", integration: "Approved Etsy API", integration_status: "developer_access_required", integration_note: "Website search is available. Live catalogue data requires approved API access and compliance with Etsy developer policies." },
+  { id: "temu", name: "Temu", region: "Global", type: "Retail", website: "https://www.temu.com/", search_prefix: "https://www.temu.com/search_result.html?search_key=", mode: "keyword", integration: "Authorized partner feed", integration_status: "website_only", integration_note: "Website search only in this release. Check shipping availability, seller terms and import costs on the source site." },
+  { id: "made-in-china", name: "Made-in-China.com", region: "Global · Wholesale", type: "B2B", website: "https://www.made-in-china.com/", search_prefix: null, mode: "manual", integration: "Supplier quotation / authorized feed", integration_status: "website_only", integration_note: "Supplier discovery website. Request quotations and verify supplier identity, samples, payment and shipping terms independently." },
+  { id: "dhgate", name: "DHgate", region: "Global · Wholesale", type: "B2B", website: "https://www.dhgate.com/", search_prefix: "https://www.dhgate.com/wholesale/search.do?searchkey=", mode: "keyword", integration: "Authorized affiliate/API feed", integration_status: "website_only", integration_note: "Website search only in this release. No live catalogue or affiliate feed is connected." }
+];
+
+function buildGlobalMarketplaceSearchLinks(query, env = {}, marketplaceId) {
+  const term = typeof query === "string" ? query.trim().slice(0, 100) : "";
+  const selected = marketplaceId
+    ? GLOBAL_MARKETPLACE_DIRECTORY.filter(item => item.id === marketplaceId)
+    : GLOBAL_MARKETPLACE_DIRECTORY;
+  if (marketplaceId && selected.length === 0) throw new Error("Unknown marketplace ID.");
+
+  return selected.map(item => {
+    let state = item.integration_status;
+    let apiConfigured = false;
+    let affiliateTracking = false;
+    if (item.id === "ebay") {
+      apiConfigured = Boolean(env.EBAY_CLIENT_ID && env.EBAY_CLIENT_SECRET);
+      affiliateTracking = Boolean(apiConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
+      state = affiliateTracking ? "api_and_affiliate_configured"
+        : apiConfigured ? "api_credentials_configured" : "api_credentials_required";
+    }
+    return {
+      id: item.id, name: item.name, region: item.region, type: item.type,
+      website: item.website,
+      search_url: term && item.search_prefix ? item.search_prefix + encodeURIComponent(term) : item.website,
+      search_mode: item.mode,
+      integration: item.integration,
+      integration_status: state,
+      api_configured: apiConfigured,
+      affiliate_tracking: affiliateTracking,
+      live_catalogue_connected: false,
+      integration_note: item.integration_note
+    };
+  });
+}
+
 const MCP_TOOLS = [
   { name: "get_marketplace_profile", description: "Explains 343SHOP brokerage marketplace model, buyer/seller roles and operating limits.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } },
   { name: "list_partner_shops", description: "Lists supplier/partner shops configured by the 343SHOP owner. Never invents partner shops.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } },
@@ -314,8 +359,23 @@ const MCP_TOOLS = [
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
+    name: "list_global_marketplaces",
+    description: "Lists global and Tanzania marketplace websites, their official search links and actual integration status. Website links are not live product feeds.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true }
+  },
+  {
+    name: "prepare_global_marketplace_search",
+    description: "Prepares official search links for a buyer keyword. The links open source marketplaces and do not return live 343SHOP product-feed results.",
+    inputSchema: { type: "object", properties: {
+      query: { type: "string", minLength: 1, maxLength: 100 },
+      marketplace_id: { type: "string", maxLength: 40 }
+    }, required: ["query"], additionalProperties: false },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true }
+  },
+  {
     name: "get_marketplace_integrations_status",
-    description: "Reports official marketplace integration readiness for Amazon, Alibaba.com, eBay and KiKUU, plus configured read-only partner catalogues. Never claims an unapproved source is connected.",
+    description: "Reports official marketplace integration readiness for Amazon, Alibaba.com, eBay and KiKUU, plus the wider marketplace directory and configured partner catalogues. Never claims an unapproved source is connected.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }
@@ -443,6 +503,8 @@ function marketplaceIntegrationsStatus(env) {
   return {
     checked_at: new Date().toISOString(),
     marketplace_count: 4,
+    marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
+    marketplace_directory: buildGlobalMarketplaceSearchLinks("", env),
     configured_partner_catalogue_count: partners.length,
     configured_partner_catalogues: partners.map(({ id, name, city, categories }) => ({ id, name, city, categories })),
     marketplaces: [
@@ -608,7 +670,9 @@ async function handleMarketplaceSearch(request, env, url) {
       partner_catalogues: { status: base.connected_partner_count ? "checked" : "none_configured", count: base.connected_partner_count },
       ebay: { status: ebay.status, count: ebay.results.length, affiliate_tracking: ebay.affiliate_tracking }
     },
-    note: "These are external seller listings, not stock owned by 343SHOP. Confirm current price, stock, shipping, taxes, seller reliability and final terms with the seller before paying. Follow the source marketplace or seller checkout; 343SHOP does not collect payment for these external listings.",
+    external_marketplace_search_links: buildGlobalMarketplaceSearchLinks(query, env),
+    marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
+    note: "These are external seller listings, not stock owned by 343SHOP. Confirm current price, stock, shipping, taxes, seller reliability and final terms with the seller before paying. The external search links open official source websites; they are not live product results or proof of affiliate approval. Follow the source marketplace or seller checkout; 343SHOP does not collect payment for these external listings.",
     integration_status: ebayProvider
   });
 }
@@ -637,16 +701,43 @@ async function searchMarketplaceProducts(args, env) {
     query: args.query || "", checked_at: new Date().toISOString(),
     result_count: Math.min(filtered.length, limit), connected_partner_count: shops.length,
     connected_marketplace_count: ebayResult.status === "available" ? 1 : 0,
+    marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
+    external_marketplace_search_links: buildGlobalMarketplaceSearchLinks(args.query || "", env),
     external_sources: { ebay: { status: ebayResult.status, affiliate_tracking: ebayResult.affiliate_tracking } },
     results: filtered.slice(0, limit),
     note: shops.length === 0 && ebayResult.status !== "available"
-      ? "No external product catalogue is connected yet. Results may contain 343SHOP showcase listings only. Configure approved public supplier feeds in PARTNER_SHOPS_JSON or official eBay API credentials."
-      : "External product data is supplied by the source marketplace or partner seller. Confirm current stock, final price, delivery, seller terms and brokerage commission before accepting an order."
+      ? "No external live product catalogue is connected yet. Results may contain 343SHOP showcase listings only. Official external marketplace search links are provided separately; they do not represent live feeds or affiliate tracking. Configure approved partner feeds in PARTNER_SHOPS_JSON or eBay API credentials."
+      : "External product data is supplied by the source marketplace or partner seller. Direct marketplace search links are not live product results. Confirm current stock, final price, delivery, seller terms and brokerage commission before accepting an order."
   };
 }
 
 async function runMcpTool(name, args, env) {
   if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Tool arguments must be a JSON object.");
+
+  if (name === "list_global_marketplaces") {
+    return {
+      marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
+      live_global_product_feeds_connected: 0,
+      marketplaces: buildGlobalMarketplaceSearchLinks("", env),
+      note: "Directory links lead to official source websites. The presence of a website or search link does not imply an approved API, affiliate relationship or live catalogue."
+    };
+  }
+
+  if (name === "prepare_global_marketplace_search") {
+    if (typeof args.query !== "string" || !args.query.trim() || args.query.length > 100) {
+      throw new Error("Enter a search phrase between 1 and 100 characters.");
+    }
+    if (args.marketplace_id !== undefined &&
+        (typeof args.marketplace_id !== "string" || args.marketplace_id.length > 40)) {
+      throw new Error("Invalid marketplace ID.");
+    }
+    return {
+      query: args.query.trim(),
+      search_links: buildGlobalMarketplaceSearchLinks(args.query, env, args.marketplace_id),
+      live_product_results_returned: false,
+      note: "These links open official marketplaces. Confirm currency, stock, seller reliability, shipping, taxes, returns and payment terms on the source site."
+    };
+  }
 
   if (name === "get_marketplace_integrations_status") return marketplaceIntegrationsStatus(env);
 
@@ -898,7 +989,7 @@ async function handleMcp(request, env, url) {
     return mcpJson(mcpResult(id, {
       protocolVersion: negotiated, capabilities: { tools: { listChanged: false } },
       serverInfo: { name: "343SHOP Marketplace", version: "1.0.0" },
-      instructions: "343SHOP is a brokerage marketplace. Search only official configured sources (partner catalogues and eBay API when enabled); never invent suppliers, listings or stock. This read-only server cannot publish listings, submit orders or spend advertising money."
+      instructions: "343SHOP is a global brokerage marketplace. Use configured partner catalogues and eBay API (when credentials are set) only for live product data. Use list_global_marketplaces and prepare_global_marketplace_search for direct official website search links. Never present those links as live product feeds or imply affiliate approval. Never invent suppliers, listings or stock. This read-only server cannot publish listings, submit orders or spend advertising money."
     }), 200, cors);
   }
   if (body.method === "ping") return mcpJson(mcpResult(id, {}), 200, cors);
@@ -924,6 +1015,7 @@ function mcpStatus(env) {
     ok: true, name: "343SHOP Marketplace MCP", endpoint: "/mcp",
     transport: "Streamable HTTP", supported_protocols: [MCP_PROTOCOL_MODERN, MCP_PROTOCOL_LEGACY, "2025-06-18", "2025-03-26"],
     tool_count: MCP_TOOLS.length, connected_partner_shops: parsePartnerShops(env).length,
+    marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
     configured_marketplace_apis: marketplaceIntegrationsStatus(env).marketplaces.filter((p) => p.api_configured).map((p) => p.id),
     access_token_required: Boolean(env.MCP_ACCESS_TOKEN),
     mode: "read-only discovery and owner-reviewed drafts", writes_enabled: false, ad_spend_enabled: false
