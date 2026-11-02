@@ -63,6 +63,27 @@
 @media(max-width:900px){.inspiration-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:190px}.tile--lead{grid-column:span 2;grid-row:auto;min-height:255px}.tile--brand,.tile--mug,.tile--books,.tile--phone{grid-column:auto;grid-row:auto}}
 @media(max-width:650px){.inspiration{padding:31px 0 46px}.inspiration-head{align-items:start;flex-direction:column;gap:12px}.inspiration-head h2{font-size:34px}.inspiration-grid{gap:10px;grid-auto-rows:165px}.tile--lead{min-height:225px}.inspiration-tile{border-radius:13px}.inspiration-copy{left:12px;right:11px;bottom:12px}.inspiration-copy strong{font-size:17px}.inspiration-copy em{font-size:8px}}
 
+
+/* 343SHOP partner onboarding */
+.partner-join{padding:68px 0;background:#e9ece3}
+.partner-shell{display:grid;grid-template-columns:.86fr 1.14fr;gap:38px;align-items:center}
+.partner-intro .section-kicker{display:block}
+.partner-intro h2{font:500 clamp(35px,4vw,48px)/1.03 Georgia,serif;letter-spacing:-.045em;color:var(--forest);margin:13px 0}
+.partner-intro p{font-size:12px;line-height:1.9;color:#687269;max-width:430px}
+.partner-points{display:grid;gap:10px;margin-top:22px}
+.partner-point{display:flex;align-items:center;gap:10px;color:#4c5b50;font-size:10px;font-weight:750}
+.partner-point span:first-child{width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:#d8e0d4;color:var(--forest)}
+.partner-form{background:var(--paper);border:1px solid #e1e4da;border-radius:20px;padding:25px;box-shadow:var(--shadow)}
+.partner-form-head{margin-bottom:17px}
+.partner-form-head strong{display:block;font:500 23px Georgia,serif;color:var(--forest)}
+.partner-form-head small{display:block;color:var(--muted);font-size:10px;line-height:1.6;margin-top:5px}
+.partner-form .form-grid{margin-top:0}
+.partner-form .field input{min-height:42px}
+.partner-form .btn{width:100%;margin-top:16px}
+.partner-note{font-size:9px;line-height:1.65;color:#858e84;text-align:center;margin:10px 0 0}
+.partner-form .field.full{grid-column:1/-1}
+@media(max-width:760px){.partner-join{padding:48px 0}.partner-shell{grid-template-columns:1fr;gap:24px}.partner-form{padding:18px}}
+
 </style>
 </head>
 <body>
@@ -70,7 +91,7 @@
 <div class="wrap">
 <header class="header">
 <a class="brand" href="#"><span class="brand-mark">3</span><span>343<span>SHOP</span></span></a>
-<nav class="nav"><a href="#shop" data-sw="Duka" data-en="Shop">Duka</a><a href="#about" data-sw="Kuhusu sisi" data-en="Our story">Kuhusu sisi</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
+<nav class="nav"><a href="#shop" data-sw="Duka" data-en="Shop">Duka</a><a href="#about" data-sw="Kuhusu sisi" data-en="Our story">Kuhusu sisi</a><a href="#partners" data-sw="Kwa maduka" data-en="For shops">Kwa maduka</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
 <div class="nav-actions"><button class="lang" id="langBtn" type="button">EN</button><button class="cart-button" id="cartBtn" type="button"><span data-sw="Kikapu" data-en="Bag">Kikapu</span><span class="count" id="cartCount">0</span></button></div>
 </header>
 <section class="hero">
@@ -127,7 +148,39 @@
 <div class="grid" id="products"></div>
 </section>
 </div>
-<section class="about" id="about"><div class="wrap about-inner"><div class="about-mark">343</div><div><span class="section-kicker">A LITTLE ABOUT US</span><h2 data-sw="Wazo lako. Mguso wetu. Kitu cha kukumbukwa." data-en="Your idea. Our craft. Something to remember.">Wazo lako. Mguso wetu. Kitu cha kukumbukwa.</h2><p data-sw="343SHOP inaleta pamoja zawadi binafsi na huduma za ubunifu. Tunapenda vitu vinavyosimulia hadithi, kubeba kumbukumbu na kuifanya chapa yako ionekane tofauti. Chagua bidhaa, weka maelezo yako, kisha tuma oda kupitia WhatsApp ili tukuhudumie." data-en="343SHOP brings together personalised gifts and creative services. We love pieces that tell stories, hold memories and make your brand stand apart. Choose an item, add your details and send your order through WhatsApp so we can help you.">343SHOP inaleta pamoja zawadi binafsi na huduma za ubunifu. Tunapenda vitu vinavyosimulia hadithi, kubeba kumbukumbu na kuifanya chapa yako ionekane tofauti. Chagua bidhaa, weka maelezo yako, kisha tuma oda kupitia WhatsApp ili tukuhudumie.</p><a class="btn" href="#shop"><span data-sw="Anza kuchagua" data-en="Start exploring">Anza kuchagua</span> ↗</a></div></div></section>
+<section class="about" id="about"><div class="wrap about-inner"><div class="about-mark">343</div><div><span class="section-kicker">A LITTLE ABOUT US</span><h2 data-sw="Wazo lako. Mguso wetu. Kitu cha kukumbukwa." data-en="Your idea. Our craft. Something to remember.">Wazo lako. Mguso wetu. Kitu cha kukumbukwa.</h2><p data-sw="343SHOP ni marketplace ya udalali inayokuunganisha na maduka, suppliers na huduma mbalimbali. Tunakusaidia kupata bidhaa kutoka kwa wauzaji washirika, kuthibitisha bei na upatikanaji, kisha kupanga oda kwa mawasiliano ya moja kwa moja. Pia tunatoa zawadi binafsi na huduma za ubunifu." data-en="343SHOP is a brokerage marketplace connecting buyers with independent shops, suppliers and service providers. We help you discover offers, confirm price and availability with the seller, then coordinate the order directly. We also offer personalised gifts and creative services.">343SHOP inaleta pamoja zawadi binafsi na huduma za ubunifu. Tunapenda vitu vinavyosimulia hadithi, kubeba kumbukumbu na kuifanya chapa yako ionekane tofauti. Chagua bidhaa, weka maelezo yako, kisha tuma oda kupitia WhatsApp ili tukuhudumie.</p><a class="btn" href="#shop"><span data-sw="Anza kuchagua" data-en="Start exploring">Anza kuchagua</span> ↗</a></div></div></section>
+
+<section class="partner-join" id="partners">
+  <div class="wrap partner-shell">
+    <div class="partner-intro">
+      <span class="section-kicker">GROW WITH 343SHOP · PARTNER NETWORK</span>
+      <h2 data-sw="Una duka? Leta bidhaa zako kwa wateja zaidi." data-en="Own a shop? Put your products in front of more buyers.">Una duka? Leta bidhaa zako kwa wateja zaidi.</h2>
+      <p data-sw="Jiunge na mtandao wa maduka washirika wa 343SHOP. Tunasaidia kuunganisha wauzaji na wanunuzi, kutafuta bidhaa na kuratibu mawasiliano. Masharti ya udalali na commission yanakubaliwa moja kwa moja kabla ya kila ushirikiano." data-en="Join the 343SHOP partner network. We connect sellers with buyers, help source products and coordinate enquiries. Brokerage terms and commission are agreed directly before each partnership.">Jiunge na mtandao wa maduka washirika wa 343SHOP. Tunasaidia kuunganisha wauzaji na wanunuzi, kutafuta bidhaa na kuratibu mawasiliano. Masharti ya udalali na commission yanakubaliwa moja kwa moja kabla ya kila ushirikiano.</p>
+      <div class="partner-points">
+        <div class="partner-point"><span>✓</span><span data-sw="Fikia wateja kupitia mtandao wa 343SHOP" data-en="Reach buyers through the 343SHOP network">Fikia wateja kupitia mtandao wa 343SHOP</span></div>
+        <div class="partner-point"><span>✓</span><span data-sw="Bidhaa na bei zibaki chini ya uthibitisho wako" data-en="You retain control of product details and prices">Bidhaa na bei zibaki chini ya uthibitisho wako</span></div>
+        <div class="partner-point"><span>✓</span><span data-sw="Commission na delivery hujadiliwa waziwazi" data-en="Commission and delivery terms are agreed transparently">Commission na delivery hujadiliwa waziwazi</span></div>
+      </div>
+    </div>
+    <form class="partner-form" id="partnerJoinForm">
+      <div class="partner-form-head">
+        <strong data-sw="Omba kujiunga kama duka mshirika" data-en="Apply to become a partner shop">Omba kujiunga kama duka mshirika</strong>
+        <small data-sw="Jaza taarifa za msingi. WhatsApp itafunguka na ujumbe wa maombi yako; bonyeza Send ili ututumie." data-en="Share your basic details. WhatsApp will open with your application; press Send to submit it.">Jaza taarifa za msingi. WhatsApp itafunguka na ujumbe wa maombi yako; bonyeza Send ili ututumie.</small>
+      </div>
+      <div class="form-grid">
+        <label class="field"><span data-sw="Jina la duka / biashara *" data-en="Shop / business name *">Jina la duka / biashara *</span><input name="shop_name" required minlength="2" maxlength="100" autocomplete="organization"></label>
+        <label class="field"><span data-sw="Eneo / mji *" data-en="Location / city *">Eneo / mji *</span><input name="shop_location" required minlength="2" maxlength="100" autocomplete="address-level2"></label>
+        <label class="field"><span data-sw="Jina la mtu wa mawasiliano *" data-en="Contact person *">Jina la mtu wa mawasiliano *</span><input name="contact_name" required minlength="2" maxlength="80" autocomplete="name"></label>
+        <label class="field"><span data-sw="Namba ya simu *" data-en="Phone number *">Namba ya simu *</span><input name="contact_phone" required type="tel" minlength="7" maxlength="25" autocomplete="tel"></label>
+        <label class="field full"><span data-sw="Aina za bidhaa / huduma mnazouza *" data-en="Products / services you offer *">Aina za bidhaa / huduma mnazouza *</span><input name="categories" required minlength="2" maxlength="220" placeholder="Mf. Simu, vifaa vya nyumbani, nguo, viatu..."></label>
+        <label class="field full"><span data-sw="Link ya catalogue au website (hiari)" data-en="Catalogue or website link (optional)">Link ya catalogue au website (hiari)</span><input name="catalogue_url" type="url" maxlength="300" placeholder="https://..."></label>
+      </div>
+      <button class="btn" type="submit"><span data-sw="Tuma maombi kwa WhatsApp" data-en="Send partner application on WhatsApp">Tuma maombi kwa WhatsApp</span> ↗</button>
+      <p class="partner-note" data-sw="Hii ni maombi tu, si uthibitisho wa kuunganishwa. Tutathibitisha taarifa, catalogue, stock na makubaliano kabla ya duka kuonekana kwenye marketplace." data-en="This is an application, not automatic approval. We verify the business, catalogue, stock and terms before a shop appears in the marketplace.">Hii ni maombi tu, si uthibitisho wa kuunganishwa. Tutathibitisha taarifa, catalogue, stock na makubaliano kabla ya duka kuonekana kwenye marketplace.</p>
+    </form>
+  </div>
+</section>
+
 <footer class="footer" id="contact"><div class="wrap"><div class="footer-top"><div><a class="brand" href="#"><span class="brand-mark">3</span><span>343<span>SHOP</span></span></a><p data-sw="Zawadi binafsi, huduma za ubunifu na vitu vidogo vinavyofanya siku iwe ya kipekee." data-en="Personalised gifts, creative services and little things that make a day special.">Zawadi binafsi, huduma za ubunifu na vitu vidogo vinavyofanya siku iwe ya kipekee.</p></div><div><span class="section-kicker" style="color:#d8bd88">LET'S TALK</span><p data-sw="Una wazo au swali? Tuandikie WhatsApp." data-en="Have an idea or a question? Message us on WhatsApp.">Una wazo au swali? Tuandikie WhatsApp.</p><a class="footer-contact" id="footerWhatsApp" href="https://wa.me/255695981035" target="_blank" rel="noopener">+255 695 981 035 ↗</a></div></div><div class="footer-bottom"><span>© 2026 343SHOP. All rights reserved.</span><span><a href="/privacy.html">Privacy &amp; Cookies</a> &nbsp; · &nbsp; Make it personal. Make it memorable.</span></div></div></footer>
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart"><div class="drawer-head"><h2 data-sw="Kikapu chako" data-en="Your bag">Kikapu chako</h2><button class="close" id="closeCart" type="button">×</button></div><div class="cart-lines" id="cartLines"></div><div class="cart-total" id="cartTotal"></div></aside>
@@ -186,6 +239,30 @@ function closeCart(){$("overlay").classList.remove("show");$("drawer").classList
 function renderCart(){const rows=Object.entries(cart).filter(([slug,n])=>n>0).map(([slug,n])=>({p:PRODUCTS.find(p=>p.slug===slug),n})).filter(x=>x.p);if(!rows.length){$("cartLines").innerHTML='<div class="empty-cart">'+tr("Kikapu chako bado kiko tupu.","Your bag is waiting for something lovely.")+'<br><br><a class="btn" href="#shop" id="continueShop">'+tr("Endelea na duka","Continue shopping")+'</a></div>';$("cartTotal").innerHTML="";const c=$("continueShop");if(c)c.onclick=closeCart;return}
 $("cartLines").innerHTML=rows.map(({p,n})=>'<div class="cart-line"><div><strong>'+(lang==="sw"?p.sw:p.en)+'</strong><small>'+money(p.price)+' · '+(lang==="sw"?p.catSw:p.catEn)+'</small><div class="qty"><button data-dec="'+p.slug+'">−</button><b>'+n+'</b><button data-inc="'+p.slug+'">+</button></div></div><b>'+money(p.price*n)+'</b></div>').join("");$("cartLines").querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{cart[b.dataset.dec]=Math.max(0,(cart[b.dataset.dec]||0)-1);if(!cart[b.dataset.dec])delete cart[b.dataset.dec];save();renderCart()});$("cartLines").querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{if((cart[b.dataset.inc]||0)>=MAX_QTY){toast(tr("Kikomo ni bidhaa 10 kwa kila aina.","Limit is 10 per product."));return}cart[b.dataset.inc]=(cart[b.dataset.inc]||0)+1;save();renderCart()});const t=totals();$("cartTotal").innerHTML='<div class="total-row"><span>'+tr("Jumla ndogo","Subtotal")+'</span><b>'+money(t.subtotal)+'</b></div><div class="total-row"><span>'+tr("Usafirishaji","Delivery")+'</span><b>'+(t.shipping?money(t.shipping):tr("Bure","Complimentary"))+'</b></div><div class="total-row grand"><span>'+tr("Jumla","Total")+'</span><b>'+money(t.total)+'</b></div><button class="btn" id="checkoutBtn">'+tr("Endelea kulipia","Continue to checkout")+' ↗</button>';$("checkoutBtn").onclick=()=>{closeCart();$("checkoutModal").classList.add("show")}}
 function applyLang(){$("langBtn").textContent=lang==="sw"?"EN":"SW";document.documentElement.lang=lang;document.querySelectorAll("[data-sw][data-en]").forEach(el=>{el.textContent=lang==="sw"?el.dataset.sw:el.dataset.en});document.querySelectorAll("[data-html-sw][data-html-en]").forEach(el=>{el.innerHTML=lang==="sw"?el.dataset.htmlSw:el.dataset.htmlEn});$("search").placeholder=tr("Tafuta bidhaa...","Search products...");renderCats();renderProducts();if($("drawer").classList.contains("show"))renderCart()}
+
+$("partnerJoinForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const form=e.currentTarget;
+  if(!form.reportValidity())return;
+  const data=Object.fromEntries(new FormData(form).entries());
+  const catalogue=(data.catalogue_url||"").trim();
+  if(catalogue){
+    try{const parsed=new URL(catalogue);if(parsed.protocol!=="https:"){toast(tr("Link ya catalogue lazima ianze na https://","Catalogue link must use https://"));return}}
+    catch{toast(tr("Weka link sahihi ya catalogue.","Enter a valid catalogue link."));return}
+  }
+  const message=[
+    "Habari 343SHOP, naomba kujiunga kama duka mshirika kwenye marketplace ya udalali.",
+    "Jina la duka: "+data.shop_name.trim(),
+    "Eneo: "+data.shop_location.trim(),
+    "Mtu wa mawasiliano: "+data.contact_name.trim(),
+    "Simu: "+data.contact_phone.trim(),
+    "Bidhaa/huduma: "+data.categories.trim(),
+    catalogue?"Catalogue/website: "+catalogue:"",
+    "Naomba maelezo ya hatua za verification na makubaliano ya commission/udalali."
+  ].filter(Boolean).join("\n");
+  window.location.href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);
+});
+
 $("langBtn").onclick=()=>{lang=lang==="sw"?"en":"sw";applyLang()};
 
 document.querySelectorAll("[data-inspire-cat]").forEach(tile=>tile.addEventListener("click",()=>{activeCat=tile.dataset.inspireCat;renderCats();renderProducts()}));
