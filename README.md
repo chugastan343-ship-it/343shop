@@ -10,7 +10,7 @@ Customers browse, search, filter products, add items to the cart and submit orde
 
 The floating assistant supports two server-side API providers:
 
-- OpenAI Responses API: `gpt-6-luna`
+- OpenAI Responses API: `gpt-5.6-luna`
 - Anthropic Messages API: `claude-haiku-5-5`
 
 Configure one or both secrets on the Cloudflare Worker named `343shop`:
