@@ -419,7 +419,7 @@ async function fetchPartnerCatalogue(shop) {
 function marketplaceIntegrationsStatus(env) {
   const partners = parsePartnerShops(env);
   const ebayConfigured = Boolean(env.EBAY_CLIENT_ID && env.EBAY_CLIENT_SECRET);
-  const ebayAffiliate = Boolean(ebayConfigured && /^\\d{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
+  const ebayAffiliate = Boolean(ebayConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
   return {
     checked_at: new Date().toISOString(),
     marketplace_count: 4,
@@ -517,7 +517,7 @@ async function searchEbayProducts(query, env, limit = 12) {
       "X-EBAY-C-MARKETPLACE-ID": String(env.EBAY_MARKETPLACE_ID || "EBAY_US")
     };
     const campaign = String(env.EBAY_CAMPAIGN_ID || "");
-    const affiliateTracking = /^\\d{10}$/.test(campaign);
+    const affiliateTracking = /^[0-9]{10}$/.test(campaign);
     if (affiliateTracking) {
       headers["X-EBAY-C-ENDUSERCTX"] = "affiliateCampaignId=" + campaign + ",affiliateReferenceId=343SHOP";
     }
