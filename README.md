@@ -43,13 +43,46 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `compare_partner_offers` — compares supplier offers only within the same currency.
 - `calculate_brokerage_margin` — calculates an owner-supplied commission proposal.
 - `create_whatsapp_quote_link` — prepares a WhatsApp link; it does not send a message or create an order.
-- `draft_supplier_listing` — returns a listing draft for review; it does not save or publish it.
+- `draft_supplier_listing` — returns a temporary listing draft for review.
+- `save_product_draft`, `list_product_drafts` and `publish_store_product` — private owner-controlled product catalogue workflow.
 - `draft_product_ad` — prepares Swahili and English ad copy; it does not publish ads or spend money.
 - `check_partner_catalogue_health` — checks whether registered public partner catalogues respond with usable product data.
 - `prepare_partner_shop_application` — prepares a WhatsApp application message for a shop that wants to join; it does not approve or connect the shop.
 - `get_marketplace_integrations_status` — reports Amazon, Alibaba.com, eBay and KiKUU integration readiness without treating pending approvals as live connections.
 - `list_global_marketplaces` — lists the official websites, direct search support and integration state for the 10-source global directory.
 - `prepare_global_marketplace_search` — prepares source-specific search URLs from a product keyword; it does not scrape or return unverified product data.
+- `save_product_draft` — saves an actually sourced product into the private D1 draft catalogue.
+- `list_product_drafts` — lets the owner review saved drafts.
+- `publish_store_product` — publishes a draft only after explicit owner confirmation and required rights/price/stock/seller checks.
+
+
+## AI-managed product catalogue (Cloudflare D1)
+
+MCP can now save sourced products as private drafts and publish them to a separate **AI Sourced Products** section on the storefront. This is separate from the existing showcase cart: external products link to their source seller and are never added to the WhatsApp checkout bag.
+
+### One-time Cloudflare setup
+
+The code is safe to deploy before D1 is connected; the new product section remains hidden and MCP writes remain disabled until setup is complete.
+
+1. In Cloudflare, open **Workers & Pages → D1 SQL Database → Create database**. Name it `343shop-products`.
+2. Open the new database's **Console** and run the complete SQL from `migrations/0001_store_products.sql` in the GitHub repository.
+3. Open **Workers & Pages → 343shop → Settings → Bindings → Add → D1 database**. Set the variable name to exactly `DB` and select `343shop-products`. Save and deploy.
+4. In **Settings → Variables and Secrets**, add a secret named exactly `MCP_WRITE_TOKEN`. Generate a long, random private token. Do not commit it to GitHub, put it in website JavaScript, or paste it into a chat.
+5. Connect the remote MCP endpoint `https://343shop.chugastan343.workers.dev/mcp` in an MCP client that supports custom Authorization headers. Set the header to `Authorization: Bearer YOUR_MCP_WRITE_TOKEN`. Keep this credential private. If `MCP_ACCESS_TOKEN` is also configured, the write token is accepted for the owner write operations.
+
+Check readiness at `https://343shop.chugastan343.workers.dev/api/mcp/status`. Both `product_database_configured` and `writes_enabled` must be `true`.
+
+### AI product workflow
+
+1. Ask the connected AI to research a product. The AI must use its available web search or a connected, authorised live catalogue. The MCP directory links alone are not product results. Current server-side live search is limited to eBay when its credentials are configured and verified partner catalogue feeds.
+2. For every real product, call `save_product_draft` with its source URL, source-listed price, three-letter currency, seller/marketplace, description and optional HTTPS image URL. The Worker stores the record as `draft`; duplicate source URLs are rejected.
+3. Call `list_product_drafts` to review pending drafts. They remain private and do not appear on the storefront.
+4. Only after the owner explicitly approves and verifies permission to list, current price and stock, seller terms and (when used) image rights, call `publish_store_product` using the exact confirmation phrase `PUBLISH` and the required confirmation flags.
+5. Published products appear in the **Discoveries from around the world / Bidhaa zilizochaguliwa duniani** section and each card links to the original source seller. Customers complete external purchases with that seller, not through the 343SHOP bag.
+
+The Worker does not invent prices, exchange rates, supplier identities, availability or commission. Source-listed prices can change and must be reconfirmed. The owner sets any brokerage commission separately. Saving or publishing a listing does not purchase the item or guarantee stock, delivery, customs costs, returns or image/listing rights.
+
+`MCP_WRITE_TOKEN` protects all product-management tools. Read-only MCP tools remain available under the existing access policy. The floating website chatbot is a separate API chat integration; it does not automatically gain the connected external MCP client's tools.
 
 ### Registering other shops
 
@@ -87,12 +120,12 @@ There are no preset commission rates. A partner application does not automatical
 
 ### Safety and current limitations
 
-- The MCP endpoint is read-only. It cannot publish new catalogue entries, submit orders, modify supplier inventories, message suppliers or run paid advertising.
-- WhatsApp links and product/ad drafts are prepared for a person to review and send.
+- MCP product management is write-capable only for the owner: `save_product_draft` and `publish_store_product` require `MCP_WRITE_TOKEN` and a configured D1 binding. It cannot modify third-party inventory, message suppliers or run paid advertising.
+- WhatsApp links and ad drafts are prepared for a person to review and send. Sourced product drafts can be saved privately; publication still requires explicit owner approval.
 - The current 343SHOP catalogue is a showcase list, not proof of physical stock.
 - No commission rate is assumed. The owner supplies the agreed amount when calculating a brokerage deal.
 - Partner shops are not automatically discovered. They must be registered with the owner's permission.
-- No database or partner API credentials are required for this read-only first release.
+- The existing storefront and WhatsApp checkout continue to work without D1. The sourced-product catalogue appears only after a D1 database and Worker binding are configured.
 
 The server supports Streamable HTTP, validates browser origins, limits request size and applies a basic per-IP request limit. If `MCP_ACCESS_TOKEN` is configured as a Worker Secret, requests must include `Authorization: Bearer <token>`; leave it unset for the initial read-only connector unless a fixed-token authentication setup is intended.
 
