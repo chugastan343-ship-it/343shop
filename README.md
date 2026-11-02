@@ -45,6 +45,8 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `create_whatsapp_quote_link` — prepares a WhatsApp link; it does not send a message or create an order.
 - `draft_supplier_listing` — returns a listing draft for review; it does not save or publish it.
 - `draft_product_ad` — prepares Swahili and English ad copy; it does not publish ads or spend money.
+- `check_partner_catalogue_health` — checks whether registered public partner catalogues respond with usable product data.
+- `prepare_partner_shop_application` — prepares a WhatsApp application message for a shop that wants to join; it does not approve or connect the shop.
 
 ### Registering other shops
 
@@ -65,6 +67,20 @@ Partner shops must first agree to share their product catalogue. Each partner mu
 The endpoint must return `application/json` with a `products` array. Each product must include `name`, numeric `price` and a three-letter ISO currency code. Optional fields include `id`, `description`, `category`, `availability`, `updated_at`, `image_url` and `product_url`. Availability values are `in_stock`, `out_of_stock`, `limited` or `unknown`. Unknown stock is never treated as available.
 
 Do not place private access tokens, passwords or customer information in `PARTNER_SHOPS_JSON`. The first version supports public read-only catalogues only; partner inventory and prices cannot be changed by 343SHOP. Partner endpoints are fetched on demand and briefly cached.
+
+
+### Inviting new partner shops
+
+The public storefront now has a **For shops / Kwa maduka** section with a short partner application form. A shop shares its name, location, contact person, phone, product categories and (optionally) its public catalogue URL. The form opens a pre-filled WhatsApp message to 343SHOP. The shop representative must press Send; the application is not submitted automatically.
+
+After reviewing the business and confirming the seller's permission to share its catalogue:
+
+1. Check the public catalogue endpoint using the MCP tool `check_partner_catalogue_health` after registration.
+2. Add the shop to the Cloudflare Worker variable `PARTNER_SHOPS_JSON` using the format above.
+3. Confirm product prices, stock update frequency, contact person, fulfilment arrangements and seller terms.
+4. Agree brokerage commission with the partner before presenting a final quote to a buyer.
+
+There are no preset commission rates. A partner application does not automatically list or connect a shop. The current onboarding form uses the existing WhatsApp contact and does not need a new paid service or database.
 
 ### Safety and current limitations
 
