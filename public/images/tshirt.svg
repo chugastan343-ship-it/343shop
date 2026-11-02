@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-label="343SHOP product sample">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8e9e4"/><stop offset="1" stop-color="#e7e0d8"/></linearGradient>
+ <linearGradient id="surface" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e9e6e1"/></linearGradient>
+ <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#55756a"/><stop offset="1" stop-color="#c8906b"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#18211f" flood-opacity=".16"/></filter>
+ <filter id="soft" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#18211f" flood-opacity=".10"/></filter>
+ </defs>
+<rect width="900" height="900" rx="44" fill="url(#bg)"/>
+<circle cx="765" cy="130" r="155" fill="#fff" opacity=".18"/>
+<circle cx="105" cy="770" r="190" fill="#fff" opacity=".12"/>
+<path d="M350 175 L445 135 L540 175 L700 270 L625 380 L570 340 V720 H320 V340 L265 380 L190 270Z" fill="url(#surface)" filter="url(#shadow)"/><path d="M350 175 Q445 245 540 175" fill="none" stroke="#d0d2cb" stroke-width="15"/><rect x="370" y="370" width="150" height="105" rx="12" fill="#e4ebe5"/><path d="M405 430 L445 365 L485 430 L445 470Z" fill="#55756a"/><path d="M370 520 H520" stroke="#d6d8d2" stroke-width="9" stroke-linecap="round"/>
+</svg>

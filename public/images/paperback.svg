@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-label="343SHOP product sample">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e5e8e9"/><stop offset="1" stop-color="#e8e0d7"/></linearGradient>
+ <linearGradient id="surface" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e9e6e1"/></linearGradient>
+ <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#375f5b"/><stop offset="1" stop-color="#c28c67"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#18211f" flood-opacity=".16"/></filter>
+ <filter id="soft" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#18211f" flood-opacity=".10"/></filter>
+ </defs>
+<rect width="900" height="900" rx="44" fill="url(#bg)"/>
+<circle cx="765" cy="130" r="155" fill="#fff" opacity=".18"/>
+<circle cx="105" cy="770" r="190" fill="#fff" opacity=".12"/>
+<path d="M240 170 L670 220 L670 735 L240 680Z" fill="#253c3a" filter="url(#shadow)"/><path d="M240 170 L280 200 L280 705 L240 680Z" fill="#172b29"/><path d="M305 260 L605 295" stroke="#d9b58c" stroke-width="10" stroke-linecap="round"/><path d="M305 320 L560 345" stroke="#d9b58c" stroke-width="7" stroke-linecap="round" opacity=".8"/><rect x="320" y="410" width="270" height="180" rx="10" fill="#d4a276"/><path d="M355 550 L430 450 L500 535 L550 470 L575 550Z" fill="#f2e4d2"/><circle cx="520" cy="455" r="25" fill="#f0d5a7"/><path d="M315 630 L575 660" stroke="#d9b58c" stroke-width="8" stroke-linecap="round"/>
+</svg>

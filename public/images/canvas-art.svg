@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-label="343SHOP product sample">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9e4ec"/><stop offset="1" stop-color="#e7e1d7"/></linearGradient>
+ <linearGradient id="surface" x1="0" y1="0" x2="0.8" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e9e6e1"/></linearGradient>
+ <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8f789a"/><stop offset="1" stop-color="#d99f75"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#18211f" flood-opacity=".16"/></filter>
+ <filter id="soft" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#18211f" flood-opacity=".10"/></filter>
+ </defs>
+<rect width="900" height="900" rx="44" fill="url(#bg)"/>
+<circle cx="765" cy="130" r="155" fill="#fff" opacity=".18"/>
+<circle cx="105" cy="770" r="190" fill="#fff" opacity=".12"/>
+<rect x="145" y="145" width="610" height="610" rx="6" fill="#d4c9b8" filter="url(#shadow)"/><rect x="178" y="178" width="544" height="544" fill="#f5f0e8"/><path d="M178 525 Q320 290 460 490 T722 370 V722 H178Z" fill="#8b7894"/><path d="M178 600 Q330 470 465 565 T722 520 V722 H178Z" fill="#d9a176"/><circle cx="540" cy="360" r="106" fill="#e6bf83"/><path d="M260 260 L390 215 L445 405 L315 448Z" fill="#6c8981" opacity=".85"/>
+</svg>
