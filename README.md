@@ -48,6 +48,8 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `check_partner_catalogue_health` — checks whether registered public partner catalogues respond with usable product data.
 - `prepare_partner_shop_application` — prepares a WhatsApp application message for a shop that wants to join; it does not approve or connect the shop.
 - `get_marketplace_integrations_status` — reports Amazon, Alibaba.com, eBay and KiKUU integration readiness without treating pending approvals as live connections.
+- `list_global_marketplaces` — lists the official websites, direct search support and integration state for the 10-source global directory.
+- `prepare_global_marketplace_search` — prepares source-specific search URLs from a product keyword; it does not scrape or return unverified product data.
 
 ### Registering other shops
 
@@ -100,11 +102,16 @@ Add a custom remote MCP connector using the endpoint above. It can be connected 
 
 ## Global marketplace integrations
 
-The storefront includes a **Global Market** area and these server routes:
+The storefront includes a **Global Market** area with 10 marketplace destinations: Amazon, Alibaba.com, AliExpress, eBay, KiKUU Tanzania, Jumia Tanzania, Etsy, Temu, Made-in-China.com and DHgate. Product keywords create source-specific official website search URLs. The directory is for discovery and hand-off; it is not 10 live product integrations.
 
-- `GET /api/marketplaces/status` — reports integration readiness without exposing secrets or claiming pending sources are connected.
-- `GET /api/marketplaces/search?q=iphone&source=all&limit=12` — searches connected read-only partner catalogues and eBay when configured. Allowed sources: `all`, `ebay`, `partners`, `343shop`.
-- The MCP tool `get_marketplace_integrations_status` exposes the same readiness report to supported AI clients. `search_marketplace_products` can also include eBay results when the API is configured.
+Server routes and tools:
+
+- `GET /api/marketplaces/status` — reports integration readiness and the official marketplace directory without exposing secrets.
+- `GET /api/marketplaces/search?q=iphone&source=all&limit=12` — searches configured read-only partner catalogues and eBay when credentials are present, then also returns `external_marketplace_search_links` for the same keyword across the official directory.
+- `get_marketplace_integrations_status` — exposes the integration readiness report to AI clients.
+- `list_global_marketplaces` — lists all official source destinations and clearly marks what is not connected.
+- `prepare_global_marketplace_search` — prepares direct search links for a chosen product keyword and optional marketplace ID.
+- `search_marketplace_products` — returns live results only from configured partner feeds, configured eBay API, or clearly labelled 343SHOP showcase entries. It also includes official website search links separately.
 
 ### eBay Browse API (implemented; requires owner credentials)
 
@@ -133,7 +140,7 @@ The [KiKUU Tanzania storefront](https://www.kikuu.co.tz/) is listed as a marketp
 
 Use `PARTNER_SHOPS_JSON` for seller-approved, read-only HTTPS JSON catalogue endpoints. A public endpoint must return a `products` array; the exact schema and example are documented above. An affiliate feed may be added only when the marketplace's terms permit it and its tracking URLs are preserved. Do not put API secrets, cookies, passwords or private access tokens inside `PARTNER_SHOPS_JSON`.
 
-**Important:** only connected feeds and the configured eBay API are searchable. Amazon, Alibaba.com and KiKUU appear as onboarding targets, not active connections. Every external product result keeps its source URL and currency. Unknown stock is never treated as confirmed. Buyers must verify stock, final price, shipping, taxes and seller terms with the seller or marketplace before payment. External marketplace orders are completed at the source; 343SHOP does not collect card payments for them.
+**Important:** the 10 marketplace website links are direct discovery routes. They are not scraped, and they do not imply affiliate approval or a partnership. Live product cards are returned only by connected seller feeds or the eBay Browse API after credentials are configured. Amazon, Alibaba.com and KiKUU remain onboarding targets; AliExpress, Jumia, Etsy, Temu, Made-in-China and DHgate are website-search destinations until an authorized feed/API or affiliate programme is verified. Every external product result keeps its source URL and currency. Unknown stock is never treated as confirmed. Buyers must verify stock, final price, shipping, taxes, customs, seller reliability, returns and terms with the source seller before payment. External marketplace orders are completed at the source; 343SHOP does not collect card payments for them.
 
 ## Google AdSense Auto ads
 
