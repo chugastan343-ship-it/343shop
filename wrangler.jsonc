@@ -10,5 +10,11 @@
   },
   "observability": {
     "enabled": true
+  },
+  "secrets": {
+    "required": [
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY"
+    ]
   }
 }
