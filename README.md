@@ -10,13 +10,15 @@ Customers browse, search, filter products, add items to the cart and submit orde
 
 The floating assistant supports two server-side API providers:
 
-- OpenAI Responses API: `gpt-5.6-luna`
-- Anthropic Messages API: `claude-haiku-5-5`
+- OpenAI Responses API: `gpt-6-luna`
+- Anthropic Messages API: `claude-haiku-4-5-20251001`
 
 Configure one or both secrets on the Cloudflare Worker named `343shop`:
 
 - `OPENAI_API_KEY`
 - `ANTHROPIC_API_KEY`
+
+Both names are declared in `wrangler.jsonc` under `secrets.required`. The deploy is intentionally blocked until both are stored as Cloudflare Worker Secrets.
 
 In Cloudflare: Workers & Pages → 343shop → Settings → Variables and Secrets → Add → Secret. Save each API key as a Secret, not as a plain text variable. Never add API keys to `public/index.html`, GitHub source files, or browser storage.
 
