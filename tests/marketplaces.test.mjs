@@ -93,7 +93,7 @@ test("cross-origin marketplace search requests are rejected", async () => {
   assert.equal(response.status, 403);
 });
 
-test("MCP exposes marketplace integration status while keeping the tool read-only", async () => {
+test("MCP exposes marketplace discovery and owner-authenticated product management tools", async () => {
   const request = (body) => worker.fetch(new Request(origin + "/mcp", {
     method: "POST",
     headers: { "content-type": "application/json", "MCP-Protocol-Version": "2025-11-25" },
@@ -106,6 +106,11 @@ test("MCP exposes marketplace integration status while keeping the tool read-onl
   const names = data.result.tools.map((tool) => tool.name);
   assert.ok(names.includes("get_marketplace_integrations_status"));
   assert.ok(names.includes("search_marketplace_products"));
+  assert.ok(names.includes("save_product_draft"));
+  assert.ok(names.includes("list_product_drafts"));
+  assert.ok(names.includes("publish_store_product"));
+  const saveTool = data.result.tools.find((tool) => tool.name === "save_product_draft");
+  assert.equal(saveTool.annotations.readOnlyHint, false);
 });
 
 test("homepage inline JavaScript parses and existing cart/WhatsApp checkout remain present", async () => {
@@ -159,4 +164,150 @@ test("AI assistant receives live global brokerage context without claiming live 
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+
+function makeProductD1Mock() {
+  const rows = [];
+  return {
+    rows,
+    prepare(sql) {
+      let values = [];
+      return {
+        bind(...args) { values = args; return this; },
+        async run() {
+          if (sql.includes("INSERT INTO store_products")) {
+            if (rows.some(row => row.source_url === values[7])) throw new Error("UNIQUE constraint failed: store_products.source_url");
+            rows.push({
+              id: values[0], slug: values[1], product_name: values[2], description: values[3],
+              category: values[4], source_marketplace: values[5], source_seller: values[6],
+              source_url: values[7], source_price: values[8], currency: values[9], image_url: values[10],
+              availability: values[11], status: "draft", created_at: values[12], updated_at: values[13], published_at: null
+            });
+            return { success: true, meta: { changes: 1 } };
+          }
+          if (sql.includes("UPDATE store_products SET status = 'published'")) {
+            const row = rows.find(item => item.id === values[2] && item.status === "draft");
+            if (!row) return { success: true, meta: { changes: 0 } };
+            row.status = "published"; row.updated_at = values[0]; row.published_at = values[1];
+            return { success: true, meta: { changes: 1 } };
+          }
+          throw new Error("Unexpected mock D1 run: " + sql);
+        },
+        async first() {
+          if (sql.includes("FROM store_products WHERE id = ?")) {
+            return rows.find(item => item.id === values[0]) || null;
+          }
+          throw new Error("Unexpected mock D1 first: " + sql);
+        },
+        async all() {
+          if (sql.includes("WHERE status = 'draft'")) {
+            return { results: rows.filter(item => item.status === "draft").slice(0, values[0]) };
+          }
+          if (sql.includes("WHERE status = 'published'")) {
+            return { results: rows.filter(item => item.status === "published").slice(0, 60) };
+          }
+          throw new Error("Unexpected mock D1 all: " + sql);
+        }
+      };
+    }
+  };
+}
+
+async function callMcpTool(name, args, env, token) {
+  const headers = { "content-type": "application/json", "MCP-Protocol-Version": "2025-11-25" };
+  if (token) headers.Authorization = "Bearer " + token;
+  const response = await worker.fetch(new Request(origin + "/mcp", {
+    method: "POST", headers,
+    body: JSON.stringify({ jsonrpc: "2.0", id: 11, method: "tools/call", params: { name, arguments: args } })
+  }), env);
+  const payload = await response.json();
+  return { response, payload, result: payload.result };
+}
+
+test("MCP product writes are blocked without the owner token", async () => {
+  const DB = makeProductD1Mock();
+  const env = { DB, MCP_WRITE_TOKEN: "test-owner-write-token" };
+  const result = await callMcpTool("save_product_draft", {
+    product_name: "Wireless Headphones", description: "Bluetooth headphones listed by the source seller.",
+    category: "electronics", source_marketplace: "Supplier Demo",
+    source_url: "https://seller.example/products/headphones", source_price: 25, currency: "USD"
+  }, env);
+  assert.equal(result.response.status, 200);
+  assert.equal(result.result.isError, true);
+  assert.match(result.result.content[0].text, /owner_authorization_required/);
+  assert.equal(DB.rows.length, 0);
+});
+
+test("owner can save, review and explicitly publish a sourced product draft", async () => {
+  const DB = makeProductD1Mock();
+  const env = { DB, MCP_WRITE_TOKEN: "test-owner-write-token" };
+  const token = env.MCP_WRITE_TOKEN;
+  const saved = await callMcpTool("save_product_draft", {
+    product_name: "Wireless Headphones", description: "Bluetooth headphones listed by the source seller.",
+    category: "electronics", source_marketplace: "Supplier Demo", source_seller: "Demo Seller",
+    source_url: "https://seller.example/products/headphones", source_price: 25, currency: "USD",
+    image_url: "https://seller.example/images/headphones.jpg", availability: "unknown"
+  }, env, token);
+  assert.equal(saved.result.isError, false);
+  const draft = JSON.parse(saved.result.content[0].text);
+  assert.equal(draft.status, "draft_saved");
+  assert.equal(draft.published, false);
+  assert.equal(DB.rows[0].status, "draft");
+
+  const listed = await callMcpTool("list_product_drafts", { limit: 10 }, env, token);
+  assert.equal(listed.result.isError, false);
+  assert.equal(JSON.parse(listed.result.content[0].text).draft_count, 1);
+
+  const refused = await callMcpTool("publish_store_product", {
+    product_id: draft.product.id, confirmation_phrase: "PUBLISH",
+    owner_confirmed_source_rights: true, owner_confirmed_price_and_stock: true,
+    owner_confirmed_seller_terms: true, owner_confirmed_image_rights: false
+  }, env, token);
+  assert.equal(refused.result.isError, true);
+  assert.match(refused.result.content[0].text, /image usage rights/);
+  assert.equal(DB.rows[0].status, "draft");
+
+  const published = await callMcpTool("publish_store_product", {
+    product_id: draft.product.id, confirmation_phrase: "PUBLISH",
+    owner_confirmed_source_rights: true, owner_confirmed_price_and_stock: true,
+    owner_confirmed_seller_terms: true, owner_confirmed_image_rights: true
+  }, env, token);
+  assert.equal(published.result.isError, false);
+  assert.equal(JSON.parse(published.result.content[0].text).status, "published");
+
+  const publicResponse = await get("/api/store/products", env);
+  assert.equal(publicResponse.status, 200);
+  const publicData = await publicResponse.json();
+  assert.equal(publicData.products.length, 1);
+  assert.equal(publicData.products[0].product_name, "Wireless Headphones");
+  assert.equal(publicData.products[0].source_url, "https://seller.example/products/headphones");
+});
+
+test("product drafts reject unsafe source links and duplicate source URLs", async () => {
+  const DB = makeProductD1Mock();
+  const env = { DB, MCP_WRITE_TOKEN: "test-owner-write-token" };
+  const token = env.MCP_WRITE_TOKEN;
+  const base = {
+    product_name: "Wireless Headphones", description: "Bluetooth headphones listed by the source seller.",
+    category: "electronics", source_marketplace: "Supplier Demo",
+    source_url: "https://seller.example/products/headphones", source_price: 25, currency: "USD"
+  };
+  const unsafe = await callMcpTool("save_product_draft", { ...base, source_url: "http://seller.example/product" }, env, token);
+  assert.equal(unsafe.result.isError, true);
+  assert.match(unsafe.result.content[0].text, /valid HTTPS/);
+  const first = await callMcpTool("save_product_draft", base, env, token);
+  assert.equal(first.result.isError, false);
+  const duplicate = await callMcpTool("save_product_draft", base, env, token);
+  assert.equal(duplicate.result.isError, true);
+  assert.match(duplicate.result.content[0].text, /duplicate_product_source/);
+});
+
+test("public sourced-product endpoint stays unavailable until D1 is configured", async () => {
+  const response = await get("/api/store/products");
+  assert.equal(response.status, 503);
+  const status = await get("/api/mcp/status");
+  const data = await status.json();
+  assert.equal(data.product_database_configured, false);
+  assert.equal(data.writes_enabled, false);
 });
