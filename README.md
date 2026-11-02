@@ -1,6 +1,6 @@
 # 343SHOP
 
-Premium bilingual storefront for personalised gifts and creative services.
+Bilingual global shopping and brokerage marketplace connecting buyers with external marketplaces and approved supplier catalogues.
 
 ## Live order flow
 
