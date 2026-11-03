@@ -1,10 +1,10 @@
 # 343SHOP
 
-Bilingual global shopping and brokerage marketplace connecting buyers with external marketplaces and approved supplier catalogues.
+Bilingual global shopping and brokerage marketplace connecting buyers with external marketplaces and approved supplier catalogues. 343SHOP-owned listings are reserved for its original books and scripts; all other goods remain the property of independent sellers.
 
 ## Live order flow
 
-Customers browse, search, filter products, add items to the cart and submit order details through WhatsApp. An order is only submitted after the customer presses Send in WhatsApp. No payment is collected or marked as paid by this site.
+Customers can order 343SHOP-owned books and approved original scripts through the WhatsApp request flow. External seller listings stay outside the owned-products cart and link to the original seller; customers may ask 343SHOP for a brokerage quote. An order request is only submitted after the customer presses Send in WhatsApp. No card payment is collected or marked as paid by this site.
 
 ## AI shopping assistant
 
@@ -39,7 +39,7 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `get_marketplace_profile` — explains the broker/agent workflow and policies.
 - `list_partner_shops` — lists only partner shops configured by the owner.
 - `get_partner_integration_guide` — explains the public supplier catalogue API.
-- `search_marketplace_products` — searches the 343SHOP showcase catalogue, registered partner catalogues and eBay when its official API credentials are configured.
+- `search_marketplace_products` — searches 343SHOP-owned books/scripts, registered partner catalogues and eBay when its official API credentials are configured.
 - `compare_partner_offers` — compares supplier offers only within the same currency.
 - `calculate_brokerage_margin` — calculates an owner-supplied commission proposal.
 - `create_whatsapp_quote_link` — prepares a WhatsApp link; it does not send a message or create an order.
@@ -192,7 +192,7 @@ Google may take time to review a newly added site. The code does not bypass AdSe
 This project is a Cloudflare Worker with Static Assets. It has no database dependency and is designed to deploy through the existing Workers Builds connection.
 
 - Root directory: /
-- Deploy command: `npx wrangler deploy`
+- Deploy command: `npm run deploy` (runs Wrangler with the configured static assets path)
 - Static files: `public/`
 - Worker entry: `worker/index.mjs`
 
@@ -200,7 +200,7 @@ This project is a Cloudflare Worker with Static Assets. It has no database depen
 
 The WhatsApp order destination is set in `public/index.html` as `WHATSAPP_NUMBER`. Update it there if the store contact changes.
 
-Product prices are displayed in USD as supplied in the original project catalogue. Confirm currency, delivery terms and product availability with the customer before accepting payment.
+343SHOP-owned book prices are displayed in USD as supplied in the current catalogue. The cart shows a products subtotal only: delivery cost and final total must be confirmed before accepting an order. External seller products are not added to the 343SHOP-owned cart.
 
 ## Local preview
 

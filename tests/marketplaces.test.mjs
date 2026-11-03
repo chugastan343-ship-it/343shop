@@ -127,6 +127,39 @@ test("homepage inline JavaScript parses and existing cart/WhatsApp checkout rema
 });
 
 
+
+
+test("343SHOP-owned storefront catalogue contains books only and does not promise a delivery price", async () => {
+  const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  const start = html.indexOf("const PRODUCTS=[");
+  const end = html.indexOf("\n];", start);
+  assert.ok(start >= 0 && end > start);
+  const catalogue = html.slice(start, end);
+  assert.equal((catalogue.match(/slug:/g) || []).length, 3);
+  assert.match(catalogue, /storybook-baraka/);
+  assert.match(catalogue, /author-paperback/);
+  assert.match(catalogue, /custom-story-ebook/);
+  assert.doesNotMatch(catalogue, /custom-photo-print|canvas-wall-art|logo-design-pack|brand-kit|custom-photo-mug|personalized-comfort-tee|memory-phone-case|content-pack-social/);
+  assert.match(html, /OWNED BY 343SHOP/);
+  assert.match(html, /Vitabu na scripts zetu/);
+  assert.doesNotMatch(html, /FREE_SHIPPING|SHIPPING=6\.99|Complimentary/);
+  assert.match(html, /Delivery: To be confirmed before order/);
+});
+
+test("global 343SHOP-owned catalogue search returns books, not independent seller goods", async () => {
+  const booksResponse = await get("/api/marketplaces/search?q=storybook&source=343shop");
+  assert.equal(booksResponse.status, 200);
+  const books = await booksResponse.json();
+  assert.equal(books.result_count, 1);
+  assert.equal(books.results[0].source_shop_id, "343shop");
+  assert.equal(books.results[0].category, "books");
+
+  const otherResponse = await get("/api/marketplaces/search?q=phone%20case&source=343shop");
+  assert.equal(otherResponse.status, 200);
+  const other = await otherResponse.json();
+  assert.equal(other.result_count, 0);
+});
+
 test("AI assistant receives live global brokerage context without claiming live search", async () => {
   const originalFetch = globalThis.fetch;
   let upstreamBody = null;
@@ -161,6 +194,8 @@ test("AI assistant receives live global brokerage context without claiming live 
     assert.match(upstreamBody.instructions, /Approved partner catalogue count: 1/);
     assert.match(upstreamBody.instructions, /Marketplace APIs with credentials configured: none/);
     assert.match(upstreamBody.instructions, /external marketplace listings/i);
+    assert.match(upstreamBody.instructions, /owns its original books and original scripts/i);
+    assert.match(upstreamBody.instructions, /External listings must never be added to the 343SHOP-owned books\/scripts checkout bag/i);
   } finally {
     globalThis.fetch = originalFetch;
   }
