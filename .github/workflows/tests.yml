@@ -16,3 +16,5 @@ jobs:
           node-version: 22
       - name: Run marketplace and storefront tests
         run: npm test
+      - name: Validate Cloudflare Worker and static assets deployment bundle
+        run: npx --yes wrangler@4.156.1 deploy --dry-run --config ./wrangler.jsonc --assets ./public/
