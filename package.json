@@ -4,8 +4,9 @@
   "private": true,
   "description": "Bilingual global shopping and brokerage marketplace",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --config ./wrangler.jsonc",
+    "deploy": "wrangler deploy --config ./wrangler.jsonc --assets ./public/",
+    "deploy:check": "wrangler deploy --dry-run --config ./wrangler.jsonc --assets ./public/",
     "test": "node --test"
   },
   "devDependencies": {
