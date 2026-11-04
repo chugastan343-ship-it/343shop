@@ -1,46 +1,132 @@
-# Official marketplace connector rollout
+# 343SHOP official marketplace integrations
 
-This release adds a server-side Shopify Storefront API search connector and readiness reporting for Amazon, Alibaba.com and Shopify. It does not claim that an API is connected merely because credentials exist.
+343SHOP is a brokerage/discovery marketplace. Third-party products remain owned, priced and fulfilled by their source merchants. 343SHOP-owned books and original scripts are separate inventory.
 
-## Current implementation
+This guide describes the current code in the Worker branch. It distinguishes a configured credential from a successfully verified live provider connection.
 
-- **Shopify:** one authorized Shopify store can be searched through the Storefront GraphQL API. Configure the store's `*.myshopify.com` domain and a Storefront API access token. The token is used only by the Worker and is never sent to the browser. This is a single-store connector, not yet a multi-merchant Shopify OAuth installation.
-- **Amazon:** readiness is tracked for the official Creators API. A working product feed still requires Amazon Associates acceptance, Creators API eligibility for the target marketplace, credentials and a tested request adapter. SP-API is a different seller-management API and is not a substitute for a public product catalogue.
-- **Alibaba.com:** readiness is tracked for the official Open Platform. Developer registration, API permissions and authorized account access are required. No unsigned/scraped catalogue requests are used; the signed Open Platform adapter remains pending validation against the specific APIs granted to 343SHOP.
-- **eBay:** existing Browse API connector remains unchanged.
+## 1. Amazon Creators API — live adapter implemented
 
-## Cloudflare Worker secrets
+The Worker implements OAuth 2.0 token retrieval/caching and `SearchItems` requests against the official Creators API. Both credential families documented by Amazon are supported:
 
-Add secrets in **Cloudflare Dashboard → Workers & Pages → 343shop → Settings → Variables and Secrets → Production**. Never commit these values to GitHub or place private tokens in HTML/JavaScript.
+- v3 credentials: versions `3.1`, `3.2`, `3.3`, using regional Login with Amazon token endpoints.
+- v2 credentials: versions `2.1`, `2.2`, `2.3`, using regional Cognito token endpoints and the versioned Authorization header.
 
-| Secret | Purpose |
+### Cloudflare Worker Secrets / Variables
+
+| Name | Example / purpose |
 | --- | --- |
-| `SHOPIFY_STORE_DOMAIN` | Authorized merchant domain, e.g. `merchant-name.myshopify.com` |
-| `SHOPIFY_STOREFRONT_ACCESS_TOKEN` | Storefront API token with required product/search access |
-| `AMAZON_CREATORS_CLIENT_ID` | Amazon Creators API client ID, after approval |
-| `AMAZON_CREATORS_CLIENT_SECRET` | Amazon Creators API client secret |
-| `AMAZON_PARTNER_TAG` | Approved Associates partner tag for the same marketplace |
-| `ALIBABA_APP_KEY` | Alibaba Open Platform application key |
-| `ALIBABA_APP_SECRET` | Alibaba Open Platform application secret |
-| `ALIBABA_ACCESS_TOKEN` | Authorized Alibaba account access token |
+| `AMAZON_CREATORS_CLIENT_ID` | Credentials issued by Associates Central |
+| `AMAZON_CREATORS_CLIENT_SECRET` | Private Creators API secret |
+| `AMAZON_PARTNER_TAG` | Approved Associates tag for the selected locale |
+| `AMAZON_MARKETPLACE` | `www.amazon.com`, `www.amazon.co.uk`, etc. |
+| `AMAZON_CREATORS_CREDENTIAL_VERSION` | `3.1`, `3.2`, `3.3` or matching `2.x` version; defaults to `3.1` |
 
-The Amazon and Alibaba values are readiness placeholders until their provider-specific authentication/signing and product-search adapters are implemented and verified. Do not add these secrets until the corresponding provider grants access.
+Never commit these values to Git or put them in frontend code. A valid partner tag and approved access for the target marketplace are still required. The adapter only requests product data; it does not guarantee that products can be shipped to Tanzania.
 
-## API routes
+API route: `GET /api/marketplaces/search?q=android%20phone&source=amazon`.
 
-- `GET /api/marketplaces/status` reports connector readiness. `api_configured` means required values are present; it does **not** mean a live provider call has succeeded.
-- `GET /api/marketplaces/search?q=shirt&source=shopify` searches the configured Shopify store.
-- `GET /api/marketplaces/search?q=shirt&source=all` includes Shopify results when configured, alongside existing connected sources.
-- Amazon and Alibaba are currently returned as explicit pending statuses; they are not represented as live search results.
+## 2. Shopify Storefront API — multi-store search adapter implemented
 
-## Official onboarding
+The Worker queries each explicitly authorised merchant store using the versioned Storefront GraphQL endpoint. Private Storefront tokens stay on the server and use Shopify's private-token header and buyer-IP header. Public tokens use the public Storefront access-token header.
 
-- Amazon developer registration: https://developer-docs.amazon/sp-api/docs/sp-api-registration-overview
-- Amazon Creators API: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction
-- Alibaba Open Platform: https://openapi.alibaba.com/
-- Shopify Storefront API: https://shopify.dev/docs/api/storefront/latest
-- Shopify API authentication: https://shopify.dev/docs/api/usage/authentication
+### Preferred multi-store secret
+
+Set `SHOPIFY_PARTNER_STORES_JSON` as one Cloudflare Worker Secret containing a JSON array:
+
+```json
+[
+  {
+    "id": "merchant-a",
+    "name": "Merchant A",
+    "domain": "merchant-a.myshopify.com",
+    "private_access_token": "PRIVATE_STOREFRONT_TOKEN"
+  },
+  {
+    "id": "merchant-b",
+    "name": "Merchant B",
+    "domain": "merchant-b.myshopify.com",
+    "public_access_token": "PUBLIC_STOREFRONT_TOKEN"
+  }
+]
+```
+
+Use the token type actually issued to the authorised Shopify app. Request only the Storefront scopes needed for product discovery. Each merchant must explicitly authorise their store; 343SHOP must not copy an Admin API token or access a store without permission.
+
+For one store, the compatibility variables `SHOPIFY_STORE_DOMAIN` plus either `SHOPIFY_STOREFRONT_PRIVATE_TOKEN` or `SHOPIFY_STOREFRONT_ACCESS_TOKEN` remain supported.
+
+API route: `GET /api/marketplaces/search?q=mug&source=shopify`.
+
+This release supports secure multi-store token configuration, not a self-service OAuth installation/merchant onboarding portal. That needs a registered Shopify app, redirect URL, consent flow, token storage and merchant-specific revocation.
+
+## 3. Alibaba.com Open Platform GGS — authorised seller catalogue path
+
+Alibaba's official Open Platform onboarding requires developer registration, app review, App Key/App Secret, permission approval and seller authorisation. The official guide describes seller-authorisation and buyer-sourcing capabilities; it is not an unrestricted public search API.
+
+The current 343SHOP build will only search Alibaba-labelled catalogue feeds when the owner has explicitly marked the seller as authorised. It does **not** scrape Alibaba pages, and it does **not** claim that an App Key alone enables a live global product search.
+
+### Seller catalogue feed configuration
+
+After 343SHOP has obtained the required Alibaba developer permissions and the supplier has explicitly authorised the app, add the seller's approved catalogue-feed endpoint to the Cloudflare Worker Secret `PARTNER_SHOPS_JSON`:
+
+```json
+[
+  {
+    "id": "alibaba-supplier-01",
+    "name": "Authorised Alibaba Supplier",
+    "marketplace": "alibaba",
+    "seller_authorized": true,
+    "catalog_url": "https://YOUR-APPROVED-SELLER-FEED.example/catalog.json",
+    "city": "China",
+    "categories": ["Electronics", "Accessories"]
+  }
+]
+```
+
+The feed endpoint must return JSON in the existing 343SHOP partner catalogue format:
+
+```json
+{
+  "products": [
+    {
+      "id": "seller-item-001",
+      "name": "Product name supplied by seller",
+      "description": "Seller-provided description",
+      "category": "Accessories",
+      "price": 12.5,
+      "currency": "USD",
+      "availability": "unknown",
+      "url": "https://www.alibaba.com/product-detail/..."
+    }
+  ]
+}
+```
+
+The feed URL must be an HTTPS endpoint controlled by the authorised supplier or the approved integration service. Do not use an unofficial scraper or mark a seller as authorised before written/API consent.
+
+API route: `GET /api/marketplaces/search?q=cotton&source=alibaba`.
+
+**Important:** the current code supports the authorised seller-feed path, but does not yet implement Alibaba's direct GGS OAuth/signing and buyer-sourcing call. That final adapter must be implemented against the exact API product and permissions Alibaba grants to 343SHOP; the public onboarding guide alone does not provide a universal endpoint for every app.
+
+## Search and status routes
+
+- `GET /api/marketplaces/status` reports marketplace credential readiness and authorised Alibaba feed count.
+- `GET /api/marketplaces/search?q=shirt&source=all` checks available configured feeds/APIs.
+- `GET /api/marketplaces/search?q=shirt&source=amazon`
+- `GET /api/marketplaces/search?q=shirt&source=alibaba`
+- `GET /api/marketplaces/search?q=shirt&source=shopify`
+- `GET /api/marketplaces/search?q=shirt&source=ebay`
+
+A credential being present means only that it is configured. A live response is reported separately by each search request.
+
+## Official documentation
+
+- Amazon Creators API introduction: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction
+- Amazon Creators API onboarding: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding
+- Amazon SearchItems reference: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/api-reference/operations/search-items
+- Amazon OAuth and HTTP examples: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/get-started/using-curl
+- Alibaba.com Open Platform GGS guide: https://openapi.alibaba.com/doc/doc.htm
+- Shopify Storefront API 2026-10: https://shopify.dev/docs/api/storefront/2026-10
 
 ## Brokerage safeguards
 
-All third-party listings remain owned and fulfilled by their source merchant. 343SHOP must display source attribution, must not invent stock or prices, and must send customers to the source merchant's checkout unless a separately authorized brokerage process is agreed.
+All external listings must display their source attribution. Confirm price freshness, stock, minimum order quantity, freight, shipping to Tanzania, customs, local taxes, warranty, returns and seller reliability before taking a buyer's money. External checkout remains with the source marketplace/seller unless a separate authorised brokerage arrangement is established.
