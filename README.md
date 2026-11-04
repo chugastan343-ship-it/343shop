@@ -62,15 +62,14 @@ MCP can now save sourced products as private drafts and publish them to a separa
 
 ### One-time Cloudflare setup
 
-The code is safe to deploy before D1 is connected; the new product section remains hidden and MCP writes remain disabled until setup is complete.
+The Cloudflare Worker needs a D1 database binding named exactly `DB` and an owner-only Worker Secret named `MCP_WRITE_TOKEN`. Once those two settings are present, the Worker automatically creates the `store_products` table and its indexes on the first product-catalogue request. You do not need to open the D1 Console or paste SQL manually.
 
-1. In Cloudflare, open **Workers & Pages → D1 SQL Database → Create database**. Name it `343shop-products`.
-2. Open the new database's **Console** and run the complete SQL from `migrations/0001_store_products.sql` in the GitHub repository.
-3. Open **Workers & Pages → 343shop → Settings → Bindings → Add → D1 database**. Set the variable name to exactly `DB` and select `343shop-products`. Save and deploy.
-4. In **Settings → Variables and Secrets**, add a secret named exactly `MCP_WRITE_TOKEN`. Generate a long, random private token. Do not commit it to GitHub, put it in website JavaScript, or paste it into a chat.
-5. Connect the remote MCP endpoint `https://343shop.chugastan343.workers.dev/mcp` in an MCP client that supports custom Authorization headers. Set the header to `Authorization: Bearer YOUR_MCP_WRITE_TOKEN`. Keep this credential private. If `MCP_ACCESS_TOKEN` is also configured, the write token is accepted for the owner write operations.
+1. Create a D1 database named `343shop-products` only if it does not already exist.
+2. Bind it to **Workers & Pages → 343shop → Settings → Bindings** using the variable name `DB`.
+3. Add `MCP_WRITE_TOKEN` under **Settings → Variables and Secrets** as a Secret. Generate a long, random private token. Do not commit it to GitHub, put it in website JavaScript, or paste it into a chat.
+4. Connect the remote MCP endpoint `https://343shop.chugastan343.workers.dev/mcp` in an MCP client that supports custom Authorization headers. Set the header to `Authorization: Bearer YOUR_MCP_WRITE_TOKEN`. Keep this credential private. If `MCP_ACCESS_TOKEN` is also configured, the write token is accepted for the owner write operations.
 
-Check readiness at `https://343shop.chugastan343.workers.dev/api/mcp/status`. Both `product_database_configured` and `writes_enabled` must be `true`.
+The migration file `migrations/0001_store_products.sql` remains available for manual database administration, but it is no longer required for initial setup. Check readiness at `https://343shop.chugastan343.workers.dev/api/mcp/status`. The status endpoint confirms the D1 binding and owner secret; the first catalogue request performs the actual table setup.
 
 ### AI product workflow
 
