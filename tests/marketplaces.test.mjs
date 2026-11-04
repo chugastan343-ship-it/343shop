@@ -43,7 +43,16 @@ test("marketplace connectivity probe separates eBay host from a control host", a
   globalThis.fetch = async (input, init = {}) => {
     const url = String(input);
     calls.push({ url, method: init.method });
-    if (url.startsWith("https://api.sandbox.ebay.com/")) {
+    if (url === "https://api.sandbox.ebay.com/identity/v1/oauth2/token" && init.method === "POST") {
+      const headers = new Headers(init.headers || {});
+      assert.match(headers.get("authorization") || "", /^Basic /);
+      assert.equal(headers.get("content-type"), "application/x-www-form-urlencoded");
+      assert.match(String(init.body), /grant_type=client_credentials/);
+      return new Response(JSON.stringify({ error: "invalid_client" }), {
+        status: 401, headers: { "content-type": "application/json" }
+      });
+    }
+    if (url === "https://api.sandbox.ebay.com/identity/v1/oauth2/token" && init.method === "GET") {
       return new Response("method not allowed", { status: 405 });
     }
     if (url === "https://example.com/") {
@@ -61,8 +70,9 @@ test("marketplace connectivity probe separates eBay host from a control host", a
     assert.equal(data.ok, true);
     assert.equal(data.environment, "sandbox");
     assert.deepEqual(data.probes.ebay_api_host, { reachable: true, http_status: 405 });
+    assert.deepEqual(data.probes.ebay_oauth_post, { reachable: true, http_status: 401 });
     assert.deepEqual(data.probes.external_control_host, { reachable: true, http_status: 200 });
-    assert.equal(calls.length, 2);
+    assert.equal(calls.length, 3);
   } finally {
     globalThis.fetch = originalFetch;
   }
