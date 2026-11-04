@@ -551,3 +551,185 @@ test("Shopify Storefront API search is server-side and preserves source attribut
   }
 });
 
+
+
+test("Amazon Creators API uses regional OAuth credentials and returns attributed SearchItems", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init = {}) => {
+    const url = String(input);
+    calls.push({ url, init });
+    if (url === "https://api.amazon.co.uk/auth/o2/token") {
+      assert.equal(init.method, "POST");
+      assert.equal(new Headers(init.headers).get("content-type"), "application/json");
+      const body = JSON.parse(init.body);
+      assert.equal(body.client_id, "amazon-test-client");
+      assert.equal(body.scope, "creatorsapi::default");
+      return new Response(JSON.stringify({ access_token: "amazon-test-token", expires_in: 3600 }), {
+        status: 200, headers: { "content-type": "application/json" }
+      });
+    }
+    if (url === "https://creatorsapi.amazon/catalog/v1/searchItems") {
+      const headers = new Headers(init.headers);
+      assert.equal(headers.get("authorization"), "Bearer amazon-test-token");
+      assert.equal(headers.get("x-marketplace"), "www.amazon.co.uk");
+      const body = JSON.parse(init.body);
+      assert.equal(body.keywords, "android phone");
+      assert.equal(body.marketplace, "www.amazon.co.uk");
+      assert.equal(body.partnerTag, "343shop-21");
+      assert.equal(body.itemCount, 10);
+      return new Response(JSON.stringify({
+        searchResult: { items: [{
+          asin: "B000343SHOP",
+          detailPageURL: "https://www.amazon.co.uk/dp/B000343SHOP?tag=343shop-21",
+          itemInfo: {
+            title: { displayValue: "Android Phone" },
+            features: { displayValues: ["Unlocked", "128GB"] }
+          },
+          images: { primary: { medium: { url: "https://m.media-amazon.com/images/phone.jpg" } } },
+          offersV2: { listings: [{
+            price: { money: { amount: 199.99, currency: "GBP" } },
+            availability: { type: "IN_STOCK" }
+          }] }
+        }] }
+      }), { status: 200, headers: { "content-type": "application/json" } });
+    }
+    throw new Error("Unexpected Amazon endpoint: " + url);
+  };
+  try {
+    const env = {
+      AMAZON_CREATORS_CLIENT_ID: "amazon-test-client",
+      AMAZON_CREATORS_CLIENT_SECRET: "amazon-test-secret",
+      AMAZON_PARTNER_TAG: "343shop-21",
+      AMAZON_MARKETPLACE: "www.amazon.co.uk",
+      AMAZON_CREATORS_CREDENTIAL_VERSION: "3.2"
+    };
+    const response = await get("/api/marketplaces/search?q=android%20phone&source=amazon", env);
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.result_count, 1);
+    assert.equal(data.sources.amazon.status, "available");
+    assert.equal(data.results[0].source_shop_id, "amazon");
+    assert.equal(data.results[0].name, "Android Phone");
+    assert.equal(data.results[0].price, 199.99);
+    assert.equal(data.results[0].currency, "GBP");
+    assert.equal(data.results[0].availability, "in_stock");
+    assert.equal(calls.length, 2);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Amazon Creators API rejects an unapproved marketplace hostname before network access", async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls += 1; throw new Error("should not call network"); };
+  try {
+    const response = await get("/api/marketplaces/search?q=phone&source=amazon", {
+      AMAZON_CREATORS_CLIENT_ID: "bad-market-client",
+      AMAZON_CREATORS_CLIENT_SECRET: "amazon-test-secret",
+      AMAZON_PARTNER_TAG: "343shop-21",
+      AMAZON_MARKETPLACE: "attacker.example"
+    });
+    const data = await response.json();
+    assert.equal(data.sources.amazon.status, "invalid_marketplace_config");
+    assert.equal(calls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Shopify multi-store search uses private/public token headers and preserves each seller", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init = {}) => {
+    const url = String(input);
+    const headers = new Headers(init.headers || {});
+    calls.push(url);
+    assert.equal(init.method, "POST");
+    assert.match(String(JSON.parse(init.body).query), /types: \\[PRODUCT\\]/);
+    if (url.includes("private-store.myshopify.com")) {
+      assert.equal(headers.get("shopify-storefront-private-token"), "private-storefront-token");
+      assert.equal(headers.get("shopify-storefront-buyer-ip"), "203.0.113.8");
+    } else if (url.includes("public-store.myshopify.com")) {
+      assert.equal(headers.get("x-shopify-storefront-access-token"), "public-storefront-token");
+    } else {
+      throw new Error("Unexpected Shopify store URL: " + url);
+    }
+    const domain = new URL(url).hostname;
+    return new Response(JSON.stringify({
+      data: { search: { nodes: [{
+        id: "gid://shopify/Product/" + domain,
+        title: domain === "private-store.myshopify.com" ? "Private Store Mug" : "Public Store Mug",
+        description: "Partner product",
+        productType: "Homeware",
+        onlineStoreUrl: "https://" + domain + "/products/mug",
+        featuredImage: { url: "https://cdn.shopify.com/s/files/1/mug.jpg", altText: "mug" },
+        priceRange: { minVariantPrice: { amount: "8.00", currencyCode: "USD" } },
+        availableForSale: true
+      }] } }
+    }), { status: 200, headers: { "content-type": "application/json" } });
+  };
+  try {
+    const env = {
+      SHOPIFY_PARTNER_STORES_JSON: JSON.stringify([
+        { id: "merchant-a", name: "Merchant A", domain: "private-store.myshopify.com", private_access_token: "private-storefront-token" },
+        { id: "merchant-b", name: "Merchant B", domain: "public-store.myshopify.com", public_access_token: "public-storefront-token" }
+      ])
+    };
+    const response = await get("/api/marketplaces/search?q=mug&source=shopify", env, { "CF-Connecting-IP": "203.0.113.8" });
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.result_count, 2);
+    assert.equal(data.sources.shopify.store_count, 2);
+    assert.deepEqual(data.results.map(item => item.source_shop).sort(), ["Merchant A", "Merchant B"]);
+    assert.ok(calls.some(url => url.includes("private-store.myshopify.com")));
+    assert.ok(calls.some(url => url.includes("public-store.myshopify.com")));
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("Alibaba search only includes explicitly seller-authorised GGS partner catalogues", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input) => {
+    const url = String(input);
+    calls.push(url);
+    if (url === "https://seller-authorized.example/catalog.json") {
+      return new Response(JSON.stringify({ products: [{
+        id: "alibaba-supplier-1", name: "Wholesale Cotton Fabric",
+        description: "Fabric sourced from authorised GGS seller",
+        category: "Textiles", price: 3.5, currency: "USD",
+        availability: "unknown", url: "https://www.alibaba.com/product-detail/fabric_123.html"
+      }] }), { status: 200, headers: { "content-type": "application/json" } });
+    }
+    if (url === "https://seller-not-authorized.example/catalog.json") {
+      throw new Error("Unauthorised seller feed must not be fetched");
+    }
+    throw new Error("Unexpected seller feed URL: " + url);
+  };
+  try {
+    const env = {
+      PARTNER_SHOPS_JSON: JSON.stringify([
+        { id: "alibaba-approved", name: "Approved GGS Seller", marketplace: "alibaba", seller_authorized: true, catalog_url: "https://seller-authorized.example/catalog.json" },
+        { id: "alibaba-pending", name: "Pending GGS Seller", marketplace: "alibaba", seller_authorized: false, catalog_url: "https://seller-not-authorized.example/catalog.json" }
+      ])
+    };
+    const response = await get("/api/marketplaces/search?q=cotton%20fabric&source=alibaba", env);
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.result_count, 1);
+    assert.equal(data.sources.alibaba.count, 1);
+    assert.equal(data.results[0].source_marketplace, "Alibaba.com");
+    assert.equal(data.results[0].source_shop_id, "alibaba-approved");
+    assert.equal(calls.length, 1);
+    const statusResponse = await get("/api/marketplaces/status", env);
+    const status = await statusResponse.json();
+    const alibaba = status.marketplaces.find(item => item.id === "alibaba");
+    assert.equal(alibaba.authorized_seller_catalogue_count, 1);
+    assert.equal(alibaba.api_configured, false);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
