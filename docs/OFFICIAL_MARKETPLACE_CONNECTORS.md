@@ -60,7 +60,7 @@ This release supports secure multi-store token configuration, not a self-service
 
 ## 3. Alibaba.com Open Platform GGS — authorised seller catalogue path
 
-Alibaba's official Open Platform onboarding requires developer registration, app review, App Key/App Secret, permission approval and seller authorisation. The official guide describes seller-authorisation and buyer-sourcing capabilities; it is not an unrestricted public search API.
+Alibaba's current Open Platform GGS guide requires developer registration, app review, App Key/App Secret, application API permissions and supplier authorisation. It documents both a product-listing integration and a Buyer Solution for procurement workflows. The available public guide does not specify a universal public cross-seller product-search endpoint; each approved application must use the API products/permissions assigned to it.
 
 The current 343SHOP build will only search Alibaba-labelled catalogue feeds when the owner has explicitly marked the seller as authorised. It does **not** scrape Alibaba pages, and it does **not** claim that an App Key alone enables a live global product search.
 
@@ -105,7 +105,7 @@ The feed URL must be an HTTPS endpoint controlled by the authorised supplier or 
 
 API route: `GET /api/marketplaces/search?q=cotton&source=alibaba`.
 
-**Important:** the current code supports the authorised seller-feed path, but does not yet implement Alibaba's direct GGS OAuth/signing and buyer-sourcing call. That final adapter must be implemented against the exact API product and permissions Alibaba grants to 343SHOP; the public onboarding guide alone does not provide a universal endpoint for every app.
+**Important:** the current code supports authorised seller catalogue feeds and deliberately does not label that path as a direct Alibaba API connection. The direct GGS OAuth and buyer-sourcing adapter remains unimplemented until Alibaba approves 343SHOP's application and confirms the exact API product, method names, signing rules, scopes and data fields for the Buyer Solution. Do not purchase a GGS package or API plan just to test this code; confirm account eligibility and access terms with Alibaba first.
 
 ## Search and status routes
 
@@ -125,6 +125,7 @@ A credential being present means only that it is configured. A live response is 
 - Amazon SearchItems reference: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/api-reference/operations/search-items
 - Amazon OAuth and HTTP examples: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/get-started/using-curl
 - Alibaba.com Open Platform GGS guide: https://openapi.alibaba.com/doc/doc.htm
+- Alibaba seller authorisation/API access overview: https://developer.alibaba.com/docs/doc.htm?articleId=121120&docType=1
 - Shopify Storefront API 2026-10: https://shopify.dev/docs/api/storefront/2026-10
 
 ## Brokerage safeguards
