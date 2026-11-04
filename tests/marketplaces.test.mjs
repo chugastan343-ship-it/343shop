@@ -36,6 +36,38 @@ test("global search validates query length and does not invent listings", async 
   assert.deepEqual(data.results, []);
 });
 
+
+test("marketplace connectivity probe separates eBay host from a control host", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init = {}) => {
+    const url = String(input);
+    calls.push({ url, method: init.method });
+    if (url.startsWith("https://api.sandbox.ebay.com/")) {
+      return new Response("method not allowed", { status: 405 });
+    }
+    if (url === "https://example.com/") {
+      return new Response("ok", { status: 200 });
+    }
+    throw new Error("Unexpected diagnostic destination");
+  };
+
+  try {
+    const response = await get("/api/marketplaces/connectivity", {
+      EBAY_SANDBOX_CLIENT_ID: "test-sandbox-id",
+      EBAY_SANDBOX_CLIENT_SECRET: "test-sandbox-secret"
+    });
+    const data = await response.json();
+    assert.equal(data.ok, true);
+    assert.equal(data.environment, "sandbox");
+    assert.deepEqual(data.probes.ebay_api_host, { reachable: true, http_status: 405 });
+    assert.deepEqual(data.probes.external_control_host, { reachable: true, http_status: 200 });
+    assert.equal(calls.length, 2);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("eBay Sandbox credentials use Sandbox OAuth and Browse API endpoints", async () => {
   const originalFetch = globalThis.fetch;
   const calls = [];
