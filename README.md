@@ -145,16 +145,28 @@ Server routes and tools:
 - `prepare_global_marketplace_search` — prepares direct search links for a chosen product keyword and optional marketplace ID.
 - `search_marketplace_products` — returns live results only from configured partner feeds, configured eBay API, or clearly labelled 343SHOP showcase entries. It also includes official website search links separately.
 
-### eBay Browse API (implemented; requires owner credentials)
+### eBay Browse API (implemented; Sandbox and Production)
 
-Configure these on the Cloudflare Worker named `343shop`:
+The Worker supports both eBay environments. It defaults to Production for compatibility with existing credentials. Set the Cloudflare Worker Variable `EBAY_ENVIRONMENT` to exactly `sandbox` to run test searches against eBay Sandbox, or `production` for Production.
 
-- Secret `EBAY_CLIENT_ID`
-- Secret `EBAY_CLIENT_SECRET`
-- Optional Worker Variable `EBAY_CAMPAIGN_ID` (the approved 10-digit eBay Partner Network campaign ID)
-- Optional Worker Variable `EBAY_MARKETPLACE_ID` (defaults to `EBAY_US`)
+For Sandbox testing, configure these on the Cloudflare Worker named `343shop`:
 
-The Worker obtains an OAuth client-credentials token server-side and calls the eBay Browse API. The client secret is never sent to the browser. Search can work when the developer application has the required API access; affiliate attribution is only reported as configured when a valid campaign ID is present. Production access to eBay Buy APIs may require approval. Without credentials, eBay is shown as **not connected** and no eBay products are fabricated.
+- Secret `EBAY_SANDBOX_CLIENT_ID` — Sandbox App ID
+- Secret `EBAY_SANDBOX_CLIENT_SECRET` — Sandbox Cert ID
+- Worker Variable `EBAY_ENVIRONMENT=sandbox`
+
+For Production, the existing secrets remain:
+
+- Secret `EBAY_CLIENT_ID` — Production App ID
+- Secret `EBAY_CLIENT_SECRET` — Production Cert ID
+- Worker Variable `EBAY_ENVIRONMENT=production` (or leave unset for the default)
+
+Optional settings:
+
+- Worker Variable `EBAY_CAMPAIGN_ID` — approved 10-digit eBay Partner Network campaign ID
+- Worker Variable `EBAY_MARKETPLACE_ID` — defaults to `EBAY_US`
+
+The Worker obtains an OAuth client-credentials token server-side and calls the matching environment's Browse API. Sandbox and Production token caches are kept separate. Client secrets are never sent to the browser. eBay documents that Browse API is testable in Sandbox, while use of Buy APIs in Production is intended for approved eBay partners and may require EPN and additional production-access approval. A keyset existing in the developer account does not by itself guarantee Browse API access. Affiliate attribution is only enabled when a valid approved 10-digit campaign ID is present.
 
 ### Amazon (onboarding target; not live yet)
 
