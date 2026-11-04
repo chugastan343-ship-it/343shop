@@ -68,7 +68,7 @@ test("eBay Sandbox credentials use Sandbox OAuth and Browse API endpoints", asyn
 
   try {
     const env = {
-      EBAY_ENVIRONMENT: "sandbox",
+      // With both keysets present and no explicit selector, Sandbox must be the safe default.
       EBAY_SANDBOX_CLIENT_ID: "sandbox-client-id",
       EBAY_SANDBOX_CLIENT_SECRET: "sandbox-client-secret",
       EBAY_CLIENT_ID: "production-client-id",
