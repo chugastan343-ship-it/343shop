@@ -147,7 +147,7 @@ Server routes and tools:
 
 ### eBay Browse API (implemented; Sandbox and Production)
 
-The Worker supports both eBay environments. It defaults to Production for compatibility with existing credentials. Set the Cloudflare Worker Variable `EBAY_ENVIRONMENT` to exactly `sandbox` to run test searches against eBay Sandbox, or `production` for Production.
+The Worker supports both eBay environments. When Sandbox credentials are present and `EBAY_ENVIRONMENT` is not set, it automatically uses Sandbox as the safe default. Set the Cloudflare Worker Variable `EBAY_ENVIRONMENT` to exactly `production` only when you are ready and have the required eBay Production API access. Set it to `sandbox` to explicitly keep testing in Sandbox.
 
 For Sandbox testing, configure these on the Cloudflare Worker named `343shop`:
 
