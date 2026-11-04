@@ -319,6 +319,69 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 }
 @media(min-width:651px){.mobile-menu-button,.mobile-menu{display:none!important;}}
 @media(min-width:651px) and (max-width:900px){.nav{gap:12px;font-size:10px}.brand{font-size:20px}.nav-actions{gap:7px}.lang,.cart-button{padding:9px 11px}}
+
+/* 343SHOP GLOBAL MARKET — premium marketplace refresh */
+:root{--forest:#173a2d;--forest2:#245743;--cream:#f6f7f3;--paper:#fff;--ink:#1b2820;--muted:#6f7c72;--line:#e3e9e1;--gold:#caa86d;--radius:20px;--shadow:0 18px 48px rgba(20,48,34,.10)}
+.header{background:rgba(249,250,246,.94);backdrop-filter:blur(16px);box-shadow:0 5px 22px rgba(23,54,39,.035)}
+.hero{padding-top:70px;padding-bottom:65px;min-height:500px}
+.hero-art{background:radial-gradient(circle at 72% 25%,rgba(255,255,255,.72),transparent 34%),linear-gradient(135deg,#d5e3d9 0%,#e8e1cb 52%,#d4dfd4 100%);border:1px solid rgba(255,255,255,.74)}
+.hero-art .art-card.main{box-shadow:0 30px 60px rgba(23,55,40,.19);border:8px solid rgba(255,255,255,.88)}
+.trust{border-color:#dfe5dc}
+.marketplace-section{position:relative;isolation:isolate;overflow:hidden;padding:86px 0 90px;background:linear-gradient(180deg,#f1f5ef 0%,#f8f9f6 48%,#f1f4ee 100%);border-top:1px solid #e3e9e1;border-bottom:1px solid #e3e9e1}
+.marketplace-section:before,.marketplace-section:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(37,80,57,.08);border-radius:50%;pointer-events:none}
+.marketplace-section:before{width:540px;height:540px;right:-235px;top:-215px}
+.marketplace-section:after{width:380px;height:380px;left:-220px;bottom:-210px}
+.marketplace-section .wrap{width:min(1240px,calc(100% - 42px))}
+.marketplace-head{align-items:end;gap:34px;margin-bottom:28px}
+.marketplace-head>div:first-child{max-width:640px}
+.marketplace-head h2{font:800 clamp(36px,4.6vw,58px)/.98 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:-.065em;color:#173a2d;margin:14px 0}
+.marketplace-head p{max-width:600px;color:#66746a;font-size:13px;line-height:1.85}
+.marketplace-stats{display:grid;grid-template-columns:repeat(3,minmax(105px,1fr));gap:9px;max-width:490px}
+.marketplace-feed-count{min-width:0;padding:14px 13px;border:1px solid rgba(220,229,218,.95);border-radius:15px;background:rgba(255,255,255,.87);box-shadow:0 7px 22px rgba(21,49,34,.045)}
+.marketplace-feed-count strong{display:block;font:800 26px/1 Inter,system-ui,sans-serif;letter-spacing:-.05em;color:#1e4a36}
+.marketplace-feed-count span{display:block;margin-top:8px;font-size:9px;font-weight:900;color:#31483a}
+.marketplace-feed-count small{display:block;margin-top:4px;font-size:8px;line-height:1.4;color:#8a968b}
+.market-search{display:grid;grid-template-columns:minmax(0,1fr) 245px auto;gap:9px;padding:9px;border-radius:19px;background:#fff;border:1px solid #e2e8df;box-shadow:0 16px 38px rgba(24,57,39,.08)}
+.market-search input,.market-search select{min-width:0;border:0;outline:0;border-radius:12px;background:#f6f8f4;padding:15px 17px;color:#24362a;font-size:12px;font-weight:650}
+.market-search input:focus,.market-search select:focus{box-shadow:0 0 0 3px rgba(69,121,81,.16)}
+.market-search .btn{min-height:48px;border-radius:13px;padding:13px 23px}
+.market-search-note{font-size:10px;color:#788579;line-height:1.7;margin:12px 4px 18px}
+.marketplace-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:32px}
+.marketplace-card{position:relative;overflow:hidden;min-height:238px;padding:23px;border:1px solid #e3e9e1;border-radius:20px;background:rgba(255,255,255,.96);box-shadow:0 10px 28px rgba(19,52,34,.055);transition:transform .22s,border-color .22s,box-shadow .22s}
+.marketplace-card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,#c9a66a,#dce5d9);opacity:.9}
+.marketplace-card[data-marketplace="amazon"]:before{background:linear-gradient(90deg,#e6a44b,#f3d9ac)}
+.marketplace-card[data-marketplace="alibaba"]:before{background:linear-gradient(90deg,#e76e4f,#f2c4ab)}
+.marketplace-card[data-marketplace="shopify"]:before{background:linear-gradient(90deg,#75a86d,#c5dcab)}
+.marketplace-card[data-marketplace="ebay"]:before{background:linear-gradient(90deg,#5077b9,#d69d5c)}
+.marketplace-card:hover{transform:translateY(-4px);border-color:#cbd8c9;box-shadow:0 20px 44px rgba(19,52,34,.10)}
+.marketplace-brand{display:flex;align-items:center;min-height:32px;font-size:25px;font-weight:900;letter-spacing:-.06em;color:#27372c}
+.marketplace-brand.amazon{color:#26392e}
+.marketplace-brand.alibaba{color:#e85a37}
+.marketplace-brand.ebay{color:#385b98}
+.marketplace-card p{font-size:11px;line-height:1.75;color:#758177;min-height:57px;margin:12px 0}
+.marketplace-state{display:inline-flex;align-items:center;max-width:100%;min-height:27px;padding:6px 10px;border-radius:999px;background:#f5f1e8;color:#856a3d;font-size:9px;font-weight:900;line-height:1.35}
+.marketplace-state[data-ready="true"]{background:#e8f2e8;color:#2c6b43}
+.marketplace-card>a{display:inline-flex;align-items:center;gap:5px;margin:15px 12px 0 0;color:#315d43;font-size:9px;font-weight:900;text-decoration:none}
+.marketplace-card>a:hover{color:#b18443}
+.marketplace-legal{margin-top:25px;padding:16px 18px;border:1px solid #e1e7df;border-radius:14px;background:rgba(255,255,255,.65);font-size:10px;line-height:1.8;color:#788378}
+.marketplace-results{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:18px}
+.market-result{overflow:hidden;border:1px solid #e3e9e1;border-radius:18px;background:#fff;box-shadow:0 8px 25px rgba(20,48,34,.05);transition:transform .2s,box-shadow .2s}
+.market-result:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(20,48,34,.09)}
+.market-result-image{height:185px;background:linear-gradient(145deg,#edf2eb,#dfe8df)}
+.market-result-image img{width:100%;height:100%;object-fit:contain;padding:16px}
+.market-result-info{padding:14px 15px 16px}
+.market-result-source{font-size:8px;letter-spacing:.13em;text-transform:uppercase;color:#8d7958;font-weight:900}
+.market-result-info h3{font-size:14px;line-height:1.35;color:#24382b;margin:8px 0;min-height:38px}
+.market-result-price{font-size:15px;font-weight:900;color:#214a34}
+.market-result-info p{font-size:9px;line-height:1.6;color:#7b867c}
+.market-result-info a{display:inline-flex;margin-top:8px;color:#2c6544;font-size:9px;font-weight:900}
+:focus-visible{outline:3px solid rgba(186,143,73,.75);outline-offset:3px}
+@media(max-width:1000px){.marketplace-head{align-items:start;flex-direction:column}.marketplace-stats{max-width:620px;width:100%}.marketplace-results{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:800px){.marketplace-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.marketplace-results{grid-template-columns:repeat(2,minmax(0,1fr))}.market-search{grid-template-columns:minmax(0,1fr) 205px}.market-search .btn{grid-column:1/-1}}
+@media(max-width:650px){.hero{padding-top:40px;padding-bottom:42px;min-height:0}.marketplace-section{padding:54px 0 58px}.marketplace-section .wrap{width:min(100% - 28px,500px)}.marketplace-head h2{font-size:38px}.marketplace-head p{font-size:11px}.marketplace-stats{gap:7px}.marketplace-feed-count{padding:11px 9px}.marketplace-feed-count strong{font-size:22px}.marketplace-feed-count span{font-size:8px}.marketplace-feed-count small{font-size:7px}.marketplace-grid{grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}.marketplace-card{min-height:238px;padding:15px;border-radius:16px}.marketplace-brand{font-size:19px}.marketplace-card p{font-size:9px;min-height:72px}.marketplace-card>a{font-size:8px;margin-right:7px}.market-search{grid-template-columns:1fr;padding:8px}.market-search input,.market-search select{font-size:11px;padding:13px 14px}.market-search .btn{grid-column:auto;width:100%}.marketplace-results{grid-template-columns:1fr 1fr;gap:9px}.market-result-image{height:125px}.market-result-info{padding:11px}.market-result-info h3{font-size:11px;min-height:42px}.market-result-price{font-size:12px}}
+@media(max-width:390px){.marketplace-grid,.marketplace-results{grid-template-columns:1fr}.marketplace-card{min-height:0}.marketplace-card p{min-height:0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -442,8 +505,8 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
     <div class="marketplace-head">
       <div>
         <span class="section-kicker">GLOBAL SOURCING · MARKETPLACE NETWORK</span>
-        <h2 data-sw="Tafuta bidhaa duniani." data-en="Search the global market.">Tafuta bidhaa duniani.</h2>
-        <p data-sw="Gundua vyanzo vikubwa vya bidhaa na catalogue za wauzaji walioidhinishwa. Matokeo yanayoonekana hapa hutoka kwenye integrations zilizounganishwa kweli; tovuti nyingine zinaonyeshwa kama vyanzo vya kujiunga au kutembelea." data-en="Discover major product sources and approved seller catalogues. Search results shown here come only from genuinely connected integrations; other marketplaces are listed as sources to join or browse.">Gundua vyanzo vikubwa vya bidhaa na catalogue za wauzaji walioidhinishwa. Matokeo yanayoonekana hapa hutoka kwenye integrations zilizounganishwa kweli; tovuti nyingine zinaonyeshwa kama vyanzo vya kujiunga au kutembelea.</p>
+        <h2 data-sw="Dunia nzima. Chanzo kimoja." data-en="The world market. One starting point.">Dunia nzima. Chanzo kimoja.</h2>
+        <p data-sw="Tafuta kwenye masoko ya kimataifa, maduka washirika na wauzaji wa jumla. Tunatenganisha bidhaa zetu na listings za wauzaji huru; bei, stock na gharama za kuleta Tanzania huthibitishwa kwa chanzo." data-en="Discover products across approved international APIs, independent Shopify stores and authorised wholesale suppliers. We keep 343SHOP originals separate from third-party listings; final prices, stock and Tanzania delivery costs are confirmed with the source.">Tafuta kwenye masoko ya kimataifa, maduka washirika na wauzaji wa jumla. Tunatenganisha bidhaa zetu na listings za wauzaji huru; bei, stock na gharama za kuleta Tanzania huthibitishwa kwa chanzo.</p>
       </div>
       <div class="marketplace-stats">
         <div class="marketplace-feed-count"><strong id="marketplaceDirectoryCount">10</strong><span data-sw="Masoko kwenye directory" data-en="Marketplaces listed">Masoko kwenye directory</span><small data-sw="Tovuti rasmi za kutafuta" data-en="Official websites to search">Tovuti rasmi za kutafuta</small></div>
@@ -454,13 +517,17 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
     <form class="market-search" id="marketSearchForm" role="search">
       <input id="marketSearchInput" type="search" minlength="2" maxlength="100" required placeholder="Mf. iPhone, laptop, viatu, blender..." aria-label="Search global products">
       <select id="marketSearchSource" aria-label="Search source">
-        <option value="all" data-sw="Vyanzo vyote" data-en="All sources">Vyanzo vyote</option>
-        <option value="ebay">eBay</option>
+        <option value="all" data-sw="Vyanzo vyote" data-en="All live sources">Vyanzo vyote</option>
+        <option value="amazon">Amazon · Creators API</option>
+        <option value="alibaba">Alibaba · authorised sellers</option>
+        <option value="shopify">Shopify partner stores</option>
+        <option value="ebay">eBay · Browse API</option>
         <option value="partners" data-sw="Wauzaji washirika" data-en="Partner catalogues">Wauzaji washirika</option>
+        <option value="343shop" data-sw="Bidhaa zetu" data-en="343SHOP originals">Bidhaa zetu</option>
       </select>
       <button class="btn" type="submit"><span data-sw="Tafuta sasa" data-en="Search now">Tafuta sasa</span> ↗</button>
     </form>
-    <p class="market-search-note" id="marketSearchNotice" role="status" aria-live="polite" data-sw="Andika bidhaa unayotafuta. Matokeo yatatoka tu kwenye vyanzo vilivyounganishwa na vilivyoruhusiwa." data-en="Enter a product to search. Results are returned only from connected and authorised sources.">Andika bidhaa unayotafuta. Matokeo yatatoka tu kwenye vyanzo vilivyounganishwa na vilivyoruhusiwa.</p>
+    <p class="market-search-note" id="marketSearchNotice" role="status" aria-live="polite" data-sw="Andika bidhaa. Live results zitaonekana pale tu chanzo kimeunganishwa na kuidhinishwa. Alibaba inaonyesha catalogue za sellers walioidhinisha 343SHOP pekee." data-en="Enter a product. Live results appear only from connected and authorised sources. Alibaba results are limited to sellers who have authorised 343SHOP.">Andika bidhaa. Live results zitaonekana pale tu chanzo kimeunganishwa na kuidhinishwa. Alibaba inaonyesha catalogue za sellers walioidhinisha 343SHOP pekee.</p>
     <div class="marketplace-results" id="marketSearchResults" aria-live="polite"></div>
 
     <section class="local-store-section" aria-labelledby="localStoreTitle">
@@ -503,21 +570,21 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
     <div class="marketplace-grid">
       <article class="marketplace-card" data-marketplace="amazon">
         <div class="marketplace-brand amazon">amazon</div>
-        <p data-sw="Retail ya kimataifa. Live product feed inahitaji Amazon Associates + Creators API approval na vigezo vya akaunti." data-en="Global retail. A live product feed requires Amazon Associates + Creators API approval and account eligibility.">Retail ya kimataifa. Live product feed inahitaji Amazon Associates + Creators API approval na vigezo vya akaunti.</p>
+        <p data-sw="Tafuta bidhaa kwa Amazon Creators API. Inahitaji Associates account iliyokubaliwa, API credentials na partner tag ya marketplace." data-en="Discover retail products through Amazon Creators API. Requires an accepted Associates account, API credentials and a partner tag for the selected marketplace.">Tafuta bidhaa kwa Amazon Creators API. Inahitaji Associates account iliyokubaliwa, API credentials na partner tag ya marketplace.</p>
         <div class="marketplace-state" id="marketplaceStatusAmazon">Inahitaji idhini rasmi</div>
         <a href="https://www.amazon.com/" target="_blank" rel="noopener noreferrer">Tafuta Amazon ↗</a>
-        <a href="https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction" target="_blank" rel="noopener noreferrer" data-sw="Masharti ya API ↗" data-en="API requirements ↗">Masharti ya API ↗</a>
+        <a href="https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction" target="_blank" rel="noopener noreferrer" data-sw="Creators API docs ↗" data-en="Creators API docs ↗">Creators API docs ↗</a>
       </article>
       <article class="marketplace-card" data-marketplace="alibaba">
         <div class="marketplace-brand alibaba">Alibaba.com</div>
-        <p data-sw="Wholesale na suppliers wa B2B. Affiliate feeds au Open Platform zinahitaji akaunti na idhini." data-en="B2B wholesale suppliers. Affiliate feeds or Open Platform access require account approval.">Wholesale na suppliers wa B2B. Affiliate feeds au Open Platform zinahitaji akaunti na idhini.</p>
-        <div class="marketplace-state" id="marketplaceStatusAlibaba">Inahitaji approval ya affiliate</div>
+        <p data-sw="Sourcing ya jumla kupitia Open Platform GGS na wauzaji walioidhinisha app. Hatutafuti au kuchukua listings za seller bila ruhusa." data-en="Wholesale sourcing through Alibaba Open Platform GGS and sellers who have authorised the app. No seller catalogue is imported without permission.">Sourcing ya jumla kupitia Open Platform GGS na wauzaji walioidhinisha app. Hatutafuti au kuchukua listings za seller bila ruhusa.</p>
+        <div class="marketplace-state" id="marketplaceStatusAlibaba">Inahitaji developer approval na seller authorisation</div>
         <a href="https://www.alibaba.com/" target="_blank" rel="noopener noreferrer">Tafuta Alibaba ↗</a>
-        <a href="https://ads.alibaba.com/" target="_blank" rel="noopener noreferrer" data-sw="Alibaba Affiliate ↗" data-en="Alibaba Affiliate ↗">Alibaba Affiliate ↗</a>
+        <a href="https://openapi.alibaba.com/doc/doc.htm" target="_blank" rel="noopener noreferrer" data-sw="Open Platform docs ↗" data-en="Open Platform docs ↗">Open Platform docs ↗</a>
       </article>
       <article class="marketplace-card" data-marketplace="shopify">
         <div class="marketplace-brand">Shopify Stores</div>
-        <p data-sw="Unganisha maduka huru yanayotumia Shopify kupitia Storefront API na ruhusa ya kila mfanyabiashara." data-en="Connect independent Shopify-powered stores through the Storefront API with each merchant's authorization.">Unganisha maduka huru yanayotumia Shopify kupitia Storefront API na ruhusa ya kila mfanyabiashara.</p>
+        <p data-sw="Tafuta catalogue za maduka mengi ya Shopify kupitia Storefront GraphQL API. Kila mfanyabiashara lazima aidhinishe duka lake." data-en="Search multiple independent Shopify store catalogues through Storefront GraphQL API. Each merchant must authorise their own store.">Tafuta catalogue za maduka mengi ya Shopify kupitia Storefront GraphQL API. Kila mfanyabiashara lazima aidhinishe duka lake.</p>
         <div class="marketplace-state" id="marketplaceStatusShopify">Inahitaji duka mshirika na Storefront token</div>
         <a href="https://www.shopify.com/" target="_blank" rel="noopener noreferrer">Shopify ↗</a>
         <a href="https://shopify.dev/docs/api/storefront/latest" target="_blank" rel="noopener noreferrer" data-sw="Storefront API docs ↗" data-en="Storefront API docs ↗">Storefront API docs ↗</a>
@@ -718,7 +785,7 @@ async function loadMarketplaceStatus(){
     const providers=Object.fromEntries((data.marketplaces||[]).map(item=>[item.id,item]));
     const labels={
       amazon:tr("Inahitaji Amazon Associates + Creators API approval","Requires Amazon Associates + Creators API approval"),
-      alibaba:tr("Inahitaji Alibaba Open Platform developer approval na API access","Requires Alibaba Open Platform developer approval and API access"),
+      alibaba:tr("Inahitaji developer approval na idhini ya kila supplier","Requires developer approval and each supplier's authorisation"),
       shopify:tr("Inahitaji duka mshirika na Storefront token","Requires a partner store and Storefront token"),
       ebay:tr("API credentials hazijawekwa","API credentials not configured"),
       kikuu:tr("Inahitaji makubaliano ya partnership","Business partnership agreement required")
@@ -727,14 +794,22 @@ async function loadMarketplaceStatus(){
       const item=providers[id],el=$("marketplaceStatus"+id.charAt(0).toUpperCase()+id.slice(1));
       if(!el||!item)continue;
       let label=labels[id];
+      let ready=false;
+      if(id==="amazon"&&item.api_configured){
+        label=tr("Credentials zipo · live API test inahitajika","Credentials present · live API test required");
+      }
+      if(id==="alibaba"&&Number(item.authorized_seller_catalogue_count)>0){
+        label=Number(item.authorized_seller_catalogue_count)+" "+tr("seller catalogue zimeidhinishwa","authorised seller catalogues connected");
+        ready=true;
+      }
       if(id==="shopify"&&item.api_configured){
-        label=tr("Storefront credentials zipo; live test inahitajika","Storefront credentials present; live test required");
+        label=Number(item.connected_store_count||0)+" "+tr("maduka · live API test hufanyika wakati wa search","stores · live API test runs on search");
       }
       if(id==="ebay"&&item.api_configured){
-        label=item.environment==="sandbox"?tr("Sandbox imeunganishwa; Production haijaidhinishwa","Sandbox connected; Production not approved"):item.affiliate_tracking?tr("Production API + affiliate tracking vimewekwa","Production API + affiliate tracking configured"):tr("API credentials zimewekwa; affiliate tracking pending","API credentials configured; affiliate tracking pending");
+        label=item.environment==="sandbox"?tr("Sandbox credentials zipo · si Production","Sandbox credentials present · not Production"):item.affiliate_tracking?tr("API + affiliate campaign credentials zipo","API + affiliate campaign credentials present"):tr("API credentials zipo · affiliate pending","API credentials present · affiliate pending");
       }
       el.textContent=label;
-      el.dataset.ready=String(Boolean(item.api_configured&&item.affiliate_tracking));
+      el.dataset.ready=String(ready);
     }
     $("marketplaceFeedCount").textContent=String(data.configured_partner_catalogue_count||0);
     $("marketplaceDirectoryCount").textContent=String(data.marketplace_directory_count||10);
@@ -743,6 +818,7 @@ async function loadMarketplaceStatus(){
     $("marketSearchNotice").textContent=tr("Hali ya integrations haikupatikana. Tafadhali jaribu tena.","Marketplace integration status could not be loaded. Please try again.");
   }
 }
+
 function renderMarketplaceResults(payload){
   const root=$("marketSearchResults");root.replaceChildren();
   const fragment=document.createDocumentFragment();
@@ -862,7 +938,14 @@ $("marketSearchForm").addEventListener("submit",async e=>{
     const data=await response.json().catch(()=>({}));
     if(!response.ok)throw new Error(data.message||data.error||"search_failed");
     renderMarketplaceResults(data);
-    $("marketSearchNotice").textContent=(data.result_count||0)+" "+tr("matokeo ya live · ","live results · ")+tr("Links za tovuti rasmi pia zimeongezwa; thibitisha bei na stock kwa muuzaji.","official website search links are also included; confirm price and stock with the seller.");
+    const sources=data.sources||{};
+    const labels=[];
+    if(sources.amazon&&sources.amazon.status==="available")labels.push("Amazon");
+    if(sources.shopify&&sources.shopify.status==="available")labels.push("Shopify");
+    if(sources.ebay&&sources.ebay.status==="available")labels.push("eBay");
+    if(sources.alibaba&&sources.alibaba.status==="authorized_seller_feeds_checked")labels.push("Alibaba seller feeds");
+    const originNote=labels.length?tr("Vyanzo vilivyojibu: ","Connected sources: ")+labels.join(", ")+". ":tr("Hakuna API/feed iliyorudisha bidhaa kwa utafutaji huu. ","No connected API/feed returned a product for this search. ");
+    $("marketSearchNotice").textContent=(data.result_count||0)+" "+tr("matokeo ya live. ","live results. ")+originNote+tr("Thibitisha bei ya mwisho, stock, delivery na kodi kwa muuzaji.","Confirm final price, stock, delivery and taxes with the seller.");
   }catch(error){
     $("marketSearchNotice").textContent=tr("Search haikufanikiwa. Jaribu tena baada ya muda.","Search failed. Please try again shortly.");
   }
