@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#102b20">
+<title>343SHOP Owner Console</title>
+<style>
+:root{color-scheme:light;--forest:#102b20;--forest2:#1c4432;--gold:#d9b775;--ink:#18251e;--muted:#758078;--line:#e6e9e3;--paper:#f5f6f1;--white:#fff;--red:#9d3c35;--green:#286b49;--shadow:0 18px 55px #183a2810}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button,a{touch-action:manipulation}a{color:inherit;text-decoration:none}.hidden{display:none!important}.topbar{height:66px;background:var(--forest);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:8;box-shadow:0 5px 18px #102b2022}.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.06em}.brand-badge{width:38px;height:38px;border:1px solid #d9b775;border-radius:11px;display:grid;place-items:center;background:linear-gradient(140deg,#285640,#0b2118);color:#f3dba6;font:bold 13px Georgia;box-shadow:inset 0 1px #fff3,0 5px 12px #0003}.brand small{display:block;color:#c9d5ca;font-size:9px;letter-spacing:.16em;font-weight:700}.top-right{display:flex;align-items:center;gap:14px;color:#d6e1d6;font-size:11px}.top-right a{border:1px solid #ffffff2a;border-radius:30px;padding:8px 12px}.shell{max-width:1450px;margin:auto;display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100vh - 66px)}.sidebar{padding:26px 16px;background:#fff;border-right:1px solid var(--line)}.side-label{padding:0 11px 13px;color:#a1a99e;font-size:9px;font-weight:900;letter-spacing:.16em}.side-nav{display:grid;gap:6px}.side-nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;border-radius:12px;background:transparent;padding:12px;color:#647168;text-align:left;font-weight:750;font-size:12px;cursor:pointer}.side-nav button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}.side-nav button.active{background:#edf2ed;color:var(--forest);box-shadow:inset 3px 0 var(--gold)}.side-note{margin:28px 7px;padding:13px;border:1px solid var(--line);border-radius:13px;color:var(--muted);font-size:10px;line-height:1.65}.side-note b{display:block;color:var(--forest);font-size:11px;margin-bottom:4px}.main{padding:30px clamp(18px,3vw,42px) 60px;min-width:0}.eyebrow{display:inline-flex;align-items:center;gap:7px;color:#977b4d;font-size:9px;font-weight:900;letter-spacing:.17em}.dot{width:7px;height:7px;border-radius:50%;background:#c2a05e;box-shadow:0 0 0 4px #c2a05e20}.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:25px}.page-head h1{margin:8px 0 5px;color:var(--forest);font:500 clamp(28px,4vw,39px)/1.07 Georgia,serif;letter-spacing:-.04em}.page-head p{margin:0;color:var(--muted);font-size:12px}.status-pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:30px;padding:8px 11px;color:#5e6c61;font-size:10px;font-weight:800}.status-pill i{width:7px;height:7px;border-radius:50%;background:#c39b57}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:var(--shadow)}.stat span{display:block;color:var(--muted);font-size:10px;font-weight:700}.stat strong{display:block;margin-top:8px;color:var(--forest);font:500 25px Georgia,serif}.stat small{display:block;margin-top:5px;color:#9aa39a;font-size:9px}.grid-main{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr);gap:15px}.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:var(--shadow);min-width:0}.panel h2{margin:0 0 5px;color:var(--forest);font:500 20px Georgia,serif}.panel p.sub{margin:0 0 16px;color:var(--muted);font-size:10px;line-height:1.7}.health-list{display:grid;gap:11px}.health{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #eef0eb}.health:last-child{border:0}.health b{font-size:11px}.health span{color:var(--muted);font-size:10px}.health em{font-style:normal;border-radius:20px;padding:5px 8px;background:#f2f3ef;color:#657168;font-size:9px;font-weight:800}.health em.good{background:#eaf3ec;color:#2b6946}.health em.warn{background:#fff4df;color:#9a6c25}.notice{padding:13px 14px;border:1px solid #eee1c7;border-radius:12px;background:#fbf7ed;color:#776341;font-size:10px;line-height:1.7}.notice strong{color:#554322}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:10px;color:#647168;font-weight:800}.field input,.field textarea,.field select,.login-input{width:100%;min-width:0;background:#fbfcf9;border:1px solid #dfe5dd;border-radius:10px;padding:11px 12px;color:var(--ink);outline:none}.field input:focus,.field textarea:focus,.field select:focus,.login-input:focus{border-color:#b99b62;box-shadow:0 0 0 3px #c7a76a20}.field textarea{min-height:76px;resize:vertical}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:11px 15px;background:var(--forest);color:#fff;font-size:11px;font-weight:850;cursor:pointer;transition:transform .18s,box-shadow .18s,filter .18s}.btn:hover{filter:brightness(1.12);box-shadow:0 8px 18px #102b2021}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.gold{background:linear-gradient(135deg,#e7cf9c,#bb9656);color:#1d3023}.btn.ghost{background:#fff;border-color:var(--line);color:var(--forest)}.btn.danger{background:#fff3f1;color:#963d36;border-color:#f1d6d3}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.products-list,.transactions{display:grid;gap:10px}.product-row,.tx-row{display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px;border:1px solid var(--line);border-radius:12px}.product-thumb{width:58px;height:58px;border-radius:9px;object-fit:cover;background:#eef1e9}.product-row h3,.tx-row h3{margin:0;color:var(--forest);font-size:12px}.product-row p,.tx-row p{margin:3px 0 0;color:var(--muted);font-size:9px;line-height:1.5}.product-right{text-align:right}.product-right b{display:block;font-size:11px}.badge{display:inline-flex;margin-top:5px;padding:4px 7px;border-radius:20px;background:#f1f3ee;color:#657168;font-size:8px;font-weight:850}.badge.published,.badge.confirmed{background:#e8f2e9;color:#2c6a45}.badge.pending,.badge.draft{background:#fff4df;color:#946824}.badge.archived,.badge.rejected{background:#f4e9e7;color:#95544c}.section{display:none}.section.active{display:block}.wallet-total{display:flex;justify-content:space-between;align-items:center;gap:15px;background:linear-gradient(135deg,#173e2b,#0e281d);color:#fff;border:1px solid #315b41;border-radius:17px;padding:22px;margin-bottom:15px}.wallet-total span{display:block;color:#d1ddd0;font-size:10px}.wallet-total strong{display:block;font:500 clamp(28px,4vw,38px) Georgia,serif;color:#f2d99f;margin-top:5px}.wallet-total small{color:#b9cabc;font-size:9px}.wallet-mark{width:54px;height:54px;border:1px solid #d5b36f;border-radius:15px;display:grid;place-items:center;color:#eed8a4;font:26px Georgia}.login-cover{position:fixed;inset:0;background:linear-gradient(140deg,#0e281d,#1a4030);z-index:20;display:grid;place-items:center;padding:20px}.login-card{width:min(440px,100%);border:1px solid #ffffff20;border-radius:23px;padding:29px;background:#fff;box-shadow:0 28px 90px #0005}.login-card h1{margin:13px 0 7px;color:var(--forest);font:500 30px Georgia,serif}.login-card p{color:var(--muted);font-size:11px;line-height:1.8;margin:0 0 17px}.login-card label{display:block;color:#647168;font-size:10px;font-weight:800;margin:0 0 6px}.login-card .btn{width:100%;margin-top:12px}.login-help{margin-top:15px;border-top:1px solid var(--line);padding-top:12px;font-size:9px;color:#818a80;line-height:1.7}.login-error{color:#9c3b35;font-size:10px;margin-top:9px;min-height:16px}.toast{position:fixed;bottom:22px;right:22px;background:#102b20;color:#fff;padding:12px 15px;border-radius:11px;box-shadow:0 12px 30px #0003;font-size:11px;z-index:30;max-width:min(90vw,420px)}.empty{padding:22px;text-align:center;border:1px dashed #dfe5dd;border-radius:13px;color:#89948a;font-size:10px}.section-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section-toolbar h2{margin:0;color:var(--forest);font:500 23px Georgia,serif}.tiny{font-size:9px;color:var(--muted);line-height:1.7}.nav-toggle{display:none;border:1px solid #ffffff2d;background:transparent;color:#fff;border-radius:8px;padding:7px 10px}
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.shell{grid-template-columns:190px minmax(0,1fr)}.grid-main{grid-template-columns:1fr}}
+@media(max-width:720px){.topbar{height:60px;padding:0 14px}.top-right span{display:none}.nav-toggle{display:block}.shell{display:block}.sidebar{display:none;position:fixed;top:60px;bottom:0;left:0;width:250px;z-index:10;box-shadow:10px 0 35px #102b2020}.sidebar.open{display:block}.main{padding:23px 14px 45px}.page-head{align-items:flex-start;flex-direction:column}.stats{gap:9px}.stat{padding:13px}.stat strong{font-size:22px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.product-row,.tx-row{grid-template-columns:47px minmax(0,1fr)}.product-thumb{width:47px;height:47px}.product-right{grid-column:2;text-align:left}.wallet-total{padding:17px}.product-row .actions{grid-column:1/-1}.topbar .brand{font-size:12px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+ <div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER CONTROL CENTER</small></span></div>
+ <div class="top-right"><span>PRIVATE · BOSS ACCESS</span><a href="/">← Duka la umma</a><button class="nav-toggle" id="navToggle" type="button">☰</button></div>
+</header>
+<div class="shell">
+ <aside class="sidebar" id="sidebar">
+  <div class="side-label">OWNER WORKSPACE</div>
+  <nav class="side-nav">
+   <button class="active" data-section="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="11" width="7" height="10" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg> Overview</button>
+   <button data-section="products"><svg viewBox="0 0 24 24"><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7M12 11v10"/></svg> Bidhaa zangu</button>
+   <button data-section="wallet"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="15" rx="3"/><path d="M2 9h20M16 15h2"/></svg> Wallet / Malipo</button>
+   <button data-section="ai"><svg viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg> AI & Connections</button>
+  </nav>
+  <div class="side-note"><b>Control ya mwenye duka</b> Token yako inatumika kwenye session hii tu. Haitahifadhiwa kwenye browser storage.</div>
+ </aside>
+ <main class="main">
+  <section class="section active" id="sec-overview">
+   <div class="page-head"><div><span class="eyebrow"><i class="dot"></i> 343SHOP PRIVATE WORKSPACE</span><h1>Habari Boss. Karibu kwenye control center.</h1><p>Usimamizi wa bidhaa zako, mapato yaliyorekodiwa na miunganisho ya AI.</p></div><span class="status-pill">OWNER ACCESS <i></i></span></div>
+   <div class="stats">
+    <article class="stat"><span>Bidhaa zako · zilizochapishwa</span><strong id="statPublished">—</strong><small>Catalogue ya 343SHOP</small></article>
+    <article class="stat"><span>Bidhaa zinazopitiwa</span><strong id="statDrafts">—</strong><small>Drafts za kusubiri idhini</small></article>
+    <article class="stat"><span>Ledger balance · TZS</span><strong id="statBalance">—</strong><small>Malipo yaliyothibitishwa kwa mkono</small></article>
+    <article class="stat"><span>Malipo yanayosubiri</span><strong id="statPending">—</strong><small>Thibitisha risiti kwanza</small></article>
+   </div>
+   <div class="grid-main">
+    <article class="panel"><h2>Muhtasari wa duka</h2><p class="sub">Taarifa za mfumo, zinatoka kwenye backend ya sasa.</p><div class="health-list" id="overviewHealth"><div class="empty">Inapakia taarifa...</div></div></article>
+    <article class="panel"><h2>Hatua za mmiliki</h2><p class="sub">Mtiririko wa kazi wa kusimamia duka.</p><div class="health-list"><div class="health"><b>01 · Ongeza bidhaa</b><span>Hifadhi kama draft</span></div><div class="health"><b>02 · Kagua bei na stock</b><span>Thibitisha taarifa</span></div><div class="health"><b>03 · Publish</b><span>Weka kwenye duka</span></div><div class="health"><b>04 · Rekodi malipo</b><span>Kagua reference kwanza</span></div></div><div class="notice" style="margin-top:14px"><strong>Usalama:</strong> Dashboard haihifadhi Gemini key, payment secret, PIN au password. Keys ziwekwe Cloudflare Secrets.</div></article>
+   </div>
+  </section>
+  <section class="section" id="sec-products">
+   <div class="page-head"><div><span class="eyebrow">343SHOP · FIRST-PARTY CATALOGUE</span><h1>Bidhaa zangu</h1><p>Hizi ni bidhaa unazomiliki wewe. Zimetenganishwa na listings za madalali.</p></div><span class="status-pill">DRAFT → REVIEW → PUBLISH</span></div>
+   <div class="grid-main">
+    <article class="panel"><h2>Ongeza bidhaa mpya</h2><p class="sub">Bidhaa itaingia kama draft. Utaiangalia kisha ubonyeze Publish.</p>
+     <form id="productForm" class="form-grid">
+      <div class="field full"><label for="pName">Jina la bidhaa</label><input id="pName" name="product_name" required minlength="2" maxlength="120" placeholder="Mfano: 343SHOP Premium T-Shirt"></div>
+      <div class="field full"><label for="pDesc">Maelezo</label><textarea id="pDesc" name="description" required minlength="5" maxlength="1000" placeholder="Eleza bidhaa, ubora na faida zake..."></textarea></div>
+      <div class="field"><label for="pCategory">Category</label><input id="pCategory" name="category" required maxlength="60" placeholder="fashion, books, electronics..."></div>
+      <div class="field"><label for="pType">Aina</label><select id="pType" name="product_type"><option value="physical">Physical product</option><option value="digital">Digital product</option><option value="service">Service</option></select></div>
+      <div class="field"><label for="pPrice">Bei</label><input id="pPrice" name="price" type="number" min="0" step="0.01" required placeholder="0"></div>
+      <div class="field"><label for="pCurrency">Currency</label><select id="pCurrency" name="currency"><option value="TZS">TZS</option><option value="USD">USD</option></select></div>
+      <div class="field"><label for="pStock">Stock (optional)</label><input id="pStock" name="stock_qty" type="number" min="0" step="1" placeholder="Acha wazi kama haijulikani"></div>
+      <div class="field"><label for="pImage">Image URL (HTTPS)</label><input id="pImage" name="image_url" type="url" placeholder="https://..."></div>
+      <div class="field full"><button class="btn gold" id="saveProduct" type="submit">＋ Hifadhi kama draft</button></div>
+     </form>
+    </article>
+    <article class="panel"><h2>Bidhaa zako zote</h2><p class="sub">Drafts, published na archived.</p><div class="products-list" id="ownerProductList"><div class="empty">Inapakia bidhaa...</div></div></article>
+   </div>
+  </section>
+  <section class="section" id="sec-wallet">
+   <div class="page-head"><div><span class="eyebrow">343SHOP · PAYMENT RECONCILIATION</span><h1>Wallet & malipo</h1><p>Rekodi za mapokezi na matumizi ya fedha ya biashara.</p></div><span class="status-pill">TZS · MANUAL LEDGER</span></div>
+   <div class="wallet-total"><div><span>Ledger balance · malipo yaliyothibitishwa</span><strong id="walletBalance">TSh 0</strong><small>Hii ni rekodi ya hesabu, si salio la benki au fedha zilizohifadhiwa na 343SHOP.</small></div><div class="wallet-mark">₮</div></div>
+   <div class="grid-main">
+    <article class="panel"><h2>Rekodi malipo au matumizi</h2><p class="sub">Ingiza reference kutoka kwenye ujumbe wa provider/statement. Rekodi inaanza Pending mpaka uhakiki.</p>
+     <form id="walletForm" class="form-grid">
+      <div class="field"><label for="wDirection">Mwelekeo</label><select id="wDirection"><option value="in">Pesa imeingia (+)</option><option value="out">Matumizi / imetoka (−)</option></select></div>
+      <div class="field"><label for="wMethod">Njia</label><select id="wMethod"><option value="mobile_money">Mobile Money</option><option value="bank">Bank</option><option value="cash">Cash</option><option value="other">Nyingine</option></select></div>
+      <div class="field"><label for="wAmount">Kiasi (TSh)</label><input id="wAmount" type="number" min="1" step="1" required placeholder="50000"></div>
+      <div class="field"><label for="wRef">Reference / Receipt</label><input id="wRef" required minlength="3" maxlength="100" placeholder="Transaction ID"></div>
+      <div class="field"><label for="wName">Jina la mhusika</label><input id="wName" maxlength="120" placeholder="Mteja / supplier"></div>
+      <div class="field"><label for="wPhone">Simu (hiari)</label><input id="wPhone" maxlength="30" placeholder="255..."></div>
+      <div class="field full"><label for="wNote">Maelezo</label><input id="wNote" maxlength="300" placeholder="Oda, gharama, bidhaa..."></div>
+      <div class="field full"><button class="btn gold" type="submit">＋ Hifadhi transaction pending</button></div>
+     </form>
+    </article>
+    <article class="panel"><h2>Muunganisho wa malipo</h2><p class="sub">Payment gateway bado haijafunguliwa. Hapa siyo mobile-money checkout inayopokea fedha moja kwa moja.</p><div class="health-list" id="paymentHealth"><div class="health"><b>Manual ledger</b><em class="good">Ready</em></div><div class="health"><b>Selcom checkout</b><em class="warn">Not connected</em></div></div><div class="notice" style="margin-top:14px">Ili malipo yawe live, tunahitaji merchant account ya provider, API credentials, callback/webhook verification na majaribio ya sandbox. Usirekodi transaction kama imethibitishwa kabla pesa haijaingia kweli.</div></article>
+   </div>
+   <article class="panel" style="margin-top:15px"><div class="section-toolbar"><h2>History ya transactions</h2><span class="tiny" id="walletCount">—</span></div><div class="transactions" id="transactionList"><div class="empty">Hakuna transaction zilizopakiwa.</div></div></article>
+  </section>
+  <section class="section" id="sec-ai">
+   <div class="page-head"><div><span class="eyebrow">343SHOP · PRIVATE AI SERVICES</span><h1>AI & Connections</h1><p>Usalama wa API keys na providers za chatbot.</p></div></div>
+   <div class="grid-main">
+    <article class="panel"><h2>AI providers</h2><p class="sub">Status ya keys kutoka Cloudflare Worker Secrets.</p><div class="health-list" id="aiHealth"><div class="empty">Inapakia...</div></div></article>
+    <article class="panel"><h2>Weka Gemini API</h2><p class="sub">Key haitakiwi kuandikwa hapa. Iweke kama Secret kwenye Cloudflare.</p><ol class="tiny"><li>Fungua Google AI Studio na utengeneze Gemini API key.</li><li>Cloudflare → Workers & Pages → 343shop → Settings → Variables and Secrets.</li><li>Ongeza Secret yenye jina <b>GEMINI_API_KEY</b>.</li><li>Save, redeploy Worker, kisha refresh hii dashboard.</li></ol><a class="btn ghost" href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio ↗</a><div class="notice" style="margin-top:15px">343SHOP chatbot inatumia Gemini 3.8 Flash kupitia Worker. API key haionekani kwenye HTML wala browser. API usage inaweza kuwa na gharama kulingana na Google AI plan.</div></article>
+   </div>
+  </section>
+ </main>
+</div>
+<div class="login-cover" id="loginCover"><div class="login-card"><div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER ACCESS ONLY</small></span></div><h1>Karibu Boss.</h1><p>Ingia kwa owner secret iliyowekwa Cloudflare. Hii si password ya customer na haipaswi kuwekwa kwenye public website.</p><label for="ownerToken">MCP_WRITE_TOKEN</label><input class="login-input" id="ownerToken" type="password" autocomplete="off" spellcheck="false" placeholder="Bandika owner token yako"><button class="btn gold" id="loginBtn" type="button">Fungua dashboard ↗</button><div class="login-error" id="loginError"></div><div class="login-help">Kama token haijawekwa: Cloudflare → 343shop → Settings → Variables and Secrets → Add Secret → <b>MCP_WRITE_TOKEN</b>. Usinitumie token kwa chat na usiweke kwenye code.</div></div></div>
+<div class="toast hidden" id="toast" role="status"></div>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id);
+let ownerToken="",products=[],wallet={ledger_balance:0,transactions:[]},status={};
+const fmt=n=>new Intl.NumberFormat("en-TZ",{maximumFractionDigits:0}).format(Number(n)||0);
+const money=n=>"TSh "+fmt(n);
+const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+function toast(message){const el=$("toast");el.textContent=message;el.classList.remove("hidden");clearTimeout(window.__343toast);window.__343toast=setTimeout(()=>el.classList.add("hidden"),3000)}
+async function api(path,method="GET",body){
+ const headers={"Accept":"application/json","Authorization":"Bearer "+ownerToken};
+ if(body!==undefined)headers["Content-Type"]="application/json";
+ const response=await fetch(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(data.error||("HTTP "+response.status));
+ return data;
+}
+function showSection(name){
+ document.querySelectorAll(".section").forEach(el=>el.classList.toggle("active",el.id==="sec-"+name));
+ document.querySelectorAll(".side-nav button").forEach(el=>el.classList.toggle("active",el.dataset.section===name));
+ $("sidebar").classList.remove("open");
+ if(name==="products")loadProducts();
+ if(name==="wallet")loadWallet();
+ if(name==="overview")loadOverview();
+ if(name==="ai")renderAI();
+}
+document.querySelectorAll("[data-section]").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.section)));
+$("navToggle").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+async function login(){
+ const token=$("ownerToken").value.trim();
+ if(!token){$("loginError").textContent="Weka owner token kwanza.";return}
+ $("loginBtn").disabled=true;$("loginError").textContent="Inakagua token...";
+ ownerToken=token;
+ try{
+  status=await api("/api/admin/status");
+  $("loginCover").classList.add("hidden");
+  $("ownerToken").value="";
+  await loadOverview();
+  renderAI();
+ }catch(error){ownerToken="";$("loginError").textContent=error.message==="owner_secret_not_configured"?"MCP_WRITE_TOKEN haijawekwa production. Weka secret Cloudflare kwanza.":"Token au D1 setup haijakubaliwa: "+error.message}
+ finally{$("loginBtn").disabled=false}
+}
+$("loginBtn").addEventListener("click",login);
+$("ownerToken").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+function renderHealth(){
+ const rows=[
+  ["Owner authentication",status.owner_authenticated],
+  ["Cloudflare D1 database",status.database_configured],
+  ["First-party product catalogue",status.products],
+  ["Manual wallet ledger",status.payments?.ledger],
+  ["Selcom API credentials",status.payments?.selcom_api_configured],
+  ["Live checkout",status.payments?.live_checkout]
+ ];
+ $("overviewHealth").innerHTML=rows.map(([label,ok])=>'<div class="health"><b>'+esc(label)+'</b><em class="'+(ok?"good":"warn")+'">'+(ok?"Ready":"Not connected")+'</em></div>').join("");
+ $("paymentHealth").innerHTML='<div class="health"><b>Manual payment ledger</b><em class="good">Ready</em></div><div class="health"><b>Selcom credentials</b><em class="'+(status.payments?.selcom_api_configured?"good":"warn")+'">'+(status.payments?.selcom_api_configured?"Credentials present":"Not connected")+'</em></div><div class="health"><b>Live payment checkout</b><em class="warn">Not enabled</em></div>';
+}
+async function loadOverview(){
+ const [p,w]=await Promise.all([api("/api/admin/products"),api("/api/admin/wallet")]);
+ products=p.products||[];wallet=w;
+ const published=products.filter(p=>p.status==="published").length,drafts=products.filter(p=>p.status==="draft").length,pending=(w.transactions||[]).filter(t=>t.status==="pending").length;
+ $("statPublished").textContent=published;$("statDrafts").textContent=drafts;$("statBalance").textContent=money(w.ledger_balance);$("statPending").textContent=pending;
+ renderHealth();renderProductsList();renderTransactions();
+}
+function renderProductList(){
+ const host=$("ownerProductList");
+ if(!products.length){host.innerHTML='<div class="empty">Bado hujaongeza bidhaa. Tumia form kuanzisha ya kwanza.</div>';return}
+ host.innerHTML=products.map(p=>{
+ const image=p.image_url?'<img class="product-thumb" src="'+esc(p.image_url)+'" alt="" loading="lazy">':'<div class="product-thumb" aria-hidden="true"></div>';
+ let actions='';
+ if(p.status==="draft")actions='<div class="actions"><button class="btn gold" data-action="publish" data-id="'+esc(p.id)+'">Publish</button><button class="btn ghost" data-action="archive" data-id="'+esc(p.id)+'">Archive</button></div>';
+ if(p.status==="published")actions='<div class="actions"><button class="btn ghost" data-action="archive" data-id="'+esc(p.id)+'">Ondoa dukani</button></div>';
+ if(p.status==="archived")actions='<div class="actions"><button class="btn ghost" data-action="restore" data-id="'+esc(p.id)+'">Rudisha draft</button></div>';
+ return '<article class="product-row">'+image+'<div><h3>'+esc(p.product_name)+'</h3><p>'+esc(p.category)+' · '+esc(p.product_type)+' · Stock: '+(p.stock_qty===null?"Haijarekodiwa":esc(p.stock_qty))+'</p><span class="badge '+esc(p.status)+'">'+esc(p.status.toUpperCase())+'</span></div><div class="product-right"><b>'+esc(p.currency)+' '+fmt(p.price)+'</b>'+actions+'</div></article>'
+ }).join("");
+ host.querySelectorAll("[data-action]").forEach(btn=>btn.addEventListener("click",()=>productAction(btn.dataset.id,btn.dataset.action)));
+}
+async function loadProducts(){try{const r=await api("/api/admin/products");products=r.products||[];renderProductList()}catch(e){toast(e.message)}}
+async function productAction(id,action){
+ const msg=action==="publish"?"Uhakiki bei, maelezo, haki za picha na stock ni sahihi?":action==="archive"?"Ondoa bidhaa kwenye duka la umma?":"Rudisha bidhaa kama draft?";
+ if(!confirm(msg))return;
+ try{await api("/api/admin/products/"+id,"PATCH",{action,owner_confirmed_details:action==="publish"});toast("Mabadiliko yamehifadhiwa.");await loadOverview()}catch(e){toast(e.message)}
+}
+$("productForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const form=e.currentTarget;
+ const body={
+  product_name:$("pName").value.trim(),description:$("pDesc").value.trim(),category:$("pCategory").value.trim(),
+  product_type:$("pType").value,price:Number($("pPrice").value),currency:$("pCurrency").value,
+  stock_qty:$("pStock").value===""?null:Number($("pStock").value),image_url:$("pImage").value.trim()||null
+ };
+ $("saveProduct").disabled=true;
+ try{await api("/api/admin/products","POST",body);form.reset();toast("Bidhaa imehifadhiwa kama draft.");await loadOverview();showSection("products")}
+ catch(error){toast(error.message)}
+ finally{$("saveProduct").disabled=false}
+});
+async function loadWallet(){
+ try{wallet=await api("/api/admin/wallet");$("walletBalance").textContent=money(wallet.ledger_balance);$("walletCount").textContent=(wallet.transactions||[]).length+" records";renderTransactions()}
+ catch(e){toast(e.message)}
+}
+function renderTransactions(){
+ const rows=wallet.transactions||[];
+ const host=$("transactionList");
+ if(!rows.length){host.innerHTML='<div class="empty">Bado hakuna transaction zilizorekodiwa.</div>';return}
+ host.innerHTML=rows.map(t=>{
+ const dir=t.direction==="in"?"+":"−",color=t.direction==="in"?"#2b6946":"#9c5147";
+ const action=t.status==="pending"?'<div class="actions"><button class="btn gold" data-wallet-action="confirm" data-id="'+esc(t.id)+'">Thibitisha</button><button class="btn danger" data-wallet-action="reject" data-id="'+esc(t.id)+'">Kataa</button></div>':"";
+ return '<article class="tx-row"><div class="product-thumb" style="display:grid;place-items:center;color:'+color+';font-weight:900">'+dir+'</div><div><h3>'+esc(t.reference)+' · '+esc(t.counterparty||"Mhusika hajatajwa")+'</h3><p>'+esc(t.method)+' · '+esc(t.description||"Hakuna maelezo")+' · '+new Date(t.created_at).toLocaleString()+'</p><span class="badge '+esc(t.status)+'">'+esc(t.status.toUpperCase())+'</span></div><div class="product-right"><b>'+dir+money(t.amount)+'</b>'+action+'</div></article>'
+ }).join("");
+ host.querySelectorAll("[data-wallet-action]").forEach(btn=>btn.addEventListener("click",()=>reviewTransaction(btn.dataset.id,btn.dataset.walletAction)));
+}
+async function reviewTransaction(id,action){
+ if(!confirm(action==="confirm"?"Umehakiki reference na una uhakika pesa imeingia/imetoka kweli?":"Kataa transaction hii?"))return;
+ try{await api("/api/admin/wallet/transactions/"+id,"PATCH",{action});toast("Transaction imehakikiwa.");await loadWallet();await loadOverview()}
+ catch(e){toast(e.message)}
+}
+$("walletForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const body={direction:$("wDirection").value,method:$("wMethod").value,amount:Number($("wAmount").value),reference:$("wRef").value.trim(),counterparty:$("wName").value.trim(),phone:$("wPhone").value.trim(),description:$("wNote").value.trim()};
+ try{await api("/api/admin/wallet/transactions","POST",body);e.currentTarget.reset();toast("Record imehifadhiwa pending; hakiki kabla ya kuthibitisha.");await loadWallet();await loadOverview()}
+ catch(error){toast(error.message)}
+});
+function renderAI(){
+ const ai=status.ai||{};
+ const items=[["Gemini 3.8 Flash",ai.gemini],["OpenAI",ai.openai],["Claude",ai.claude]];
+ $("aiHealth").innerHTML=items.map(([name,enabled])=>'<div class="health"><b>'+name+'</b><em class="'+(enabled?"good":"warn")+'">'+(enabled?"API key imewekwa":"Key haijawekwa")+'</em></div>').join("");
+}
+})();
+</script>
+</body></html>

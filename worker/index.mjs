@@ -117,7 +117,7 @@ async function handleAIChat(request, env, url) {
   }
 
   const provider = body?.provider;
-  if (provider !== "openai" && provider !== "claude") {
+  if (provider !== "openai" && provider !== "claude" && provider !== "gemini") {
     return json({ error: "invalid_provider" }, 400);
   }
 
@@ -134,7 +134,7 @@ async function handleAIChat(request, env, url) {
     return json({ error: "invalid_messages" }, 400);
   }
 
-  const apiKey = provider === "openai" ? env.OPENAI_API_KEY : env.ANTHROPIC_API_KEY;
+  const apiKey = provider === "openai" ? env.OPENAI_API_KEY : provider === "claude" ? env.ANTHROPIC_API_KEY : env.GEMINI_API_KEY;
   if (!apiKey) return json({ error: "provider_not_configured" }, 503);
 
   try {
@@ -152,6 +152,22 @@ async function handleAIChat(request, env, url) {
           input: messages,
           max_output_tokens: 350,
           store: false
+        })
+      });
+    } else if (provider === "gemini") {
+      upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
+        method: "POST",
+        headers: {
+          "x-goog-api-key": apiKey,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: buildStoreSystemPrompt(env) }] },
+          contents: messages.map((message) => ({
+            role: message.role === "assistant" ? "model" : "user",
+            parts: [{ text: message.content }]
+          })),
+          generationConfig: { maxOutputTokens: 350, temperature: 0.35 }
         })
       });
     } else {
@@ -179,11 +195,15 @@ async function handleAIChat(request, env, url) {
     const payload = await upstream.json();
     const reply = provider === "openai"
       ? extractOpenAIText(payload)
-      : (payload.content || [])
-          .filter((part) => part.type === "text" && typeof part.text === "string")
-          .map((part) => part.text)
-          .join("\n")
-          .trim();
+      : provider === "gemini"
+        ? (payload.candidates?.[0]?.content?.parts || [])
+            .filter((part) => typeof part.text === "string")
+            .map((part) => part.text).join("\n").trim()
+        : (payload.content || [])
+            .filter((part) => part.type === "text" && typeof part.text === "string")
+            .map((part) => part.text)
+            .join("\n")
+            .trim();
 
     if (!reply) return json({ error: "empty_ai_reply" }, 502);
     return json({ reply, provider });
@@ -1365,6 +1385,244 @@ async function publishStoreProduct(args, env) {
   };
 }
 
+
+/* Private 343SHOP owner dashboard: first-party products and a manual payment ledger.
+   The wallet records verified receipts; it is not a bank account or stored-value wallet. */
+const OWNER_DASHBOARD_SCHEMA_READY = new WeakMap();
+
+function ownerDashboardAuthorized(request, env, url) {
+  const origin = request.headers.get("Origin");
+  if (origin && origin !== url.origin) return "origin_not_allowed";
+  const token = env?.MCP_WRITE_TOKEN;
+  if (typeof token !== "string" || !token.trim()) return "owner_secret_not_configured";
+  const authorization = request.headers.get("Authorization") || "";
+  return safeEqual(authorization, "Bearer " + token) ? null : "unauthorized";
+}
+
+async function ensureOwnerDashboardSchema(db) {
+  let ready = OWNER_DASHBOARD_SCHEMA_READY.get(db);
+  if (!ready) {
+    ready = (async () => {
+      await db.prepare(`
+        CREATE TABLE IF NOT EXISTS owner_products (
+          id TEXT PRIMARY KEY,
+          slug TEXT NOT NULL UNIQUE,
+          product_name TEXT NOT NULL CHECK(length(product_name) BETWEEN 2 AND 120),
+          description TEXT NOT NULL CHECK(length(description) BETWEEN 5 AND 1000),
+          category TEXT NOT NULL CHECK(length(category) BETWEEN 2 AND 60),
+          product_type TEXT NOT NULL CHECK(product_type IN ('physical', 'digital', 'service')),
+          price REAL NOT NULL CHECK(price >= 0),
+          currency TEXT NOT NULL CHECK(length(currency) = 3),
+          image_url TEXT,
+          stock_qty INTEGER CHECK(stock_qty IS NULL OR stock_qty >= 0),
+          status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft', 'published', 'archived')),
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          published_at TEXT
+        )
+      `).run();
+      await db.prepare("CREATE INDEX IF NOT EXISTS idx_owner_products_status ON owner_products(status, published_at DESC)").run();
+      await db.prepare(`
+        CREATE TABLE IF NOT EXISTS wallet_transactions (
+          id TEXT PRIMARY KEY,
+          direction TEXT NOT NULL CHECK(direction IN ('in', 'out')),
+          amount REAL NOT NULL CHECK(amount > 0),
+          currency TEXT NOT NULL DEFAULT 'TZS' CHECK(currency = 'TZS'),
+          method TEXT NOT NULL CHECK(method IN ('mobile_money', 'bank', 'cash', 'other')),
+          reference TEXT NOT NULL UNIQUE CHECK(length(reference) BETWEEN 3 AND 100),
+          counterparty TEXT NOT NULL DEFAULT '',
+          phone TEXT NOT NULL DEFAULT '',
+          description TEXT NOT NULL DEFAULT '',
+          status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'confirmed', 'rejected')),
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          confirmed_at TEXT
+        )
+      `).run();
+      await db.prepare("CREATE INDEX IF NOT EXISTS idx_wallet_status_created ON wallet_transactions(status, created_at DESC)").run();
+    })();
+    OWNER_DASHBOARD_SCHEMA_READY.set(db, ready);
+  }
+  try { await ready; }
+  catch (error) {
+    OWNER_DASHBOARD_SCHEMA_READY.delete(db);
+    throw new Error("owner_dashboard_schema_failed: " + String(error?.message || "D1 schema error").slice(0, 120));
+  }
+}
+
+function validateOwnerProduct(body) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("product_payload_required");
+  const name = typeof body.product_name === "string" ? body.product_name.trim() : "";
+  const description = typeof body.description === "string" ? body.description.trim() : "";
+  const category = typeof body.category === "string" ? body.category.trim() : "";
+  const productType = body.product_type || "physical";
+  const price = Number(body.price);
+  const currency = typeof body.currency === "string" ? body.currency.trim().toUpperCase() : "TZS";
+  if (name.length < 2 || name.length > 120) throw new Error("product_name_invalid");
+  if (description.length < 5 || description.length > 1000) throw new Error("product_description_invalid");
+  if (category.length < 2 || category.length > 60) throw new Error("product_category_invalid");
+  if (!["physical", "digital", "service"].includes(productType)) throw new Error("product_type_invalid");
+  if (!Number.isFinite(price) || price < 0 || price > 1_000_000_000_000) throw new Error("product_price_invalid");
+  if (!/^[A-Z]{3}$/.test(currency)) throw new Error("product_currency_invalid");
+  let imageUrl = null;
+  if (body.image_url) {
+    imageUrl = safeHttpsLink(body.image_url);
+    if (!imageUrl && typeof body.image_url === "string" && /^\/images\/[a-z0-9/_-]+\.(?:png|jpe?g|webp|svg)$/i.test(body.image_url)) {
+      imageUrl = body.image_url;
+    }
+    if (!imageUrl) throw new Error("product_image_must_be_https_or_local_image");
+  }
+  let stockQty = null;
+  if (body.stock_qty !== undefined && body.stock_qty !== null && body.stock_qty !== "") {
+    stockQty = Number(body.stock_qty);
+    if (!Number.isInteger(stockQty) || stockQty < 0 || stockQty > 1_000_000_000) throw new Error("product_stock_invalid");
+  }
+  return { product_name: name, description, category, product_type: productType, price, currency, image_url: imageUrl, stock_qty: stockQty };
+}
+
+async function handleOwnerDashboard(request, env, url) {
+  const authError = ownerDashboardAuthorized(request, env, url);
+  if (authError) return json({ error: authError }, authError === "origin_not_allowed" ? 403 : authError === "owner_secret_not_configured" ? 503 : 401);
+  if (!env?.DB || typeof env.DB.prepare !== "function") return json({ error: "product_database_not_configured" }, 503);
+  const db = env.DB;
+  try {
+    await ensureProductSchema(db);
+    await ensureOwnerDashboardSchema(db);
+    const path = url.pathname;
+    if (path === "/api/admin/status") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      return json({
+        ok: true, owner_authenticated: true, database_configured: true,
+        products: true,
+        ai: { gemini: Boolean(env.GEMINI_API_KEY), openai: Boolean(env.OPENAI_API_KEY), claude: Boolean(env.ANTHROPIC_API_KEY) },
+        payments: { ledger: true, selcom_api_configured: Boolean(env.SELCOM_API_KEY && env.SELCOM_API_SECRET && env.SELCOM_VENDOR_ID), live_checkout: false },
+        payment_note: "Wallet screen is a manual reconciliation ledger. It does not hold funds or initiate mobile-money transfers."
+      });
+    }
+    if (path === "/api/admin/products") {
+      if (request.method === "GET") {
+        const result = await db.prepare("SELECT id, slug, product_name, description, category, product_type, price, currency, image_url, stock_qty, status, created_at, updated_at, published_at FROM owner_products ORDER BY created_at DESC LIMIT 100").all();
+        return json({ ok: true, products: result.results || [] });
+      }
+      if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
+      const product = validateOwnerProduct(body);
+      const id = crypto.randomUUID();
+      const slug = slugifyStoreProduct(product.product_name, id);
+      const now = new Date().toISOString();
+      await db.prepare(`
+        INSERT INTO owner_products
+        (id, slug, product_name, description, category, product_type, price, currency, image_url, stock_qty, status, created_at, updated_at, published_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, NULL)
+      `).bind(id, slug, product.product_name, product.description, product.category, product.product_type, product.price, product.currency, product.image_url, product.stock_qty, now, now).run();
+      return json({ ok: true, product: { id, slug, ...product, status: "draft", created_at: now } }, 201);
+    }
+    const productMatch = path.match(/^\/api\/admin\/products\/([a-f0-9-]{36})$/i);
+    if (productMatch) {
+      if (request.method !== "PATCH") return json({ error: "method_not_allowed" }, 405);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
+      const id = productMatch[1];
+      const current = await db.prepare("SELECT id, status FROM owner_products WHERE id = ?").bind(id).first();
+      if (!current) return json({ error: "product_not_found" }, 404);
+      const action = body?.action;
+      if (action === "publish") {
+        if (body?.owner_confirmed_details !== true) return json({ error: "owner_confirmation_required" }, 400);
+        const now = new Date().toISOString();
+        const result = await db.prepare("UPDATE owner_products SET status = 'published', updated_at = ?, published_at = ? WHERE id = ? AND status = 'draft'").bind(now, now, id).run();
+        if (result?.meta?.changes === 0) return json({ error: "product_publish_conflict" }, 409);
+      } else if (action === "archive") {
+        await db.prepare("UPDATE owner_products SET status = 'archived', updated_at = ? WHERE id = ? AND status != 'archived'").bind(new Date().toISOString(), id).run();
+      } else if (action === "restore") {
+        await db.prepare("UPDATE owner_products SET status = 'draft', updated_at = ?, published_at = NULL WHERE id = ? AND status = 'archived'").bind(new Date().toISOString(), id).run();
+      } else {
+        return json({ error: "invalid_product_action" }, 400);
+      }
+      const updated = await db.prepare("SELECT id, slug, product_name, description, category, product_type, price, currency, image_url, stock_qty, status, created_at, updated_at, published_at FROM owner_products WHERE id = ?").bind(id).first();
+      return json({ ok: true, product: updated });
+    }
+    if (path === "/api/admin/wallet") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      const [sum, rows] = await Promise.all([
+        db.prepare("SELECT COALESCE(SUM(CASE WHEN direction = 'in' THEN amount ELSE -amount END), 0) AS balance, COUNT(*) AS confirmed_count FROM wallet_transactions WHERE status = 'confirmed'").first(),
+        db.prepare("SELECT id, direction, amount, currency, method, reference, counterparty, phone, description, status, created_at, updated_at, confirmed_at FROM wallet_transactions ORDER BY created_at DESC LIMIT 100").all()
+      ]);
+      return json({ ok: true, currency: "TZS", ledger_balance: Number(sum?.balance || 0), confirmed_count: Number(sum?.confirmed_count || 0), transactions: rows.results || [], live_payment_gateway: false });
+    }
+    if (path === "/api/admin/wallet/transactions") {
+      if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
+      const direction = body?.direction;
+      const method = body?.method;
+      const amount = Number(body?.amount);
+      const reference = typeof body?.reference === "string" ? body.reference.trim() : "";
+      const counterparty = typeof body?.counterparty === "string" ? body.counterparty.trim().slice(0, 120) : "";
+      const phone = typeof body?.phone === "string" ? body.phone.trim().slice(0, 30) : "";
+      const description = typeof body?.description === "string" ? body.description.trim().slice(0, 300) : "";
+      if (!["in", "out"].includes(direction)) return json({ error: "wallet_direction_invalid" }, 400);
+      if (!["mobile_money", "bank", "cash", "other"].includes(method)) return json({ error: "wallet_method_invalid" }, 400);
+      if (!Number.isFinite(amount) || amount <= 0 || amount > 1_000_000_000_000) return json({ error: "wallet_amount_invalid" }, 400);
+      if (reference.length < 3 || reference.length > 100) return json({ error: "wallet_reference_required" }, 400);
+      const sums = await db.prepare("SELECT COALESCE(SUM(CASE WHEN direction = 'in' THEN amount ELSE -amount END), 0) AS balance FROM wallet_transactions WHERE status = 'confirmed'").first();
+      if (direction === "out") {
+        const pending = await db.prepare("SELECT COALESCE(SUM(amount), 0) AS pending_out FROM wallet_transactions WHERE status = 'pending' AND direction = 'out'").first();
+        if (amount > Number(sums?.balance || 0) - Number(pending?.pending_out || 0)) return json({ error: "wallet_insufficient_recorded_balance" }, 409);
+      }
+      const id = crypto.randomUUID();
+      const now = new Date().toISOString();
+      try {
+        await db.prepare("INSERT INTO wallet_transactions (id, direction, amount, currency, method, reference, counterparty, phone, description, status, created_at, updated_at, confirmed_at) VALUES (?, ?, ?, 'TZS', ?, ?, ?, ?, ?, 'pending', ?, ?, NULL)").bind(id, direction, amount, method, reference, counterparty, phone, description, now, now).run();
+      } catch {
+        return json({ error: "wallet_reference_duplicate_or_storage_error" }, 409);
+      }
+      return json({ ok: true, transaction: { id, direction, amount, currency: "TZS", method, reference, counterparty, phone, description, status: "pending", created_at: now } }, 201);
+    }
+    const walletMatch = path.match(/^\/api\/admin\/wallet\/transactions\/([a-f0-9-]{36})$/i);
+    if (walletMatch) {
+      if (request.method !== "PATCH") return json({ error: "method_not_allowed" }, 405);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
+      const id = walletMatch[1], action = body?.action;
+      const current = await db.prepare("SELECT id, direction, amount, status FROM wallet_transactions WHERE id = ?").bind(id).first();
+      if (!current) return json({ error: "wallet_transaction_not_found" }, 404);
+      if (current.status !== "pending") return json({ error: "wallet_transaction_already_reviewed" }, 409);
+      if (action === "confirm") {
+        if (current.direction === "out") {
+          const summary = await db.prepare("SELECT COALESCE(SUM(CASE WHEN direction = 'in' THEN amount ELSE -amount END), 0) AS balance FROM wallet_transactions WHERE status = 'confirmed'").first();
+          const pending = await db.prepare("SELECT COALESCE(SUM(amount), 0) AS pending_out FROM wallet_transactions WHERE status = 'pending' AND direction = 'out' AND id != ?").bind(id).first();
+          if (Number(current.amount) > Number(summary?.balance || 0) - Number(pending?.pending_out || 0)) return json({ error: "wallet_insufficient_recorded_balance" }, 409);
+        }
+        const now = new Date().toISOString();
+        await db.prepare("UPDATE wallet_transactions SET status = 'confirmed', updated_at = ?, confirmed_at = ? WHERE id = ? AND status = 'pending'").bind(now, now, id).run();
+      } else if (action === "reject") {
+        await db.prepare("UPDATE wallet_transactions SET status = 'rejected', updated_at = ? WHERE id = ? AND status = 'pending'").bind(new Date().toISOString(), id).run();
+      } else {
+        return json({ error: "invalid_wallet_review_action" }, 400);
+      }
+      return json({ ok: true, transaction: await db.prepare("SELECT id, direction, amount, currency, method, reference, counterparty, phone, description, status, created_at, updated_at, confirmed_at FROM wallet_transactions WHERE id = ?").bind(id).first() });
+    }
+    return json({ error: "not_found" }, 404);
+  } catch (error) {
+    const code = String(error?.message || "owner_dashboard_error").split(":")[0].slice(0, 64);
+    const status = code.includes("invalid") ? 400 : code.includes("not_found") ? 404 : 503;
+    return json({ error: code }, status);
+  }
+}
+
+async function handlePublicOwnerProducts(request, env) {
+  if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+  if (!env?.DB || typeof env.DB.prepare !== "function") return json({ ok: false, products: [], error: "product_database_not_configured" }, 503);
+  try {
+    await ensureOwnerDashboardSchema(env.DB);
+    const result = await env.DB.prepare("SELECT id, slug, product_name, description, category, product_type, price, currency, image_url, stock_qty, published_at FROM owner_products WHERE status = 'published' ORDER BY published_at DESC LIMIT 60").all();
+    return json({ ok: true, products: result.results || [] });
+  } catch {
+    return json({ ok: false, products: [], error: "product_storage_unavailable" }, 503);
+  }
+}
+
 async function handlePublishedStoreProducts(request, env) {
   if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
   if (!env?.DB || typeof env.DB.prepare !== "function") {
@@ -1717,6 +1975,14 @@ export default {
       return json(mcpStatus(env));
     }
 
+    if (url.pathname.startsWith("/api/admin/")) {
+      return handleOwnerDashboard(request, env, url);
+    }
+
+    if (url.pathname === "/api/store/owner-products") {
+      return handlePublicOwnerProducts(request, env);
+    }
+
     if (url.pathname === "/api/store/products") {
       return handlePublishedStoreProducts(request, env);
     }
@@ -1752,7 +2018,8 @@ export default {
       return json({
         providers: {
           openai: Boolean(env.OPENAI_API_KEY),
-          claude: Boolean(env.ANTHROPIC_API_KEY)
+          claude: Boolean(env.ANTHROPIC_API_KEY),
+          gemini: Boolean(env.GEMINI_API_KEY)
         }
       });
     }
