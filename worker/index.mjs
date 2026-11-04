@@ -619,19 +619,30 @@ async function getEbayAccessToken(env) {
   if (cached && cached.expiresAt > Date.now() + 30_000) return cached.token;
 
   const auth = btoa(clientId + ":" + clientSecret);
-  const response = await fetch(apiBase + "/identity/v1/oauth2/token", {
-    method: "POST",
-    headers: {
-      "Authorization": "Basic " + auth,
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Accept": "application/json"
-    },
-    body: "grant_type=client_credentials&scope=" + encodeURIComponent("https://api.ebay.com/oauth/api_scope"),
-    redirect: "error",
-    signal: AbortSignal.timeout(8000)
-  });
+  let response;
+  try {
+    response = await fetch(apiBase + "/identity/v1/oauth2/token", {
+      method: "POST",
+      headers: {
+        "Authorization": "Basic " + auth,
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      },
+      body: "grant_type=client_credentials&scope=" + encodeURIComponent("https://api.ebay.com/oauth/api_scope"),
+      redirect: "error",
+      signal: AbortSignal.timeout(8000)
+    });
+  } catch (error) {
+    throw new Error(error?.name === "TimeoutError" || error?.name === "AbortError"
+      ? "ebay_oauth_network_timeout" : "ebay_oauth_network_error");
+  }
   if (!response.ok) throw new Error("ebay_oauth_http_" + response.status);
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("ebay_oauth_invalid_json");
+  }
   if (typeof data.access_token !== "string" || !data.access_token || !Number.isFinite(Number(data.expires_in))) {
     throw new Error("ebay_token_invalid");
   }
@@ -662,11 +673,22 @@ async function searchEbayProducts(query, env, limit = 12) {
     if (affiliateTracking) {
       headers["X-EBAY-C-ENDUSERCTX"] = "affiliateCampaignId=" + campaign + ",affiliateReferenceId=343SHOP";
     }
-    const response = await fetch(config.apiBase + "/buy/browse/v1/item_summary/search?" + params.toString(), {
-      method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(9000)
-    });
+    let response;
+    try {
+      response = await fetch(config.apiBase + "/buy/browse/v1/item_summary/search?" + params.toString(), {
+        method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(9000)
+      });
+    } catch (error) {
+      throw new Error(error?.name === "TimeoutError" || error?.name === "AbortError"
+        ? "ebay_browse_network_timeout" : "ebay_browse_network_error");
+    }
     if (!response.ok) throw new Error("ebay_browse_http_" + response.status);
-    const payload = await response.json();
+    let payload;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new Error("ebay_browse_invalid_json");
+    }
     const items = Array.isArray(payload.itemSummaries) ? payload.itemSummaries : [];
     const results = items.map((item) => {
       const price = Number(item.price?.value);
@@ -693,14 +715,12 @@ async function searchEbayProducts(query, env, limit = 12) {
     return { status: "available", affiliate_tracking: affiliateTracking, results };
   } catch (error) {
     const message = typeof error?.message === "string" ? error.message : "";
-    const httpError = /^(ebay_(?:oauth|browse)_http_[1-5]\d{2})$/.exec(message);
-    const errorCode = httpError
-      ? httpError[1]
+    const safeError = /^(ebay_(?:oauth|browse)_(?:http_[1-5]\\d{2}|network_error|network_timeout|invalid_json))$/.exec(message);
+    const errorCode = safeError
+      ? safeError[1]
       : message === "ebay_token_invalid"
         ? "ebay_token_invalid"
-        : error?.name === "TimeoutError" || error?.name === "AbortError"
-          ? "ebay_request_timeout"
-          : "ebay_upstream_network_or_response_error";
+        : "ebay_upstream_network_or_response_error";
     console.warn("eBay Browse API request failed", {
       environment: config.environment,
       errorCode
