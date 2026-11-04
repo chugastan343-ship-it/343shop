@@ -229,7 +229,7 @@ test("eBay Browse API uses server-side OAuth and preserves affiliate URL", async
     assert.equal(data.results[0].source_shop, "eBay");
     assert.equal(data.results[0].currency, "USD");
     assert.equal(data.results[0].product_url, "https://www.ebay.com/itm/123?campid=1234567890");
-    assert.equal(calls.length, 2);
+    assert.equal(calls.length, 3);
   } finally {
     globalThis.fetch = originalFetch;
   }
