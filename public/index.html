@@ -785,7 +785,7 @@ async function loadMarketplaceStatus(){
     const providers=Object.fromEntries((data.marketplaces||[]).map(item=>[item.id,item]));
     const labels={
       amazon:tr("Inahitaji Amazon Associates + Creators API approval","Requires Amazon Associates + Creators API approval"),
-      alibaba:tr("Inahitaji Alibaba Open Platform developer approval na API access","Requires Alibaba Open Platform developer approval and API access"),
+      alibaba:tr("Inahitaji developer approval na idhini ya kila supplier","Requires developer approval and each supplier's authorisation"),
       shopify:tr("Inahitaji duka mshirika na Storefront token","Requires a partner store and Storefront token"),
       ebay:tr("API credentials hazijawekwa","API credentials not configured"),
       kikuu:tr("Inahitaji makubaliano ya partnership","Business partnership agreement required")
@@ -794,14 +794,22 @@ async function loadMarketplaceStatus(){
       const item=providers[id],el=$("marketplaceStatus"+id.charAt(0).toUpperCase()+id.slice(1));
       if(!el||!item)continue;
       let label=labels[id];
+      let ready=false;
+      if(id==="amazon"&&item.api_configured){
+        label=tr("Credentials zipo · live API test inahitajika","Credentials present · live API test required");
+      }
+      if(id==="alibaba"&&Number(item.authorized_seller_catalogue_count)>0){
+        label=Number(item.authorized_seller_catalogue_count)+" "+tr("seller catalogue zimeidhinishwa","authorised seller catalogues connected");
+        ready=true;
+      }
       if(id==="shopify"&&item.api_configured){
-        label=tr("Storefront credentials zipo; live test inahitajika","Storefront credentials present; live test required");
+        label=Number(item.connected_store_count||0)+" "+tr("maduka · live API test hufanyika wakati wa search","stores · live API test runs on search");
       }
       if(id==="ebay"&&item.api_configured){
-        label=item.environment==="sandbox"?tr("Sandbox imeunganishwa; Production haijaidhinishwa","Sandbox connected; Production not approved"):item.affiliate_tracking?tr("Production API + affiliate tracking vimewekwa","Production API + affiliate tracking configured"):tr("API credentials zimewekwa; affiliate tracking pending","API credentials configured; affiliate tracking pending");
+        label=item.environment==="sandbox"?tr("Sandbox credentials zipo · si Production","Sandbox credentials present · not Production"):item.affiliate_tracking?tr("API + affiliate campaign credentials zipo","API + affiliate campaign credentials present"):tr("API credentials zipo · affiliate pending","API credentials present · affiliate pending");
       }
       el.textContent=label;
-      el.dataset.ready=String(Boolean(item.api_configured&&item.affiliate_tracking));
+      el.dataset.ready=String(ready);
     }
     $("marketplaceFeedCount").textContent=String(data.configured_partner_catalogue_count||0);
     $("marketplaceDirectoryCount").textContent=String(data.marketplace_directory_count||10);
@@ -810,6 +818,7 @@ async function loadMarketplaceStatus(){
     $("marketSearchNotice").textContent=tr("Hali ya integrations haikupatikana. Tafadhali jaribu tena.","Marketplace integration status could not be loaded. Please try again.");
   }
 }
+
 function renderMarketplaceResults(payload){
   const root=$("marketSearchResults");root.replaceChildren();
   const fragment=document.createDocumentFragment();
@@ -929,7 +938,14 @@ $("marketSearchForm").addEventListener("submit",async e=>{
     const data=await response.json().catch(()=>({}));
     if(!response.ok)throw new Error(data.message||data.error||"search_failed");
     renderMarketplaceResults(data);
-    $("marketSearchNotice").textContent=(data.result_count||0)+" "+tr("matokeo ya live · ","live results · ")+tr("Links za tovuti rasmi pia zimeongezwa; thibitisha bei na stock kwa muuzaji.","official website search links are also included; confirm price and stock with the seller.");
+    const sources=data.sources||{};
+    const labels=[];
+    if(sources.amazon&&sources.amazon.status==="available")labels.push("Amazon");
+    if(sources.shopify&&sources.shopify.status==="available")labels.push("Shopify");
+    if(sources.ebay&&sources.ebay.status==="available")labels.push("eBay");
+    if(sources.alibaba&&sources.alibaba.status==="authorized_seller_feeds_checked")labels.push("Alibaba seller feeds");
+    const originNote=labels.length?tr("Vyanzo vilivyojibu: ","Connected sources: ")+labels.join(", ")+". ":tr("Hakuna API/feed iliyorudisha bidhaa kwa utafutaji huu. ","No connected API/feed returned a product for this search. ");
+    $("marketSearchNotice").textContent=(data.result_count||0)+" "+tr("matokeo ya live. ","live results. ")+originNote+tr("Thibitisha bei ya mwisho, stock, delivery na kodi kwa muuzaji.","Confirm final price, stock, delivery and taxes with the seller.");
   }catch(error){
     $("marketSearchNotice").textContent=tr("Search haikufanikiwa. Jaribu tena baada ya muda.","Search failed. Please try again shortly.");
   }
