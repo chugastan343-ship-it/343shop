@@ -796,9 +796,9 @@ async function searchEbayProducts(query, env, limit = 12) {
 
 async function searchShopifyProducts(query, env, limit = 12) {
   const domain = String(env.SHOPIFY_STORE_DOMAIN || "").trim().toLowerCase()
-    .replace(/^https?:\\/\\//, "").replace(/\\/$/, "");
+    .replace(/^https?:\/\//, "").replace(/\/$/, "");
   const token = String(env.SHOPIFY_STOREFRONT_ACCESS_TOKEN || "").trim();
-  if (!domain || !/^[a-z0-9][a-z0-9-]*\\.myshopify\\.com$/.test(domain) || !token) {
+  if (!domain || !/^[a-z0-9][a-z0-9-]*\.myshopify\.com$/.test(domain) || !token) {
     return { status: "not_configured", results: [] };
   }
   const term = String(query || "").trim();
