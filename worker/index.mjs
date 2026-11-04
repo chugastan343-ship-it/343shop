@@ -167,7 +167,7 @@ async function handleAIChat(request, env, url) {
             role: message.role === "assistant" ? "model" : "user",
             parts: [{ text: message.content }]
           })),
-          generationConfig: { maxOutputTokens: 350, temperature: 0.35 }
+          generationConfig: { maxOutputTokens: 350 }
         })
       });
     } else {
