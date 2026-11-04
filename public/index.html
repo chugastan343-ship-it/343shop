@@ -303,6 +303,22 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 @media(max-width:390px){.featured-local-grid{grid-template-columns:1fr 1fr}.featured-local-visual{height:125px}}
 
 .ownership-legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}.ownership-legend>span{display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap;padding:9px 12px;border:1px solid #e1e4da;border-radius:30px;background:#fffefa;color:#677268;font-size:10px}.ownership-legend b{font-size:8px;letter-spacing:.08em;color:#244b3c}.owned-label{display:inline-flex;margin:0 0 7px;padding:5px 8px;border-radius:30px;background:#eaf2e9;color:#28543c;font-size:8px;font-weight:900;letter-spacing:.08em}
+
+
+/* Mobile-first navigation: keep every major destination reachable on small screens. */
+.mobile-menu-button{display:none;width:39px;height:39px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--forest);font-size:18px;line-height:1;cursor:pointer;place-items:center;}
+.mobile-menu{display:none;}
+.mobile-menu-button:focus-visible,.mobile-menu a:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
+@media(max-width:650px){
+  .mobile-menu-button{display:inline-grid;}
+  .mobile-menu{position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:35;display:none;gap:3px;padding:9px;border:1px solid var(--line);border-radius:16px;background:var(--paper);box-shadow:0 18px 45px rgba(23,48,38,.16);}
+  .mobile-menu.is-open{display:grid;}
+  .mobile-menu a{display:flex;align-items:center;justify-content:space-between;min-height:45px;padding:0 13px;border-radius:10px;color:var(--forest);font-size:12px;font-weight:800;}
+  .mobile-menu a:after{content:"↗";color:#a27f46;font-size:13px;}
+  .mobile-menu a:hover{background:#f0f2eb;}
+}
+@media(min-width:651px){.mobile-menu-button,.mobile-menu{display:none!important;}}
+@media(min-width:651px) and (max-width:900px){.nav{gap:12px;font-size:10px}.brand{font-size:20px}.nav-actions{gap:7px}.lang,.cart-button{padding:9px 11px}}
 </style>
 </head>
 <body>
@@ -311,7 +327,8 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 <header class="header">
 <a class="brand" href="#"><span class="brand-mark">3</span><span>343<span>SHOP</span></span></a>
 <nav class="nav"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
-<div class="nav-actions"><button class="lang" id="langBtn" type="button">EN</button><button class="cart-button" id="cartBtn" type="button"><span data-sw="Kikapu" data-en="Bag">Kikapu</span><span class="count" id="cartCount">0</span></button></div>
+<div class="nav-actions"><button class="lang" id="langBtn" type="button">EN</button><button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Fungua menyu" aria-controls="mobileMenu" aria-expanded="false"><span aria-hidden="true">☰</span></button><button class="cart-button" id="cartBtn" type="button"><span data-sw="Kikapu" data-en="Bag">Kikapu</span><span class="count" id="cartCount">0</span></button></div>
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
 </header>
 <section class="hero">
 <div><span class="eyebrow" data-sw="GLOBAL SHOPPING · UDALALI WA KIMATAIFA" data-en="GLOBAL SHOPPING · BROKERAGE MARKETPLACE">GLOBAL SHOPPING · UDALALI WA KIMATAIFA</span>
@@ -857,7 +874,20 @@ document.querySelectorAll("[data-global-query]").forEach(button=>{
   button.addEventListener("click",()=>searchGlobalProducts(button.dataset.globalQuery));
 });
 
-$("langBtn").onclick=()=>{lang=lang==="sw"?"en":"sw";applyLang()};
+const mobileMenuBtn=$("mobileMenuBtn"),mobileMenu=$("mobileMenu");
+function setMobileMenu(open){
+  if(!mobileMenu||!mobileMenuBtn)return;
+  mobileMenu.classList.toggle("is-open",open);
+  mobileMenu.setAttribute("aria-hidden",String(!open));
+  mobileMenuBtn.setAttribute("aria-expanded",String(open));
+  mobileMenuBtn.setAttribute("aria-label",open?(lang==="sw"?"Funga menyu":"Close menu"):(lang==="sw"?"Fungua menyu":"Open menu"));
+  const icon=mobileMenuBtn.querySelector("span");
+  if(icon)icon.textContent=open?"×":"☰";
+}
+mobileMenuBtn.addEventListener("click",()=>setMobileMenu(!mobileMenu.classList.contains("is-open")));
+mobileMenu.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>setMobileMenu(false)));
+document.addEventListener("click",event=>{if(mobileMenu.classList.contains("is-open")&&!event.target.closest(".header"))setMobileMenu(false)});
+$("langBtn").onclick=()=>{lang=lang==="sw"?"en":"sw";applyLang();if(mobileMenuBtn)mobileMenuBtn.setAttribute("aria-label",mobileMenu.classList.contains("is-open")?(lang==="sw"?"Funga menyu":"Close menu"):(lang==="sw"?"Fungua menyu":"Open menu"))};
 
 // Gallery tiles direct independent-seller discovery to Global Market.
 
@@ -899,7 +929,7 @@ $("aiForm").addEventListener("submit",async e=>{
   }catch(error){addAiBubble("assistant",error.message||tr("Hitilafu ya mtandao. Jaribu tena.","Network error. Please try again."));setAiStatus(tr("Muunganisho haujakamilika.","Connection not completed."))}
   finally{aiBusy=false;const ready=aiProviders.openai||aiProviders.claude;aiInput.disabled=!ready;aiSend.disabled=!ready;aiInput.focus()}
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();closeAi();$("checkoutModal").classList.remove("show")}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();closeAi();setMobileMenu(false);$("checkoutModal").classList.remove("show")}});
 updateCount();renderCats();renderProducts();loadAiProviders();loadMarketplaceStatus();
 loadPublishedStoreProducts();
 })();
