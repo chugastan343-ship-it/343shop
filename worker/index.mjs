@@ -610,6 +610,42 @@ function marketplaceRateLimited(ip) {
   return false;
 }
 
+async function handleMarketplaceConnectivity(env) {
+  const config = getEbayConfig(env);
+  const probe = async (url) => {
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        redirect: "manual",
+        signal: AbortSignal.timeout(7000)
+      });
+      return { reachable: true, http_status: response.status };
+    } catch (error) {
+      return {
+        reachable: false,
+        error_code: error?.name === "TimeoutError" || error?.name === "AbortError"
+          ? "network_timeout"
+          : "network_error"
+      };
+    }
+  };
+
+  const [ebay, control] = await Promise.all([
+    probe(config.apiBase + "/identity/v1/oauth2/token"),
+    probe("https://example.com/")
+  ]);
+
+  return json({
+    ok: true,
+    environment: config.environment,
+    probes: {
+      ebay_api_host: ebay,
+      external_control_host: control
+    },
+    note: "Connectivity only. This check does not authenticate with eBay or verify API permissions."
+  });
+}
+
 async function getEbayAccessToken(env) {
   const config = getEbayConfig(env);
   const { clientId, clientSecret, apiBase, environment } = config;
@@ -1345,6 +1381,11 @@ export default {
 
     if (url.pathname === "/api/marketplaces/status") {
       return json(marketplaceIntegrationsStatus(env));
+    }
+
+    if (url.pathname === "/api/marketplaces/connectivity") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      return handleMarketplaceConnectivity(env);
     }
 
     if (url.pathname === "/api/marketplaces/search") {
