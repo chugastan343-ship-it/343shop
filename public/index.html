@@ -710,6 +710,21 @@ body{background:#f2f4f1;color:var(--shop-ink)}
 @media(max-width:650px){.audience-grid{grid-template-columns:1fr;gap:13px}.audience-image{height:320px}.audience-copy{padding:15px 16px 18px}.audience-copy strong{font-size:29px}.audience-arrow{right:16px;bottom:22px;width:39px;height:39px}.gift-hub{padding:27px 14px 20px;border-radius:17px}.print-work{margin:19px 0 3px;padding:14px;border-radius:17px}.print-work-topline{align-items:flex-start;flex-direction:column;gap:9px}.print-work-head h2{font-size:30px}.print-work-head p{font-size:10px}.print-work-copy{padding:14px}.print-work-copy h3{font-size:20px}.print-work-footer{align-items:flex-start}.cart-icon{width:16px;height:16px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* First-party product shelves and dedicated Gift Cards destination */
+.owner-store{padding:36px 0 12px}.owner-store-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:18px}
+.owner-store-head h2{margin:8px 0 7px;color:var(--forest);font:500 clamp(28px,3vw,37px)/1.05 Georgia,serif;letter-spacing:-.04em}.owner-store-head p{max-width:680px;margin:0;color:#758078;font-size:11px;line-height:1.8}
+.owner-store-stamp{flex:none;padding:9px 12px;border:1px solid #d9c59b;border-radius:30px;color:#97794b;font-size:8px;font-weight:900;letter-spacing:.13em;background:#fffdf8}
+.owner-store-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.owner-store-card{min-width:0;overflow:hidden;border:1px solid #e2e7df;border-radius:16px;background:#fff;box-shadow:0 8px 25px #1735220c;transition:transform .22s,box-shadow .22s}.owner-store-card:hover{transform:translateY(-4px);box-shadow:0 17px 30px #17352218}
+.owner-store-image{position:relative;aspect-ratio:1/1;background:#f0f2eb;overflow:hidden}.owner-store-image img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .4s}.owner-store-card:hover .owner-store-image img{transform:scale(1.045)}.owner-store-image>span{position:absolute;top:10px;left:10px;border-radius:20px;padding:6px 8px;background:#102b20e8;color:#f1dba7;font-size:7px;letter-spacing:.1em;font-weight:900}
+.owner-store-placeholder{height:100%;display:grid;align-content:center;justify-items:center;gap:8px;background:radial-gradient(circle at 50% 40%,#e2cf9f,#e9eee5 74%)}.owner-store-placeholder span{display:grid;place-items:center;width:57px;height:57px;border:1px solid #a88d5f;border-radius:17px;background:#173a2b;color:#f1dba7;font:700 18px Georgia}.owner-store-placeholder small{color:#596e5c;font-size:7px;font-weight:900;letter-spacing:.15em}
+.owner-store-info{padding:13px}.owner-store-info>small{color:#a18352;text-transform:uppercase;font-size:7px;font-weight:900;letter-spacing:.12em}.owner-store-info h3{margin:7px 0 5px;color:var(--forest);font:500 18px/1.2 Georgia,serif}.owner-store-info p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:42px;margin:0;color:#758078;font-size:9px;line-height:1.6}
+.owner-store-bottom{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:12px}.owner-store-bottom b{font-size:11px;color:#1e4934}.owner-store-bottom a{display:inline-flex;align-items:center;gap:5px;border:1px solid #dfe7dc;border-radius:8px;padding:8px 9px;background:#edf3ec;color:#1e4934;font-size:8px;font-weight:900}.owner-store-stock{display:block;margin-top:9px;color:#939d93;font-size:8px}
+.owner-store-empty{grid-column:1/-1;display:flex;align-items:center;gap:13px;padding:19px;border:1px dashed #d7dfd5;border-radius:14px;background:#fbfcf9;color:#738074}.owner-store-empty>span{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#183d2d;color:#f1dba7;font:700 15px Georgia}.owner-store-empty b{display:block;color:#365541;font-size:11px}.owner-store-empty small{display:block;font-size:9px}
+.gift-teaser{display:grid;grid-template-columns:minmax(0,1fr) minmax(270px,.95fr);align-items:center;gap:25px;margin-top:26px;margin-bottom:22px;padding:25px;border:1px solid #e8e1d2;border-radius:20px;background:linear-gradient(120deg,#f8f3e7,#edf1e8);box-shadow:0 12px 34px #183a2808}.gift-teaser-copy h2{max-width:530px;margin:9px 0;color:var(--forest);font:500 clamp(27px,3vw,36px)/1.08 Georgia,serif;letter-spacing:-.04em}.gift-teaser-copy p{max-width:540px;color:#748075;font-size:10px;line-height:1.8}.gift-teaser-link{display:inline-flex;align-items:center;gap:20px;margin-top:6px;padding:12px 15px;border-radius:10px;background:#163b2b;color:#fff;font-size:10px;font-weight:900;box-shadow:0 6px 16px #163b2b20}.gift-teaser-link b{color:#e8cd92;font-size:15px}
+.gift-teaser-samples{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:100px 100px;gap:10px;transform:rotate(-1deg)}.gift-mini{display:flex;flex-direction:column;justify-content:space-between;padding:13px;border:1px solid #ffffff75;border-radius:11px;color:#fff;box-shadow:0 9px 20px #172e241c}.gift-mini small{font-size:7px;font-weight:900;letter-spacing:.13em}.gift-mini strong{font:700 19px Georgia,serif;letter-spacing:.02em}.gift-mini em{font-style:normal;font-size:8px;opacity:.9}.gift-mini.amazon{background:linear-gradient(135deg,#183d2d,#286346)}.gift-mini.gaming{background:linear-gradient(135deg,#33255d,#7052a9)}.gift-mini.occasion{grid-column:1/-1;background:linear-gradient(110deg,#8b293a,#ba6e57)}
+@media(max-width:900px){.owner-store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gift-teaser{grid-template-columns:1fr}.gift-teaser-samples{max-width:520px;width:100%}}@media(max-width:560px){.owner-store-head{align-items:flex-start;flex-direction:column}.owner-store-grid{gap:9px}.owner-store-info{padding:10px}.owner-store-info h3{font-size:16px}.owner-store-bottom{align-items:flex-start;flex-direction:column}.gift-teaser{padding:16px}.gift-teaser-samples{grid-template-rows:90px 90px}}
+
 </style>
 </head>
 <body>
@@ -734,7 +749,7 @@ body{background:#f2f4f1;color:var(--shop-ink)}
   <a href="#marketplaces" data-sw="Soko la Dunia" data-en="Global Market">Soko la Dunia</a>
   <a href="#print-studio" data-sw="Print Studio" data-en="Print Studio">Print Studio</a>
   <a href="#shop" data-sw="Vitabu vyetu" data-en="Our Books">Vitabu vyetu</a>
-  <a href="#giftcards" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a>
+  <a href="gift-cards.html" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a>
   <a href="#partners" data-sw="Wauzaji washirika" data-en="Partner sellers">Wauzaji washirika</a>
   <a href="#about" data-sw="Jinsi inavyofanya kazi" data-en="How it works">Jinsi inavyofanya kazi</a>
 </nav>
@@ -837,73 +852,7 @@ body{background:#f2f4f1;color:var(--shop-ink)}
 </section>
 
 
-<section class="gift-hub wrap" id="giftcards" aria-labelledby="giftHubTitle">
-  <div class="gift-hub-head">
-    <div>
-      <span class="section-kicker">343SHOP GLOBAL GIFTING · CARDS & VOUCHERS</span>
-      <h2 id="giftHubTitle" data-sw="Zawadi inayomfaa kila mtu." data-en="A gift for every kind of moment.">Zawadi inayomfaa kila mtu.</h2>
-      <p data-sw="Chagua kadi ya kidijitali, kadi halisi au voucher iliyobuniwa na kuchapishwa na studio yetu. Bidhaa za chapa nyingine hupatikana kupitia wauzaji walioidhinishwa pekee." data-en="Choose a digital card, a physical gift card, or a custom voucher designed and printed by our studio. Third-party branded cards are sourced only through authorised sellers.">Chagua kadi ya kidijitali, kadi halisi au voucher iliyobuniwa na kuchapishwa na studio yetu. Bidhaa za chapa nyingine hupatikana kupitia wauzaji walioidhinishwa pekee.</p>
-    </div>
-    <a class="gift-hub-all" href="https://www.amazon.com/gift-cards/b/?ie=UTF8&amp;node=2238192011&amp;ref_=nav_cs_gc" target="_blank" rel="noopener noreferrer" data-sw="Angalia Amazon Gift Cards ↗" data-en="Explore Amazon Gift Cards ↗">Angalia Amazon Gift Cards ↗</a>
-  </div>
-  <div class="gift-format-grid">
-    <article class="gift-format-card">
-      <div class="gift-format-art gift-format-digital" aria-label="Illustration of a digital gift card on a phone">
-        <div class="gift-phone">
-          <div class="gift-phone-top"><span>343</span><i>•••</i></div>
-          <div class="gift-phone-card"><small>GIFT CARD</small><strong>For you ✦</strong><em>Make someone's day</em></div>
-          <div class="gift-phone-lines"><i></i><i></i><i></i></div>
-        </div>
-        <span class="gift-art-label">SEND A LITTLE JOY</span>
-      </div>
-      <div class="gift-format-copy">
-        <small>DIGITAL · eGIFT CARDS</small>
-        <h3 data-sw="Gift Cards za kidijitali" data-en="Digital eGift cards">Gift Cards za kidijitali</h3>
-        <p data-sw="Kadi za kutumwa kwa email au njia ya kidijitali inayokubaliwa na mtoa huduma. Thibitisha nchi, currency na masharti kabla ya kununua." data-en="Cards delivered by email or a provider-supported digital method. Check country, currency and redemption terms before purchase.">Kadi za kutumwa kwa email au njia ya kidijitali inayokubaliwa na mtoa huduma. Thibitisha nchi, currency na masharti kabla ya kununua.</p>
-        <a class="gift-action" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20naomba%20mnisaidie%20kupata%20digital%20gift%20card.%20Tafadhali%20thibitisheni%20brand%2C%20nchi%20na%20delivery." target="_blank" rel="noopener noreferrer" data-sw="Omba eGift Card ↗" data-en="Request an eGift card ↗">Omba eGift Card ↗</a>
-      </div>
-    </article>
-    <article class="gift-format-card">
-      <div class="gift-format-art gift-format-physical" aria-label="Illustration of a physical gift card and envelope">
-        <div class="gift-envelope"><div class="gift-envelope-card"><span>343</span><strong>GIFT<br>WITH LOVE</strong><i>✦</i></div><div class="gift-seal">✦</div></div>
-        <span class="gift-art-label">A GIFT TO HOLD</span>
-      </div>
-      <div class="gift-format-copy">
-        <small>PHYSICAL · GIFT CARDS</small>
-        <h3 data-sw="Gift Cards za mkononi" data-en="Physical gift cards">Gift Cards za mkononi</h3>
-        <p data-sw="Kadi halisi zenye bahasha au packaging ya zawadi. Tunatafuta chanzo na kuthibitisha stock na eneo la matumizi kabla ya oda." data-en="Physical cards with gift envelopes or packaging. We confirm the supplier, stock and redemption region before an order.">Kadi halisi zenye bahasha au packaging ya zawadi. Tunatafuta chanzo na kuthibitisha stock na eneo la matumizi kabla ya oda.</p>
-        <a class="gift-action" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nataka%20physical%20gift%20card.%20Nisaidieni%20kutafuta%20muuzaji%20aliyeidhinishwa." target="_blank" rel="noopener noreferrer" data-sw="Tafuta kadi halisi ↗" data-en="Find a physical card ↗">Tafuta kadi halisi ↗</a>
-      </div>
-    </article>
-    <article class="gift-format-card gift-format-owned">
-      <div class="gift-format-art gift-format-voucher" aria-label="Illustration of a custom printed 343SHOP voucher">
-        <div class="gift-voucher"><small>MADE FOR YOU</small><strong>GIFT<br>VOUCHER</strong><span>YOUR BRAND · YOUR DESIGN</span><i>343</i></div>
-        <span class="gift-art-label">DESIGNED & PRINTED HERE</span>
-      </div>
-      <div class="gift-format-copy">
-        <small>343SHOP PRINT STUDIO · OUR SERVICE</small>
-        <h3 data-sw="Voucher za biashara yako" data-en="Custom business vouchers">Voucher za biashara yako</h3>
-        <p data-sw="Tunabuni na kuchapisha gift vouchers, coupon cards na kadi za ofa zenye brand yako. Hii ni huduma ya printing; masharti ya matumizi unaweka wewe." data-en="We design and print gift vouchers, coupon cards and branded offer cards. This is a print service; your business sets its redemption rules.">Tunabuni na kuchapisha gift vouchers, coupon cards na kadi za ofa zenye brand yako. Hii ni huduma ya printing; masharti ya matumizi unaweka wewe.</p>
-        <a class="gift-action" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nataka%20gift%20voucher%20ya%20biashara%20yangu%20ibuniwe%20na%20kuchapishwa." target="_blank" rel="noopener noreferrer" data-sw="Buni voucher yangu ↗" data-en="Create my voucher ↗">Buni voucher yangu ↗</a>
-      </div>
-    </article>
-  </div>
-  <div class="gift-occasion-head">
-    <div><span class="gift-occasion-kicker">SHOP BY OCCASION</span><h3 data-sw="Chagua kulingana na tukio." data-en="Find a card for the occasion.">Chagua kulingana na tukio.</h3></div>
-    <span data-sw="Pata muundo unaoendana na ujumbe wako." data-en="Choose a design that suits your message.">Pata muundo unaoendana na ujumbe wako.</span>
-  </div>
-  <div class="gift-occasion-grid">
-    <a class="gift-occasion gift-birthday" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20gift%20card%20ya%20Birthday." target="_blank" rel="noopener noreferrer"><span>🎂</span><strong>Birthday</strong><em data-sw="Siku ya kuzaliwa" data-en="Make their day">Siku ya kuzaliwa</em></a>
-    <a class="gift-occasion gift-thanks" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20gift%20card%20ya%20Thank%20You." target="_blank" rel="noopener noreferrer"><span>💛</span><strong>Thank You</strong><em data-sw="Shukrani na pongezi" data-en="Say thank you">Shukrani na pongezi</em></a>
-    <a class="gift-occasion gift-congrats" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20gift%20card%20ya%20Congratulations." target="_blank" rel="noopener noreferrer"><span>🎉</span><strong>Congratulations</strong><em data-sw="Hongera kwa mafanikio" data-en="Celebrate a win">Hongera kwa mafanikio</em></a>
-    <a class="gift-occasion gift-business" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20corporate%20gift%20cards%20au%20vouchers." target="_blank" rel="noopener noreferrer"><span>🏢</span><strong>Business & Events</strong><em data-sw="Zawadi za kampuni na matukio" data-en="For teams and events">Zawadi za kampuni na matukio</em></a>
-  </div>
-  <div class="gift-hub-note">
-    <span>!</span>
-    <p data-sw="Tahadhari: Amazon.com Gift Card hutumika kwa bidhaa na huduma zinazokubalika kwenye Amazon.com pekee. Usitumie claim code kulipia 343SHOP au mfanyabiashara mwingine. Angalia region na masharti ya kila mtoa kadi kabla ya kununua." data-en="Please note: Amazon.com Gift Cards are for eligible purchases on Amazon.com only. Never use a claim code to pay 343SHOP or another merchant. Check each issuer's region and terms before buying.">Tahadhari: Amazon.com Gift Card hutumika kwa bidhaa na huduma zinazokubalika kwenye Amazon.com pekee. Usitumie claim code kulipia 343SHOP au mfanyabiashara mwingine. Angalia region na masharti ya kila mtoa kadi kabla ya kununua.</p>
-    <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GGKDN3QZSKBFGNBF" target="_blank" rel="noopener noreferrer" data-sw="Soma tahadhari za Amazon ↗" data-en="Read Amazon's safety guidance ↗">Soma tahadhari za Amazon ↗</a>
-  </div>
-</section>
+<section class="gift-teaser wrap" aria-labelledby="giftTeaserTitle"><div class="gift-teaser-copy"><span class="section-kicker">343SHOP · GIFT CARDS DESTINATION</span><h2 id="giftTeaserTitle" data-sw="Gift Card yako, sehemu yake maalum." data-en="A dedicated home for every gift card.">Gift Card yako, sehemu yake maalum.</h2><p data-sw="eGift, kadi za mkononi, gaming na zawadi za biashara. Fungua Gift Cards Hub kuona sampo, aina na namna ya kuomba kadi." data-en="eGift cards, physical cards, gaming and business gifting. Open the dedicated Gift Cards Hub to explore samples and request verified sourcing.">eGift, kadi za mkononi, gaming na zawadi za biashara. Fungua Gift Cards Hub kuona sampo, aina na namna ya kuomba kadi.</p><a class="gift-teaser-link" href="gift-cards.html"><span data-sw="Fungua Gift Cards Hub" data-en="Explore Gift Cards Hub">Fungua Gift Cards Hub</span><b>↗</b></a></div><div class="gift-teaser-samples" aria-hidden="true"><div class="gift-mini amazon"><small>343SHOP · DIGITAL</small><strong>GIFT CARD</strong><em>For someone special</em></div><div class="gift-mini gaming"><small>GAME TIME</small><strong>PLAY MORE</strong><em>Make their day</em></div><div class="gift-mini occasion"><small>WITH LOVE</small><strong>JUST FOR YOU</strong><em>Personalise a moment</em></div></div></section>
 
 <section class="global-departments wrap african-pattern-area" id="departments" aria-labelledby="departmentsTitle">
 <div class="departments-head"><div><span class="section-kicker">343SHOP · SHOP BY COLLECTION</span><h2 id="departmentsTitle" data-sw="Chagua upande wako wa fashion." data-en="Shop your style.">Chagua upande wako wa fashion.</h2><p data-sw="Makundi yetu makuu ni mawili. Chagua Men au Women kuanza kutafuta nguo, viatu na accessories kutoka kwa wauzaji." data-en="Two main collections, made simple. Choose Men or Women to discover clothing, shoes and accessories from sellers.">Makundi yetu makuu ni mawili. Chagua Men au Women kuanza kutafuta nguo, viatu na accessories kutoka kwa wauzaji.</p></div><a class="departments-all" href="#marketplaces" data-sw="Soko lote la Dunia ↗" data-en="Explore Global Market ↗">Soko lote la Dunia ↗</a></div>
@@ -952,6 +901,7 @@ body{background:#f2f4f1;color:var(--shop-ink)}
 <div class="categories" id="categories"></div>
 <div class="grid" id="products"></div>
 </section>
+<section class="owner-store wrap" id="owner-store" aria-labelledby="ownerStoreTitle"><div class="owner-store-head"><div><span class="section-kicker">343SHOP · OUR STORE</span><h2 id="ownerStoreTitle" data-sw="Bidhaa zetu za dukani." data-en="Shop 343SHOP originals.">Bidhaa zetu za dukani.</h2><p data-sw="Bidhaa halisi ambazo mmiliki wa 343SHOP ameongeza na kuthibitisha. Hizi ni tofauti na bidhaa za wauzaji wa nje kwenye Soko la Dunia." data-en="First-party products added and approved by the 343SHOP owner. These are separate from independent sellers in the Global Market.">Bidhaa halisi ambazo mmiliki wa 343SHOP ameongeza na kuthibitisha. Hizi ni tofauti na bidhaa za wauzaji wa nje kwenye Soko la Dunia.</p></div><span class="owner-store-stamp">343 / ORIGINALS</span></div><div class="owner-store-grid" id="ownerProductsGrid"><div class="empty">Bidhaa mpya zitaonekana hapa baada ya mmiliki kuziongeza.</div></div></section>
 </div>
 
 <section class="marketplace-section" id="marketplaces">
@@ -1144,14 +1094,14 @@ body{background:#f2f4f1;color:var(--shop-ink)}
   </div>
 </section>
 
-<footer class="footer" id="contact"><div class="wrap"><div class="footer-top"><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true"><svg class="brand-symbol" viewBox="0 0 48 48" focusable="false"><path d="M9 17h30l-2.4 25H11.4L9 17Z" fill="#143628" stroke="#e4c17d" stroke-width="2.3" stroke-linejoin="round"/><path d="M16 17v-4a8 8 0 0 1 16 0v4" fill="none" stroke="#f0d79b" stroke-width="2.3" stroke-linecap="round"/><path d="M15 25h18" stroke="#e4c17d" stroke-width="1.5"/><text x="24" y="36" text-anchor="middle" fill="#fff0c7" font-family="Georgia,serif" font-size="10" font-weight="700">343</text></svg></span><span>343<span>SHOP</span></span></a><p data-sw="Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP." data-en="A brokerage marketplace for independent sellers, alongside original 343SHOP books and scripts.">Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP.</p></div><div><span class="section-kicker" style="color:#d8bd88">LET'S TALK</span><p data-sw="Una wazo au swali? Tuandikie WhatsApp." data-en="Have an idea or a question? Message us on WhatsApp.">Una wazo au swali? Tuandikie WhatsApp.</p><a class="footer-contact" id="footerWhatsApp" href="https://wa.me/255695981035" target="_blank" rel="noopener">+255 695 981 035 ↗</a></div></div><div class="footer-bottom"><span>© 2026 343SHOP. All rights reserved.</span><span><a href="/privacy.html">Privacy &amp; Cookies</a> &nbsp; · &nbsp; Make it personal. Make it memorable.</span></div></div></footer>
+<footer class="footer" id="contact"><div class="wrap"><div class="footer-top"><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true"><svg class="brand-symbol" viewBox="0 0 48 48" focusable="false"><path d="M9 17h30l-2.4 25H11.4L9 17Z" fill="#143628" stroke="#e4c17d" stroke-width="2.3" stroke-linejoin="round"/><path d="M16 17v-4a8 8 0 0 1 16 0v4" fill="none" stroke="#f0d79b" stroke-width="2.3" stroke-linecap="round"/><path d="M15 25h18" stroke="#e4c17d" stroke-width="1.5"/><text x="24" y="36" text-anchor="middle" fill="#fff0c7" font-family="Georgia,serif" font-size="10" font-weight="700">343</text></svg></span><span>343<span>SHOP</span></span></a><p data-sw="Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP." data-en="A brokerage marketplace for independent sellers, alongside original 343SHOP books and scripts.">Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP.</p></div><div><span class="section-kicker" style="color:#d8bd88">LET'S TALK</span><p data-sw="Una wazo au swali? Tuandikie WhatsApp." data-en="Have an idea or a question? Message us on WhatsApp.">Una wazo au swali? Tuandikie WhatsApp.</p><a class="footer-contact" id="footerWhatsApp" href="https://wa.me/255695981035" target="_blank" rel="noopener">+255 695 981 035 ↗</a></div></div><div class="footer-bottom"><span>© 2026 343SHOP. All rights reserved.</span><span><a href="/privacy.html">Privacy &amp; Cookies</a> &nbsp; · &nbsp; <a href="/admin.html" rel="nofollow">Owner Portal</a> &nbsp; · &nbsp; Make it personal. Make it memorable.</span></div></div></footer>
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart"><div class="drawer-head"><h2 data-sw="Kikapu chako" data-en="Your bag">Kikapu chako</h2><button class="close" id="closeCart" type="button">×</button></div><div class="cart-lines" id="cartLines"></div><div class="cart-total" id="cartTotal"></div></aside>
 <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle"><div class="modal-card"><div class="modal-head"><div><span class="section-kicker">343SHOP · CHECKOUT</span><h2 id="checkoutTitle" data-sw="Taarifa za oda" data-en="Order details">Taarifa za oda</h2><p data-sw="Jaza taarifa zako. Oda itatumwa WhatsApp kwa uthibitisho." data-en="Add your details. Your order will be sent to WhatsApp for confirmation.">Jaza taarifa zako. Oda itatumwa WhatsApp kwa uthibitisho.</p></div><button class="close" id="closeCheckout" type="button">×</button></div><form id="checkoutForm"><div class="form-grid"><label class="field"><span data-sw="Jina kamili *" data-en="Full name *">Jina kamili *</span><input name="name" required minlength="2" autocomplete="name"></label><label class="field"><span data-sw="Namba ya simu *" data-en="Phone number *">Namba ya simu *</span><input name="phone" required type="tel" autocomplete="tel"></label><label class="field"><span>Email (optional)</span><input name="email" type="email" autocomplete="email"></label><label class="field"><span data-sw="Mji / eneo *" data-en="City / area *">Mji / eneo *</span><input name="city" required autocomplete="address-level2"></label><label class="field full"><span data-sw="Anuani / maelekezo ya kufikisha *" data-en="Delivery address / directions *">Anuani / maelekezo ya kufikisha *</span><textarea name="address" required rows="2"></textarea></label><label class="field full"><span data-sw="Maelezo ya ziada (hiari)" data-en="Extra notes (optional)">Maelezo ya ziada (hiari)</span><textarea name="notes" rows="2"></textarea></label></div><div class="form-note" data-sw="Baada ya kubonyeza hapa, WhatsApp itafunguka ikiwa na ujumbe wa oda yako. Bonyeza Send ndani ya WhatsApp ili kutuma oda. Malipo hayafanyiki kwenye tovuti hii; tutakuthibitishia jumla na njia ya malipo kwa mawasiliano." data-en="After clicking below, WhatsApp opens with your order message. Press Send in WhatsApp to submit it. This site does not collect payment; we will confirm the total and payment method with you directly.">Baada ya kubonyeza hapa, WhatsApp itafunguka ikiwa na ujumbe wa oda yako. Bonyeza Send ndani ya WhatsApp ili kutuma oda. Malipo hayafanyiki kwenye tovuti hii; tutakuthibitishia jumla na njia ya malipo kwa mawasiliano.</div><button class="btn submit" type="submit"><span data-sw="Tuma oda kupitia WhatsApp" data-en="Send order on WhatsApp">Tuma oda kupitia WhatsApp</span> ↗</button><p class="fine" data-sw="Oda haijatumwa mpaka ubonyeze Send ndani ya WhatsApp." data-en="Your order is not submitted until you press Send in WhatsApp.">Oda haijatumwa mpaka ubonyeze Send ndani ya WhatsApp.</p></form></div></div>
 <button class="ai-launch" id="aiLaunch" type="button" aria-controls="aiPanel" aria-expanded="false">✦ <span data-sw="Msaidizi wa AI" data-en="Ask 343 AI">Msaidizi wa AI</span></button>
 <section class="ai-panel" id="aiPanel" role="dialog" aria-label="343SHOP AI assistant" aria-hidden="true">
-  <div class="ai-head"><div><strong>343SHOP Assistant</strong><small>ChatGPT · Claude</small></div><button class="close" id="aiClose" type="button" aria-label="Close assistant">×</button></div>
-  <div class="ai-controls"><label for="aiProvider" data-sw="AI:" data-en="AI:">AI:</label><select id="aiProvider"><option value="openai">ChatGPT · GPT-5.6 Luna</option><option value="claude">Claude · Haiku 5.5</option></select></div>
+  <div class="ai-head"><div><strong>343SHOP Assistant</strong><small>Gemini · ChatGPT · Claude</small></div><button class="close" id="aiClose" type="button" aria-label="Close assistant">×</button></div>
+  <div class="ai-controls"><label for="aiProvider" data-sw="AI:" data-en="AI:">AI:</label><select id="aiProvider"><option value="gemini">Google Gemini 3.8 Flash</option><option value="openai">ChatGPT</option><option value="claude">Claude</option></select></div>
   <div class="ai-status" id="aiStatus" role="status">Inaunganisha msaidizi...</div>
   <div class="ai-messages" id="aiMessages" aria-live="polite"><div class="ai-bubble bot">Karibu 343SHOP! Ni bidhaa gani ungependa kujua zaidi?</div></div>
   <form class="ai-compose" id="aiForm"><input id="aiInput" type="text" maxlength="1200" placeholder="Andika swali lako..." autocomplete="off" aria-label="Message" disabled><button id="aiSend" type="submit" aria-label="Send message" disabled>↑</button></form>
@@ -1448,7 +1398,7 @@ $("cartBtn").onclick=openCart;$("closeCart").onclick=closeCart;$("overlay").oncl
 $("search").addEventListener("input",e=>{query=e.target.value.toLowerCase().trim();renderProducts()});
 $("checkoutForm").addEventListener("submit",e=>{e.preventDefault();if(!e.currentTarget.reportValidity())return;const hasItems=Object.entries(cart).some(([slug,qty])=>PRODUCTS.some(p=>p.slug===slug)&&Number.isSafeInteger(qty)&&qty>0);if(!hasItems){$("checkoutModal").classList.remove("show");toast(tr("Kikapu hakina bidhaa. Chagua bidhaa kwanza.","Your bag is empty. Add an item first."));return}const data=Object.fromEntries(new FormData(e.currentTarget).entries());const ref="343-"+Date.now().toString(36).toUpperCase();const t=totals();const items=Object.entries(cart).filter(([k,n])=>n>0).map(([k,n])=>{const p=PRODUCTS.find(x=>x.slug===k);return p?"• "+(lang==="sw"?p.sw:p.en)+" × "+n+" — "+money(p.price*n):""}).filter(Boolean);const msg=["*343SHOP — ORDER REQUEST*","Reference: "+ref,"","*ITEMS*",...items,"","Subtotal: "+money(t.subtotal),"Delivery: To be confirmed before order","*PRODUCTS SUBTOTAL (delivery excluded): "+money(t.subtotal),"","*CUSTOMER*","Name: "+data.name,"Phone: "+data.phone,"Email: "+(data.email||"Not provided"),"Area: "+data.city,"Address: "+data.address,"Extra notes: "+(data.notes||"None"),"","Please confirm availability, final delivery cost and payment instructions."];const url="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg.join("\n"));const opened=window.open("about:blank","_blank");if(opened){opened.opener=null;opened.location=url}else window.location.href=url;$("checkoutModal").classList.remove("show");toast(tr("WhatsApp imefunguliwa. Bonyeza Send kutuma oda.","WhatsApp opened. Press Send to submit your order."))});
 const aiLaunch=$("aiLaunch"),aiPanel=$("aiPanel"),aiMessagesEl=$("aiMessages"),aiProvider=$("aiProvider"),aiInput=$("aiInput"),aiSend=$("aiSend"),aiStatus=$("aiStatus");
-let aiHistory=[],aiProviders={openai:false,claude:false},aiBusy=false;
+let aiHistory=[],aiProviders={openai:false,claude:false,gemini:false},aiBusy=false;
 function addAiBubble(role,text){const el=document.createElement("div");el.className="ai-bubble "+(role==="user"?"user":"bot");el.textContent=text;aiMessagesEl.appendChild(el);aiMessagesEl.scrollTop=aiMessagesEl.scrollHeight}
 function setAiStatus(message){aiStatus.textContent=message}
 function openAi(){aiPanel.classList.add("open");aiPanel.setAttribute("aria-hidden","false");aiLaunch.setAttribute("aria-expanded","true");aiInput.focus()}
@@ -1458,10 +1408,12 @@ async function loadAiProviders(){
     const response=await fetch("/api/ai/status",{headers:{"Accept":"application/json"},cache:"no-store"});
     if(!response.ok)throw new Error("status");
     const data=await response.json();aiProviders=data.providers||aiProviders;
-    const openOption=aiProvider.querySelector('option[value="openai"]'),claudeOption=aiProvider.querySelector('option[value="claude"]');
-    openOption.disabled=!aiProviders.openai;claudeOption.disabled=!aiProviders.claude;
-    if(!aiProviders.openai&&aiProviders.claude)aiProvider.value="claude";
-    const ready=aiProviders.openai||aiProviders.claude;
+    const geminiOption=aiProvider.querySelector('option[value="gemini"]'),openOption=aiProvider.querySelector('option[value="openai"]'),claudeOption=aiProvider.querySelector('option[value="claude"]');
+    geminiOption.disabled=!aiProviders.gemini;openOption.disabled=!aiProviders.openai;claudeOption.disabled=!aiProviders.claude;
+    if(aiProviders.gemini)aiProvider.value="gemini";
+    else if(aiProviders.openai)aiProvider.value="openai";
+    else if(aiProviders.claude)aiProvider.value="claude";
+    const ready=aiProviders.gemini||aiProviders.openai||aiProviders.claude;
     aiInput.disabled=!ready;aiSend.disabled=!ready;
     setAiStatus(ready?tr("Msaidizi yuko tayari. Uliza kuhusu bidhaa na oda.","Assistant is ready. Ask about products and orders."):tr("Msaidizi anasubiri API key za duka ziwekwe na mmiliki.","AI setup is pending. The shop owner must add the API keys."));
   }catch{setAiStatus(tr("Msaidizi hapatikani kwa sasa. Tumia WhatsApp kuwasiliana nasi.","Assistant is temporarily unavailable. Please use WhatsApp."))}
@@ -1480,9 +1432,27 @@ $("aiForm").addEventListener("submit",async e=>{
     if(typeof data.reply!=="string"||!data.reply.trim())throw new Error(tr("Jibu halijapatikana. Jaribu tena.","No reply received. Please try again."));
     aiHistory.push({role:"assistant",content:data.reply});addAiBubble("assistant",data.reply);setAiStatus(tr("Uko huru kuuliza swali jingine.","You can ask another question."));
   }catch(error){addAiBubble("assistant",error.message||tr("Hitilafu ya mtandao. Jaribu tena.","Network error. Please try again."));setAiStatus(tr("Muunganisho haujakamilika.","Connection not completed."))}
-  finally{aiBusy=false;const ready=aiProviders.openai||aiProviders.claude;aiInput.disabled=!ready;aiSend.disabled=!ready;aiInput.focus()}
+  finally{aiBusy=false;const ready=aiProviders.gemini||aiProviders.openai||aiProviders.claude;aiInput.disabled=!ready;aiSend.disabled=!ready;aiInput.focus()}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();closeAi();setMobileMenu(false);$("checkoutModal").classList.remove("show")}});
+/* Owner-published product shelf. Only approved 343SHOP first-party items are shown. */
+function escapeStoreHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
+function ownerProductMoney(amount,currency){try{return new Intl.NumberFormat("en-TZ",{style:"currency",currency:currency||"TZS",maximumFractionDigits:2}).format(Number(amount)||0)}catch{return (currency||"TZS")+" "+(Number(amount)||0).toLocaleString()}}
+async function loadOwnerStoreProducts(){
+ const grid=$("ownerProductsGrid");if(!grid)return;
+ try{
+  const response=await fetch("/api/store/owner-products",{headers:{"Accept":"application/json"},cache:"no-store"});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok||!Array.isArray(data.products))throw new Error("catalogue unavailable");
+  if(!data.products.length){grid.innerHTML='<div class="owner-store-empty"><span>343</span><div><b>'+tr("Bidhaa mpya zinaandaliwa.","New products are being prepared.")+'</b><small>'+tr("Tembelea tena hivi karibuni.","Check back soon.")+'</small></div></div>';return}
+  grid.innerHTML=data.products.map(p=>{
+   const image=p.image_url?'<img src="'+escapeStoreHtml(p.image_url)+'" alt="'+escapeStoreHtml(p.product_name)+'" loading="lazy" decoding="async">':'<div class="owner-store-placeholder"><span>343</span><small>ORIGINAL PRODUCT</small></div>';
+   const stock=p.stock_qty===null||p.stock_qty===undefined?tr("Upatikanaji thibitishwa kwa oda","Availability confirmed on request"):tr("Stock iliyorekodiwa: "+p.stock_qty,"Recorded stock: "+p.stock_qty);
+   const message=encodeURIComponent("Habari 343SHOP, naomba taarifa na kuagiza bidhaa: "+p.product_name+". Naomba kuthibitishiwa stock, bei ya sasa na delivery.");
+   return '<article class="owner-store-card"><div class="owner-store-image">'+image+'<span>343SHOP ORIGINAL</span></div><div class="owner-store-info"><small>'+escapeStoreHtml(p.category)+' · '+escapeStoreHtml(p.product_type)+'</small><h3>'+escapeStoreHtml(p.product_name)+'</h3><p>'+escapeStoreHtml(p.description)+'</p><div class="owner-store-bottom"><b>'+ownerProductMoney(p.price,p.currency)+'</b><a href="https://wa.me/'+WHATSAPP_NUMBER+'?text='+message+'" target="_blank" rel="noopener noreferrer">'+tr("Uliza / Agiza","Enquire / Order")+' ↗</a></div><span class="owner-store-stock">'+escapeStoreHtml(stock)+'</span></div></article>';
+  }).join("");
+ }catch{grid.innerHTML='<div class="owner-store-empty"><div><b>'+tr("Catalogue haipatikani kwa sasa.","Catalogue is temporarily unavailable.")+'</b><small>'+tr("Jaribu tena baadaye.","Please try again later.")+'</small></div></div>'}
+}
 async function loadPrintPortfolioArtwork(){
  const images=document.querySelectorAll("img[data-print-sample]");
  try{
@@ -1494,6 +1464,7 @@ async function loadPrintPortfolioArtwork(){
 }
 updateCount();renderCats();renderProducts();loadAiProviders();loadMarketplaceStatus();loadPrintPortfolioArtwork();
 loadPublishedStoreProducts();
+loadOwnerStoreProducts();
 })();
 </script>
 </body>
