@@ -515,6 +515,13 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
         <a href="https://www.alibaba.com/" target="_blank" rel="noopener noreferrer">Tafuta Alibaba ↗</a>
         <a href="https://ads.alibaba.com/" target="_blank" rel="noopener noreferrer" data-sw="Alibaba Affiliate ↗" data-en="Alibaba Affiliate ↗">Alibaba Affiliate ↗</a>
       </article>
+      <article class="marketplace-card" data-marketplace="shopify">
+        <div class="marketplace-brand">Shopify Stores</div>
+        <p data-sw="Unganisha maduka huru yanayotumia Shopify kupitia Storefront API na ruhusa ya kila mfanyabiashara." data-en="Connect independent Shopify-powered stores through the Storefront API with each merchant's authorization.">Unganisha maduka huru yanayotumia Shopify kupitia Storefront API na ruhusa ya kila mfanyabiashara.</p>
+        <div class="marketplace-state" id="marketplaceStatusShopify">Inahitaji duka mshirika na Storefront token</div>
+        <a href="https://www.shopify.com/" target="_blank" rel="noopener noreferrer">Shopify ↗</a>
+        <a href="https://shopify.dev/docs/api/storefront/latest" target="_blank" rel="noopener noreferrer" data-sw="Storefront API docs ↗" data-en="Storefront API docs ↗">Storefront API docs ↗</a>
+      </article>
       <article class="marketplace-card" data-marketplace="ebay">
         <div class="marketplace-brand ebay">eBay</div>
         <p data-sw="Browse API tayari imeandaliwa kwenye Worker. Inahitaji developer credentials; EPN campaign ID ni kwa affiliate tracking." data-en="Browse API adapter is implemented in the Worker. Developer credentials are required; an EPN campaign ID enables affiliate tracking.">Browse API tayari imeandaliwa kwenye Worker. Inahitaji developer credentials; EPN campaign ID ni kwa affiliate tracking.</p>
@@ -711,14 +718,18 @@ async function loadMarketplaceStatus(){
     const providers=Object.fromEntries((data.marketplaces||[]).map(item=>[item.id,item]));
     const labels={
       amazon:tr("Inahitaji Amazon Associates + Creators API approval","Requires Amazon Associates + Creators API approval"),
-      alibaba:tr("Inahitaji affiliate account approval","Affiliate account approval required"),
+      alibaba:tr("Inahitaji Alibaba Open Platform developer approval na API access","Requires Alibaba Open Platform developer approval and API access"),
+      shopify:tr("Inahitaji duka mshirika na Storefront token","Requires a partner store and Storefront token"),
       ebay:tr("API credentials hazijawekwa","API credentials not configured"),
       kikuu:tr("Inahitaji makubaliano ya partnership","Business partnership agreement required")
     };
-    for(const id of ["amazon","alibaba","ebay","kikuu"]){
+    for(const id of ["amazon","alibaba","shopify","ebay","kikuu"]){
       const item=providers[id],el=$("marketplaceStatus"+id.charAt(0).toUpperCase()+id.slice(1));
       if(!el||!item)continue;
       let label=labels[id];
+      if(id==="shopify"&&item.api_configured){
+        label=tr("Storefront credentials zipo; live test inahitajika","Storefront credentials present; live test required");
+      }
       if(id==="ebay"&&item.api_configured){
         label=item.environment==="sandbox"?tr("Sandbox imeunganishwa; Production haijaidhinishwa","Sandbox connected; Production not approved"):item.affiliate_tracking?tr("Production API + affiliate tracking vimewekwa","Production API + affiliate tracking configured"):tr("API credentials zimewekwa; affiliate tracking pending","API credentials configured; affiliate tracking pending");
       }
