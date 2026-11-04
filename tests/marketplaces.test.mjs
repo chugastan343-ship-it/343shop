@@ -274,6 +274,18 @@ test("homepage inline JavaScript parses and existing cart/WhatsApp checkout rema
 });
 
 
+test("mobile navigation exposes all main sections and supports accessible open/close controls", async () => {
+  const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  assert.match(html, /id="mobileMenuBtn"[^>]*aria-controls="mobileMenu"[^>]*aria-expanded="false"/);
+  assert.match(html, /<nav class="mobile-menu" id="mobileMenu"[^>]*aria-hidden="true"/);
+  for (const section of ["departments", "marketplaces", "shop", "about", "partners", "contact"]) {
+    assert.match(html, new RegExp('href="#' + section + '"'));
+  }
+  assert.match(html, /function setMobileMenu\(open\)/);
+  assert.match(html, /setMobileMenu\(false\)/);
+  assert.match(html, /\.mobile-menu\.is-open\{display:grid/);
+});
+
 test("343SHOP-owned storefront catalogue contains only its books and never invents delivery charges", async () => {
   const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const start = html.indexOf("const PRODUCTS=[");
