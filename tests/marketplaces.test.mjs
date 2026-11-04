@@ -169,13 +169,20 @@ test("AI assistant receives live global brokerage context without claiming live 
 
 function makeProductD1Mock() {
   const rows = [];
+  let schemaStatements = 0;
   return {
     rows,
+    get schemaStatements() { return schemaStatements; },
     prepare(sql) {
       let values = [];
       return {
         bind(...args) { values = args; return this; },
         async run() {
+          if (/^\\s*CREATE TABLE IF NOT EXISTS store_products/i.test(sql) ||
+              /^\\s*CREATE INDEX IF NOT EXISTS idx_store_products_/i.test(sql)) {
+            schemaStatements += 1;
+            return { success: true, meta: { changes: 0 } };
+          }
           if (sql.includes("INSERT INTO store_products")) {
             if (rows.some(row => row.source_url === values[7])) throw new Error("UNIQUE constraint failed: store_products.source_url");
             rows.push({
@@ -254,6 +261,7 @@ test("owner can save, review and explicitly publish a sourced product draft", as
   assert.equal(draft.status, "draft_saved");
   assert.equal(draft.published, false);
   assert.equal(DB.rows[0].status, "draft");
+  assert.equal(DB.schemaStatements, 3, "the Worker should create the table and both indexes automatically");
 
   const listed = await callMcpTool("list_product_drafts", { limit: 10 }, env, token);
   assert.equal(listed.result.isError, false);
