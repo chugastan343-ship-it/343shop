@@ -630,7 +630,7 @@ async function getEbayAccessToken(env) {
     redirect: "error",
     signal: AbortSignal.timeout(8000)
   });
-  if (!response.ok) throw new Error("ebay_token_failed");
+  if (!response.ok) throw new Error("ebay_oauth_http_" + response.status);
   const data = await response.json();
   if (typeof data.access_token !== "string" || !data.access_token || !Number.isFinite(Number(data.expires_in))) {
     throw new Error("ebay_token_invalid");
@@ -665,7 +665,7 @@ async function searchEbayProducts(query, env, limit = 12) {
     const response = await fetch(config.apiBase + "/buy/browse/v1/item_summary/search?" + params.toString(), {
       method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(9000)
     });
-    if (!response.ok) throw new Error("ebay_search_failed");
+    if (!response.ok) throw new Error("ebay_browse_http_" + response.status);
     const payload = await response.json();
     const items = Array.isArray(payload.itemSummaries) ? payload.itemSummaries : [];
     const results = items.map((item) => {
@@ -691,8 +691,21 @@ async function searchEbayProducts(query, env, limit = 12) {
       };
     }).filter(Boolean);
     return { status: "available", affiliate_tracking: affiliateTracking, results };
-  } catch {
-    return { status: "temporarily_unavailable", affiliate_tracking: false, results: [] };
+  } catch (error) {
+    const message = typeof error?.message === "string" ? error.message : "";
+    const httpError = /^(ebay_(?:oauth|browse)_http_[1-5]\d{2})$/.exec(message);
+    const errorCode = httpError
+      ? httpError[1]
+      : message === "ebay_token_invalid"
+        ? "ebay_token_invalid"
+        : error?.name === "TimeoutError" || error?.name === "AbortError"
+          ? "ebay_request_timeout"
+          : "ebay_upstream_network_or_response_error";
+    console.warn("eBay Browse API request failed", {
+      environment: config.environment,
+      errorCode
+    });
+    return { status: "temporarily_unavailable", error_code: errorCode, affiliate_tracking: false, results: [] };
   }
 }
 
@@ -727,7 +740,7 @@ async function handleMarketplaceSearch(request, env, url) {
     results,
     sources: {
       partner_catalogues: { status: base.connected_partner_count ? "checked" : "none_configured", count: base.connected_partner_count },
-      ebay: { status: ebay.status, count: ebay.results.length, affiliate_tracking: ebay.affiliate_tracking }
+      ebay: { status: ebay.status, count: ebay.results.length, affiliate_tracking: ebay.affiliate_tracking, ...(ebay.error_code ? { error_code: ebay.error_code } : {}) }
     },
     external_marketplace_search_links: buildGlobalMarketplaceSearchLinks(query, env),
     marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
