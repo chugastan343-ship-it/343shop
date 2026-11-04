@@ -549,22 +549,12 @@ function marketplaceIntegrationsStatus(env) {
   const shopifyConfigured = Boolean(env.SHOPIFY_STORE_DOMAIN && env.SHOPIFY_STOREFRONT_ACCESS_TOKEN);
   return {
     checked_at: new Date().toISOString(),
-    marketplace_count: 7,
+    marketplace_count: 5,
     marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
     marketplace_directory: buildGlobalMarketplaceSearchLinks("", env),
     configured_partner_catalogue_count: partners.length,
     configured_partner_catalogues: partners.map(({ id, name, city, categories }) => ({ id, name, city, categories })),
     marketplaces: [
-      {
-        id: "amazon", name: "Amazon", website: "https://www.amazon.com",
-        integration: "creators_api", state: "approval_required", api_configured: false, affiliate_tracking: false,
-        next_step: "Join Amazon Associates for the target marketplace, obtain final acceptance and Creators API access, then configure the official credentials."
-      },
-      {
-        id: "alibaba", name: "Alibaba.com", website: "https://www.alibaba.com",
-        integration: "affiliate_portal_and_approved_feeds", state: "affiliate_approval_required", api_configured: false, affiliate_tracking: false,
-        next_step: "Apply through the official Alibaba Affiliates portal. Use only approved offers, data feeds or API material provided in the affiliate account."
-      },
       {
         id: "amazon", name: "Amazon", website: "https://www.amazon.com",
         integration: "creators_api", state: amazonConfigured ? "credentials_configured_pending_live_test" : "approval_and_credentials_required",
