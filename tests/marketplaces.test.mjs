@@ -92,6 +92,32 @@ test("eBay Sandbox credentials use Sandbox OAuth and Browse API endpoints", asyn
   }
 });
 
+
+test("eBay Sandbox returns a safe OAuth failure code without exposing credentials", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => {
+    assert.match(String(input), /^https:\/\/api\.sandbox\.ebay\.com\/identity\/v1\/oauth2\/token$/);
+    return new Response(JSON.stringify({ error: "invalid_client", error_description: "Credentials are invalid." }), {
+      status: 401, headers: { "content-type": "application/json" }
+    });
+  };
+
+  try {
+    const response = await get("/api/marketplaces/search?q=android%20phone&source=ebay", {
+      EBAY_ENVIRONMENT: "sandbox",
+      EBAY_SANDBOX_CLIENT_ID: "diagnostic-client-id",
+      EBAY_SANDBOX_CLIENT_SECRET: "diagnostic-client-secret"
+    });
+    const data = await response.json();
+    assert.equal(data.sources.ebay.status, "temporarily_unavailable");
+    assert.equal(data.sources.ebay.error_code, "ebay_oauth_http_401");
+    assert.equal(JSON.stringify(data).includes("diagnostic-client-secret"), false);
+    assert.equal(JSON.stringify(data).includes("Credentials are invalid"), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("eBay Browse API uses server-side OAuth and preserves affiliate URL", async () => {
   const originalFetch = globalThis.fetch;
   const calls = [];
