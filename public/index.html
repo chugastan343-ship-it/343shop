@@ -186,81 +186,6 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 .hero-search-meta i{width:6px;height:6px;border-radius:50%;background:#7eaa83;box-shadow:0 0 0 3px rgba(126,170,131,.15)}
 .trust{background:rgba(255,255,255,.42);border-color:rgba(18,59,48,.10);padding:19px 0}
 
-/* Amazon-inspired visual browsing and 343SHOP in-house print catalogue */
-.hero-art{background:#172c24;isolation:isolate}
-.hero-art:before{display:none}
-.hero-art:after{display:none}
-.hero-art-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:saturate(.86)}
-.hero-art-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,25,19,.68),rgba(11,25,19,.10) 76%),linear-gradient(0deg,rgba(11,25,19,.58),transparent 55%);z-index:-1}
-.hero-art .art-label{top:23px;left:24px;color:#f4dfb7;text-shadow:0 2px 12px rgba(0,0,0,.4)}
-.hero-art-message{position:absolute;left:25px;right:20px;bottom:78px;display:flex;flex-direction:column;gap:8px;color:white}
-.hero-art-message strong{font:500 clamp(27px,3vw,39px)/1.05 Georgia,serif;max-width:380px}
-.hero-art-message em{font:700 10px/1.5 Arial,sans-serif;color:#f0dfc2;font-style:normal;letter-spacing:.06em}
-.hero-art .art-caption{color:#183628;font-weight:900}
-.print-studio{padding-top:58px;padding-bottom:31px}
-.print-studio-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:23px}
-.print-studio-head h2{font:500 clamp(30px,4vw,44px)/1.04 Georgia,serif;color:var(--forest);letter-spacing:-.05em;margin:9px 0 8px}
-.print-studio-head p{max-width:660px;font-size:11px;line-height:1.75;color:#758077;margin:0}
-.print-studio-link{flex:none;font-size:10px;font-weight:900;color:var(--forest);border:1px solid #cbd5c9;border-radius:30px;padding:11px 16px;white-space:nowrap}
-.print-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.print-card{min-width:0;overflow:hidden;border:1px solid #e5e8df;border-radius:17px;background:#fffefa;box-shadow:0 9px 26px rgba(20,50,37,.045);transition:transform .22s,box-shadow .22s,border-color .22s}
-.print-card:hover{transform:translateY(-4px);box-shadow:0 19px 38px rgba(20,50,37,.10);border-color:#cbd7ca}
-.print-card-media{position:relative;height:174px;background:#ebece5;overflow:hidden}
-.print-card-media img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .5s}
-.print-card:hover .print-card-media img{transform:scale(1.045)}
-.print-card-media>span{position:absolute;left:11px;top:11px;padding:7px 9px;border-radius:30px;background:rgba(24,53,42,.88);color:#fff;font-size:7px;font-weight:900;letter-spacing:.12em}
-.print-card-content{padding:14px 14px 13px}
-.print-card-content>small{font-size:7px;letter-spacing:.15em;font-weight:900;color:#a0804d}
-.print-card-content h3{font:600 15px/1.25 Arial,sans-serif;color:var(--forest);margin:8px 0 7px;min-height:38px}
-.print-card-content p{font-size:9px;line-height:1.6;color:#788278;min-height:43px;margin:0 0 13px}
-.print-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:11px;border-top:1px solid #edf0e9}
-.print-price{color:#1d4837;font-size:16px;font-weight:900;white-space:nowrap}
-.print-quote{color:#795f36;font-size:11px;font-weight:900}
-.print-card-bottom a{font-size:8px;font-weight:900;color:#fff;background:var(--forest);padding:9px 10px;border-radius:30px;white-space:nowrap}
-.print-card-bottom a:hover{background:#2b5744}
-.print-studio-note{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 15px;border-radius:13px;background:#edf0e8;color:#778278}
-.print-studio-note>span{display:grid;place-items:center;flex:0 0 31px;height:31px;border-radius:9px;background:var(--forest);color:#e9d7ad;font:700 13px Georgia,serif}
-.print-studio-note p{margin:0;font-size:9px;line-height:1.6}
-.department-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
-.department-card.department-photo{display:block;min-height:220px;padding:0;border:0;border-radius:17px;background:#243d31;box-shadow:0 9px 28px rgba(20,50,37,.07)}
-.department-card.department-photo:before{display:none}
-.department-photo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .55s}
-.department-photo-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(7,20,14,.02) 15%,rgba(7,20,14,.76) 100%)}
-.department-card.department-photo:hover .department-photo-img{transform:scale(1.055)}
-.department-photo-copy{position:absolute;z-index:2;left:17px;right:35px;bottom:17px;display:flex;flex-direction:column;gap:6px;color:white}
-.department-photo-copy small{font-size:7px;font-weight:900;letter-spacing:.16em;color:#f1d8a8}
-.department-photo-copy strong{font:600 16px/1.15 Arial,sans-serif;color:#fff}
-.department-photo-copy em{font:400 9px/1.4 Arial,sans-serif;color:rgba(255,255,255,.84);font-style:normal}
-.department-photo-arrow{position:absolute;right:14px;bottom:15px;z-index:2;color:#fff;font-size:16px}
-@media(max-width:1050px){.print-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:900px){.department-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.department-card.department-photo{min-height:205px}}
-@media(max-width:650px){
-  .hero-art{min-height:260px}
-  .hero-art-message{left:17px;bottom:67px}
-  .hero-art-message strong{font-size:29px}
-  .hero-art .art-label{left:17px;top:17px;font-size:8px}
-  .print-studio{padding-top:39px;padding-bottom:22px}
-  .print-studio-head{align-items:flex-start;flex-direction:column;gap:11px}
-  .print-studio-head h2{font-size:33px}
-  .print-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-  .print-card{border-radius:13px}
-  .print-card-media{height:135px}
-  .print-card-content{padding:10px 10px 11px}
-  .print-card-content h3{font-size:12px;min-height:42px}
-  .print-card-content p{font-size:8px;min-height:53px}
-  .print-price{font-size:13px}
-  .print-quote{font-size:9px}
-  .print-card-bottom{align-items:flex-start;flex-direction:column;gap:9px}
-  .print-card-bottom a{font-size:8px}
-  .department-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-  .department-card.department-photo{min-height:170px;border-radius:13px}
-  .department-photo-copy{left:11px;right:26px;bottom:12px;gap:5px}
-  .department-photo-copy small{font-size:6px}
-  .department-photo-copy strong{font-size:12px}
-  .department-photo-copy em{font-size:8px}
-  .department-photo-arrow{right:10px;bottom:10px}
-}
-
 .global-departments{padding-top:62px;padding-bottom:38px}
 .departments-head{display:flex;align-items:end;justify-content:space-between;gap:22px;margin-bottom:22px}
 .departments-head h2{font:500 clamp(31px,4vw,45px)/1.04 Georgia,serif;color:var(--forest);letter-spacing:-.05em;margin:9px 0 8px}
@@ -458,6 +383,81 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 @media(max-width:390px){.marketplace-grid,.marketplace-results{grid-template-columns:1fr}.marketplace-card{min-height:0}.marketplace-card p{min-height:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
+
+/* Amazon-inspired visual browsing and 343SHOP in-house print catalogue */
+.hero-art{background:#172c24;isolation:isolate}
+.hero-art:before{display:none}
+.hero-art:after{display:none}
+.hero-art-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:saturate(.86)}
+.hero-art-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,25,19,.68),rgba(11,25,19,.10) 76%),linear-gradient(0deg,rgba(11,25,19,.58),transparent 55%);z-index:-1}
+.hero-art .art-label{top:23px;left:24px;color:#f4dfb7;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.hero-art-message{position:absolute;left:25px;right:20px;bottom:78px;display:flex;flex-direction:column;gap:8px;color:white}
+.hero-art-message strong{font:500 clamp(27px,3vw,39px)/1.05 Georgia,serif;max-width:380px}
+.hero-art-message em{font:700 10px/1.5 Arial,sans-serif;color:#f0dfc2;font-style:normal;letter-spacing:.06em}
+.hero-art .art-caption{color:#183628;font-weight:900}
+.print-studio{padding-top:58px;padding-bottom:31px}
+.print-studio-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:23px}
+.print-studio-head h2{font:500 clamp(30px,4vw,44px)/1.04 Georgia,serif;color:var(--forest);letter-spacing:-.05em;margin:9px 0 8px}
+.print-studio-head p{max-width:660px;font-size:11px;line-height:1.75;color:#758077;margin:0}
+.print-studio-link{flex:none;font-size:10px;font-weight:900;color:var(--forest);border:1px solid #cbd5c9;border-radius:30px;padding:11px 16px;white-space:nowrap}
+.print-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.print-card{min-width:0;overflow:hidden;border:1px solid #e5e8df;border-radius:17px;background:#fffefa;box-shadow:0 9px 26px rgba(20,50,37,.045);transition:transform .22s,box-shadow .22s,border-color .22s}
+.print-card:hover{transform:translateY(-4px);box-shadow:0 19px 38px rgba(20,50,37,.10);border-color:#cbd7ca}
+.print-card-media{position:relative;height:174px;background:#ebece5;overflow:hidden}
+.print-card-media img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .5s}
+.print-card:hover .print-card-media img{transform:scale(1.045)}
+.print-card-media>span{position:absolute;left:11px;top:11px;padding:7px 9px;border-radius:30px;background:rgba(24,53,42,.88);color:#fff;font-size:7px;font-weight:900;letter-spacing:.12em}
+.print-card-content{padding:14px 14px 13px}
+.print-card-content>small{font-size:7px;letter-spacing:.15em;font-weight:900;color:#a0804d}
+.print-card-content h3{font:600 15px/1.25 Arial,sans-serif;color:var(--forest);margin:8px 0 7px;min-height:38px}
+.print-card-content p{font-size:9px;line-height:1.6;color:#788278;min-height:43px;margin:0 0 13px}
+.print-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:11px;border-top:1px solid #edf0e9}
+.print-price{color:#1d4837;font-size:16px;font-weight:900;white-space:nowrap}
+.print-quote{color:#795f36;font-size:11px;font-weight:900}
+.print-card-bottom a{font-size:8px;font-weight:900;color:#fff;background:var(--forest);padding:9px 10px;border-radius:30px;white-space:nowrap}
+.print-card-bottom a:hover{background:#2b5744}
+.print-studio-note{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 15px;border-radius:13px;background:#edf0e8;color:#778278}
+.print-studio-note>span{display:grid;place-items:center;flex:0 0 31px;height:31px;border-radius:9px;background:var(--forest);color:#e9d7ad;font:700 13px Georgia,serif}
+.print-studio-note p{margin:0;font-size:9px;line-height:1.6}
+.department-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.department-card.department-photo{display:block;min-height:220px;padding:0;border:0;border-radius:17px;background:#243d31;box-shadow:0 9px 28px rgba(20,50,37,.07)}
+.department-card.department-photo:before{display:none}
+.department-photo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .55s}
+.department-photo-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(7,20,14,.02) 15%,rgba(7,20,14,.76) 100%)}
+.department-card.department-photo:hover .department-photo-img{transform:scale(1.055)}
+.department-photo-copy{position:absolute;z-index:2;left:17px;right:35px;bottom:17px;display:flex;flex-direction:column;gap:6px;color:white}
+.department-photo-copy small{font-size:7px;font-weight:900;letter-spacing:.16em;color:#f1d8a8}
+.department-photo-copy strong{font:600 16px/1.15 Arial,sans-serif;color:#fff}
+.department-photo-copy em{font:400 9px/1.4 Arial,sans-serif;color:rgba(255,255,255,.84);font-style:normal}
+.department-photo-arrow{position:absolute;right:14px;bottom:15px;z-index:2;color:#fff;font-size:16px}
+@media(max-width:1050px){.print-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.department-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.department-card.department-photo{min-height:205px}}
+@media(max-width:650px){
+  .hero-art{min-height:260px}
+  .hero-art-message{left:17px;bottom:67px}
+  .hero-art-message strong{font-size:29px}
+  .hero-art .art-label{left:17px;top:17px;font-size:8px}
+  .print-studio{padding-top:39px;padding-bottom:22px}
+  .print-studio-head{align-items:flex-start;flex-direction:column;gap:11px}
+  .print-studio-head h2{font-size:33px}
+  .print-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .print-card{border-radius:13px}
+  .print-card-media{height:135px}
+  .print-card-content{padding:10px 10px 11px}
+  .print-card-content h3{font-size:12px;min-height:42px}
+  .print-card-content p{font-size:8px;min-height:53px}
+  .print-price{font-size:13px}
+  .print-quote{font-size:9px}
+  .print-card-bottom{align-items:flex-start;flex-direction:column;gap:9px}
+  .print-card-bottom a{font-size:8px}
+  .department-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .department-card.department-photo{min-height:170px;border-radius:13px}
+  .department-photo-copy{left:11px;right:26px;bottom:12px;gap:5px}
+  .department-photo-copy small{font-size:6px}
+  .department-photo-copy strong{font-size:12px}
+  .department-photo-copy em{font-size:8px}
+  .department-photo-arrow{right:10px;bottom:10px}
+}
 </style>
 </head>
 <body>
