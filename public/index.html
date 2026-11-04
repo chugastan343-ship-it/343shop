@@ -539,16 +539,161 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
   .gift-hub-note a{margin-left:37px}
 }
 
+
+/* 343SHOP PREMIUM MARKETPLACE SHELL — Amazon-inspired, original brand */
+:root{--shop-ink:#17231d;--shop-green:#15372a;--shop-deep:#10271f;--shop-gold:#d4ad69;--shop-surface:#fffefa;--shop-line:#e4e8e1}
+body{background:#f2f4f1;color:var(--shop-ink)}
+.announcement{background:var(--shop-deep);color:#e9eee8;padding:9px 18px;font-size:10px;letter-spacing:.13em}
+.announcement b{color:#e8c98e}
+.header.premium-header{height:auto;min-height:80px;display:grid;grid-template-columns:auto 145px minmax(240px,1fr) auto;grid-template-rows:auto auto;align-items:center;justify-content:initial;column-gap:17px;row-gap:0;padding:11px 0 0;background:#fffefa;border-bottom:1px solid #dfe5de;box-shadow:0 6px 20px rgba(14,37,27,.055)}
+.premium-header .brand{grid-column:1;grid-row:1;font-size:23px;white-space:nowrap}
+.premium-header .brand-mark{width:40px;height:40px;border-radius:11px;background:var(--shop-green)}
+.premium-location{grid-column:2;grid-row:1;display:flex;align-items:center;gap:8px;min-width:0;color:#425348}
+.premium-location-icon{font-size:22px;color:#967442}
+.premium-location>span:last-child{display:flex;flex-direction:column;gap:3px;min-width:0}
+.premium-location small,.premium-support-link small{font-size:7px;letter-spacing:.13em;color:#879188;font-weight:900;white-space:nowrap}
+.premium-location strong,.premium-support-link strong{font-size:9px;color:#263a2e;white-space:nowrap}
+.global-header-search{grid-column:3;grid-row:1;display:flex;align-items:center;min-width:0;height:43px;border:2px solid #d7dfd5;border-radius:9px;overflow:hidden;background:#fff;transition:border-color .18s,box-shadow .18s}
+.global-header-search:focus-within{border-color:#b99051;box-shadow:0 0 0 3px rgba(193,157,94,.13)}
+.global-header-search-icon{padding-left:13px;color:#66766a;font-size:21px;line-height:1}
+.global-header-search input{min-width:0;flex:1;height:100%;border:0;outline:0;padding:0 12px;background:transparent;color:#1e3025;font-size:11px}
+.global-header-search input::placeholder{color:#9aa39b}
+.global-header-search button{align-self:stretch;display:flex;align-items:center;gap:10px;padding:0 17px;border:0;background:#d7b36e;color:#1d2c22;font-size:10px;font-weight:900;cursor:pointer}
+.global-header-search button:hover{background:#e4c17d}
+.global-header-search button b{font-size:14px}
+.premium-header-actions{grid-column:4;grid-row:1;display:flex;align-items:center;gap:8px}
+.premium-support-link{display:flex;flex-direction:column;gap:3px;padding:0 7px}
+.premium-support-link:hover strong{color:#9b7840}
+.premium-header .lang{padding:9px 11px;border-radius:8px;background:#f7f8f4}
+.premium-header .cart-button{padding:9px 12px;border-radius:8px;background:var(--shop-green);border-color:var(--shop-green)}
+.premium-header .nav{grid-column:1/-1;grid-row:2;width:100%;height:43px;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:10px;padding:0 1px;border-top:1px solid #edf0ea;background:#fffefa;font-size:10px;color:#526256}
+.premium-header .nav a{display:inline-flex;align-items:center;gap:7px;height:100%;font-weight:800;white-space:nowrap;color:#536257}
+.premium-header .nav a:hover{color:#a0783c}
+.premium-header .nav .nav-all-link{color:#17392b;font-weight:900}
+.premium-header .nav-all-link span:first-child{font-size:14px}
+.premium-header .mobile-menu{top:calc(100% + 6px)}
+.hero{padding:37px 34px 30px;margin:21px auto 18px;min-height:400px;gap:36px;border:1px solid #e5e9e2;border-radius:24px;background:#fffefa;box-shadow:0 14px 36px rgba(20,48,33,.065)}
+.hero h1{font-size:clamp(49px,5.2vw,68px);margin:16px 0 14px}
+.hero-copy{font-size:13px;line-height:1.8;max-width:500px}
+.hero-art{min-height:345px;border-radius:17px;box-shadow:0 16px 35px rgba(16,41,28,.16)}
+.hero-art-photo{object-position:center}
+.hero-art-shade{background:linear-gradient(90deg,rgba(10,29,19,.62),rgba(10,29,19,.04) 82%),linear-gradient(0deg,rgba(10,29,19,.56),transparent 58%)}
+.hero-art .art-caption{border:1px solid rgba(255,255,255,.55);border-radius:7px}
+.hero-quick-links{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:15px}
+.hero-quick-links>span{font-size:7px;font-weight:900;letter-spacing:.12em;color:#8b795a;margin-right:3px}
+.hero-quick-links button{border:1px solid #e1e7df;border-radius:30px;padding:7px 10px;background:#f7f8f4;color:#3a5545;font-size:8px;font-weight:800;cursor:pointer;transition:background .18s,border-color .18s}
+.hero-quick-links button:hover{background:#e9f0e9;border-color:#c9d8ca}
+.hero-search{display:none!important}
+.hero-search-meta{display:none}
+.trust{padding:16px 0;border-color:#dfe6de}
+.trust-item{font-size:9px}
+.trust-icon{border-radius:10px;background:#e9efe8}
+.print-studio{padding-top:54px}
+.print-grid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(255px,1fr);grid-template-columns:none;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#c4d0c4 transparent;padding:0 0 13px}
+.print-card{scroll-snap-align:start}
+.print-card-media{height:185px}
+.global-departments{padding-top:53px}
+.department-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.department-card.department-photo{min-height:215px;border-radius:15px}
+.gift-hub{padding-top:48px}
+.gift-format-card{border-radius:15px}
+.gift-format-art{height:205px}
+.inspiration{padding-top:45px}
+.marketplace-section{background:linear-gradient(180deg,#eef2ec,#f7f7f2 80%);padding-top:70px}
+.marketplace-card{background:#fffefa}
+.product,.local-store-card{background:#fffefa}
+.footer{background:var(--shop-deep)}
+@media(max-width:1080px){
+ .header.premium-header{grid-template-columns:auto minmax(230px,1fr) auto;column-gap:12px}
+ .premium-location{display:none}
+ .global-header-search{grid-column:2}
+ .premium-header-actions{grid-column:3}
+ .premium-header .nav{gap:11px;font-size:9px}
+ .premium-support-link{display:none}
+ .department-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:780px){
+ .header.premium-header{grid-template-columns:auto minmax(0,1fr) auto;column-gap:10px}
+ .premium-header .brand{font-size:20px}
+ .global-header-search{grid-column:1/-1;grid-row:2;margin:10px 0 0;height:41px}
+ .premium-header-actions{grid-column:3;grid-row:1}
+ .premium-header .nav{grid-row:3;margin-top:10px}
+ .premium-header .premium-support-link{display:none}
+ .premium-header .nav{gap:8px}
+ .hero{gap:24px;padding:25px 22px 23px}
+}
+@media(max-width:650px){
+ .announcement{font-size:8px;letter-spacing:.08em;padding:8px 10px}
+ .header.premium-header{min-height:0;padding:10px 0 0;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:8px;row-gap:0}
+ .premium-header .brand{grid-column:1;grid-row:1;font-size:19px;gap:8px}
+ .premium-header .brand-mark{width:35px;height:35px}
+ .premium-header-actions{grid-column:2;grid-row:1;gap:6px}
+ .premium-header .lang{padding:8px 9px;font-size:9px}
+ .premium-header .cart-button{padding:8px 10px;font-size:9px}
+ .global-header-search{grid-column:1/-1;grid-row:2;margin:10px 0 0;height:41px}
+ .global-header-search button{padding:0 12px}
+ .premium-header .nav{display:none}
+ .premium-header .mobile-menu-button{display:inline-grid}
+ .premium-header .mobile-menu{top:calc(100% + 6px)}
+ .hero{margin:12px auto 13px;padding:23px 15px 18px;grid-template-columns:1fr;gap:19px;border-radius:17px;min-height:0}
+ .hero h1{font-size:clamp(43px,12vw,57px)}
+ .hero-art{min-height:245px;border-radius:13px}
+ .hero-art-message{left:16px;bottom:63px}
+ .hero-art-message strong{font-size:27px}
+ .hero-art .art-label{left:16px;top:16px;font-size:7px}
+ .hero-quick-links{gap:6px;margin-top:13px}
+ .hero-quick-links>span{width:100%}
+ .hero-quick-links button{font-size:7px;padding:7px 9px}
+ .trust{gap:10px;padding:14px 0}
+ .trust-item{font-size:8px}
+ .print-studio{padding-top:37px}
+ .print-grid{grid-auto-columns:minmax(74%,1fr);gap:10px}
+ .print-card-media{height:155px}
+ .department-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .department-card.department-photo{min-height:170px}
+ .gift-format-grid{grid-template-columns:1fr}
+ .gift-format-card:last-child{grid-column:auto}
+ .inspiration-grid{gap:9px}
+}
+
 </style>
 </head>
 <body>
 <div class="announcement"><b>343SHOP</b> &nbsp; · &nbsp; GLOBAL SHOPPING & BROKERAGE &nbsp; · &nbsp; TAFUTA DUNIA NZIMA</div>
 <div class="wrap">
-<header class="header">
-<a class="brand" href="#"><span class="brand-mark">3</span><span>343<span>SHOP</span></span></a>
-<nav class="nav"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#giftcards" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a><a href="#print-studio" data-sw="Printing" data-en="Print studio">Printing</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
-<div class="nav-actions"><button class="lang" id="langBtn" type="button">EN</button><button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Fungua menyu" aria-controls="mobileMenu" aria-expanded="false"><span aria-hidden="true">☰</span></button><button class="cart-button" id="cartBtn" type="button"><span data-sw="Kikapu" data-en="Bag">Kikapu</span><span class="count" id="cartCount">0</span></button></div>
-<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#giftcards" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a><a href="#print-studio" data-sw="Printing" data-en="Print studio">Printing</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
+<header class="header premium-header">
+<a class="brand" href="#" aria-label="343SHOP home"><span class="brand-mark">3</span><span>343<span>SHOP</span></span></a>
+<div class="premium-location"><span class="premium-location-icon">◎</span><span><small>SHOPPING FROM</small><strong>Dar es Salaam · TZ</strong></span></div>
+<form class="global-header-search" id="globalHeaderSearchForm" role="search">
+  <span class="global-header-search-icon" aria-hidden="true">⌕</span>
+  <input id="globalHeaderSearchInput" type="search" minlength="2" maxlength="100" placeholder="Search products, shoes, phones, gifts..." aria-label="Search 343SHOP" autocomplete="off" required>
+  <button type="submit"><span data-sw="Tafuta" data-en="Search">Tafuta</span><b aria-hidden="true">↗</b></button>
+</form>
+<div class="nav-actions premium-header-actions">
+  <a class="premium-support-link" href="#contact"><small data-sw="Msaada" data-en="Help">Msaada</small><strong data-sw="Wasiliana nasi" data-en="Contact us">Wasiliana nasi</strong></a>
+  <button class="lang" id="langBtn" type="button">EN</button>
+  <button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Fungua menyu" aria-controls="mobileMenu" aria-expanded="false"><span aria-hidden="true">☰</span></button>
+  <button class="cart-button" id="cartBtn" type="button"><span data-sw="Kikapu" data-en="Bag">Kikapu</span><span class="count" id="cartCount">0</span></button>
+</div>
+<nav class="nav" aria-label="Primary shopping navigation">
+  <a class="nav-all-link" href="#departments"><span aria-hidden="true">☰</span><span data-sw="Makundi yote" data-en="All departments">Makundi yote</span></a>
+  <a href="#marketplaces" data-sw="Soko la Dunia" data-en="Global Market">Soko la Dunia</a>
+  <a href="#print-studio" data-sw="Print Studio" data-en="Print Studio">Print Studio</a>
+  <a href="#shop" data-sw="Vitabu vyetu" data-en="Our Books">Vitabu vyetu</a>
+  <a href="#giftcards" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a>
+  <a href="#partners" data-sw="Wauzaji washirika" data-en="Partner sellers">Wauzaji washirika</a>
+  <a href="#about" data-sw="Jinsi inavyofanya kazi" data-en="How it works">Jinsi inavyofanya kazi</a>
+</nav>
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true">
+  <a href="#departments" data-sw="Makundi yote" data-en="All departments">Makundi yote</a>
+  <a href="#marketplaces" data-sw="Soko la Dunia" data-en="Global Market">Soko la Dunia</a>
+  <a href="#print-studio" data-sw="Print Studio" data-en="Print Studio">Print Studio</a>
+  <a href="#shop" data-sw="Vitabu vyetu" data-en="Our Books">Vitabu vyetu</a>
+  <a href="#giftcards" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a>
+  <a href="#partners" data-sw="Wauzaji washirika" data-en="Partner sellers">Wauzaji washirika</a>
+  <a href="#about" data-sw="Jinsi inavyofanya kazi" data-en="How it works">Jinsi inavyofanya kazi</a>
+  <a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a>
+</nav>
 </header>
 <section class="hero">
 <div><span class="eyebrow" data-sw="GLOBAL SHOPPING · UDALALI WA KIMATAIFA" data-en="GLOBAL SHOPPING · BROKERAGE MARKETPLACE">GLOBAL SHOPPING · UDALALI WA KIMATAIFA</span>
@@ -561,9 +706,16 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
   <button type="submit"><span data-sw="Tafuta" data-en="Search">Tafuta</span><b aria-hidden="true">↗</b></button>
 </form>
 <div class="hero-search-meta"><span><i></i><span data-sw="Masoko ya kimataifa + maduka ya Tanzania" data-en="Global marketplaces + Tanzania stores">Masoko ya kimataifa + maduka ya Tanzania</span></span><span data-sw="Bei na stock huthibitishwa kwa muuzaji" data-en="Seller confirms final price and stock">Bei na stock huthibitishwa kwa muuzaji</span></div>
+<div class="hero-quick-links" aria-label="Popular searches">
+  <span data-sw="TAFUTA HARAKA:" data-en="QUICK SEARCH:">TAFUTA HARAKA:</span>
+  <button type="button" data-global-query="sneakers shoes">Viatu</button>
+  <button type="button" data-global-query="smartphones android phones">Simu</button>
+  <button type="button" data-global-query="water bottles custom mugs">Chupa & vikombe</button>
+  <button type="button" data-global-query="construction machinery excavators">Mashine za ujenzi</button>
+</div>
 <div class="hero-note"><span class="avatars"><i>✦</i><i>3</i><i>↗</i></span><span data-sw="Vyanzo wazi. Bei na stock huthibitishwa kwa muuzaji." data-en="Transparent sources. Sellers confirm price and stock.">Vyanzo wazi. Bei na stock huthibitishwa kwa muuzaji.</span></div></div>
 <div class="hero-art">
-  <img class="hero-art-photo" src="https://unsplash.com/photos/Tzm3Oyu_6sk/download?force=true" alt="Printing press producing printed sheets" loading="eager" decoding="async">
+  <img class="hero-art-photo" src="https://www.graficasgarcia.com/media/images/gallery/9/big/16.jpg" alt="Printing press producing printed sheets" loading="eager" decoding="async">
   <span class="hero-art-shade"></span>
   <span class="art-label">343SHOP · PRINT & GLOBAL MARKET</span>
   <span class="hero-art-message"><strong data-sw="Tengeneza kitu chako." data-en="Make it yours.">Tengeneza kitu chako.</strong><em data-sw="T-shirt · chupa · vikombe · mabango" data-en="T-shirts · bottles · mugs · banners">T-shirt · chupa · vikombe · mabango</em></span>
@@ -1023,7 +1175,7 @@ function renderCart(){
   $("cartTotal").innerHTML='<div class="total-row"><span>'+tr("Jumla ya bidhaa","Products subtotal")+'</span><b>'+money(t.subtotal)+'</b></div><div class="total-row"><span>'+tr("Usafirishaji","Delivery")+'</span><b>'+tr("Itathibitishwa kabla ya oda","To be confirmed before order")+'</b></div><div class="total-row grand"><span>'+tr("Jumla ya bidhaa (bila usafirishaji)","Products subtotal (delivery excluded)") + '</span><b>'+money(t.subtotal)+'</b></div><button class="btn" id="checkoutBtn">'+tr("Endelea na ombi la oda","Continue to order request")+' ↗</button>';
   $("checkoutBtn").onclick=()=>{closeCart();$("checkoutModal").classList.add("show")};
 }
-function applyLang(){$("langBtn").textContent=lang==="sw"?"EN":"SW";document.documentElement.lang=lang;document.querySelectorAll("[data-sw][data-en]").forEach(el=>{el.textContent=lang==="sw"?el.dataset.sw:el.dataset.en});document.querySelectorAll("[data-html-sw][data-html-en]").forEach(el=>{el.innerHTML=lang==="sw"?el.dataset.htmlSw:el.dataset.htmlEn});$("search").placeholder=tr("Tafuta bidhaa...","Search products...");$("heroSearchInput").placeholder=tr("Tafuta simu, laptop, viatu, perfume...","Search phones, laptops, shoes, perfume...");renderCats();renderProducts();if($("drawer").classList.contains("show"))renderCart()}
+function applyLang(){$("langBtn").textContent=lang==="sw"?"EN":"SW";document.documentElement.lang=lang;document.querySelectorAll("[data-sw][data-en]").forEach(el=>{el.textContent=lang==="sw"?el.dataset.sw:el.dataset.en});document.querySelectorAll("[data-html-sw][data-html-en]").forEach(el=>{el.innerHTML=lang==="sw"?el.dataset.htmlSw:el.dataset.htmlEn});$("search").placeholder=tr("Tafuta bidhaa...","Search products...");$("heroSearchInput").placeholder=tr("Tafuta simu, laptop, viatu, perfume...","Search phones, laptops, shoes, perfume...");$("globalHeaderSearchInput").placeholder=tr("Tafuta bidhaa, viatu, simu, zawadi...","Search products, shoes, phones, gifts...");renderCats();renderProducts();if($("drawer").classList.contains("show"))renderCart()}
 
 $("partnerJoinForm").addEventListener("submit",e=>{
   e.preventDefault();
@@ -1232,6 +1384,11 @@ function searchGlobalProducts(term){
   $("marketSearchForm").requestSubmit();
   $("marketplaces").scrollIntoView({behavior:"smooth",block:"start"});
 }
+$("globalHeaderSearchForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  $("heroSearchInput").value=$("globalHeaderSearchInput").value;
+  $("heroSearchForm").requestSubmit();
+});
 $("heroSearchForm").addEventListener("submit",e=>{
   e.preventDefault();
   searchGlobalProducts($("heroSearchInput").value);
