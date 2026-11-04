@@ -290,11 +290,11 @@ const MCP_TOOLS = [
   { name: "get_partner_integration_guide", description: "Returns the public JSON catalogue API format a partner shop must expose to be searchable.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } },
   {
     name: "search_marketplace_products",
-    description: "Searches 343SHOP-owned books, configured partner catalogues and eBay Browse API when official credentials are configured. Returns source attribution and stock-verification status.",
+    description: "Searches 343SHOP originals, authorised seller catalogues, eBay Browse API, Amazon Creators API and configured Shopify Storefront partner stores. Returns source attribution and stock-verification status.",
     inputSchema: { type: "object", properties: {
       query: { type: "string", maxLength: 100, description: "Product name or keyword; empty means browse." },
       category: { type: "string", maxLength: 60 },
-      source: { type: "string", enum: ["all", "343shop", "partners", "ebay"] },
+      source: { type: "string", enum: ["all", "343shop", "partners", "ebay", "amazon", "alibaba", "shopify"] },
       limit: { type: "integer", minimum: 1, maximum: 25 }
     }, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true }
   },
@@ -523,7 +523,8 @@ function normalizePartnerProduct(product, shop) {
     id: typeof product.id === "string" ? product.id.slice(0, 80) : name.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 80),
     name, description: typeof product.description === "string" ? product.description.slice(0, 700) : "",
     category: typeof product.category === "string" ? product.category.slice(0, 60) : "other",
-    price, currency, source_type: "partner_shop", source_shop_id: shop.id, source_shop: shop.name, city: shop.city,
+    price, currency, source_type: "partner_shop", source_shop_id: shop.id, source_shop: shop.name,
+    source_marketplace: shop.marketplace === "alibaba" ? "Alibaba.com" : "Independent partner", city: shop.city,
     availability: availabilityValues.includes(product.availability) ? product.availability : "unknown",
     stock_last_updated: typeof product.updated_at === "string" ? product.updated_at.slice(0, 50) : null,
     image_url: safeHttpsLink(product.image_url), product_url: safeHttpsLink(product.url || product.product_url)
@@ -1002,7 +1003,6 @@ function getShopifyPartnerStores(env = {}) {
 }
 
 async function searchShopifyStore(query, store, limit, buyerIp) {
-  const token = store.privateToken || store.publicToken;
   const headers = {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -1128,17 +1128,27 @@ async function searchMarketplaceProducts(args, env) {
   const category = normaliseSearchText(args.category || "");
   const source = args.source || "all";
   const limit = Number.isInteger(args.limit) ? Math.min(25, Math.max(1, args.limit)) : 15;
-  const own = ["partners", "ebay"].includes(source) ? [] : MARKETPLACE_CATALOGUE.map(p => ({
+  const own = ["partners", "ebay", "alibaba", "amazon", "shopify"].includes(source) ? [] : MARKETPLACE_CATALOGUE.map(p => ({
     ...p, source_type: "343shop_showcase", source_shop_id: "343shop",
     source_shop: "343SHOP original books & scripts", city: "Online",
     availability: "confirm_with_supplier", stock_last_updated: null, image_url: null, product_url: null
   }));
-  const shops = ["343shop", "ebay"].includes(source) ? [] : parsePartnerShops(env);
+  const configuredShops = parsePartnerShops(env);
+  const shops = ["343shop", "ebay", "amazon", "shopify"].includes(source) ? []
+    : source === "alibaba"
+      ? configuredShops.filter(shop => shop.marketplace === "alibaba" && shop.seller_authorized)
+      : configuredShops.filter(shop => shop.marketplace !== "alibaba" || shop.seller_authorized);
   const partnerLists = await Promise.all(shops.map(async shop => (await fetchPartnerCatalogue(shop)).products));
   const ebayResult = source === "all" || source === "ebay"
     ? await searchEbayProducts(args.query || "", env, limit)
     : { status: "not_requested", affiliate_tracking: false, results: [] };
-  const combined = [...own, ...partnerLists.flat(), ...ebayResult.results];
+  const amazonResult = source === "all" || source === "amazon"
+    ? await searchAmazonProducts(args.query || "", env, limit)
+    : { status: "not_requested", affiliate_tracking: false, results: [] };
+  const shopifyResult = source === "all" || source === "shopify"
+    ? await searchShopifyProducts(args.query || "", env, limit)
+    : { status: "not_requested", results: [] };
+  const combined = [...own, ...partnerLists.flat(), ...ebayResult.results, ...amazonResult.results, ...shopifyResult.results];
   const filtered = combined.filter(p => {
     const text = normaliseSearchText([p.name, p.description, p.category, p.source_shop].join(" "));
     return (!query || text.includes(query)) && (!category || normaliseSearchText(p.category).includes(category));
@@ -1149,7 +1159,11 @@ async function searchMarketplaceProducts(args, env) {
     connected_marketplace_count: ebayResult.status === "available" ? 1 : 0,
     marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
     external_marketplace_search_links: buildGlobalMarketplaceSearchLinks(args.query || "", env),
-    external_sources: { ebay: { status: ebayResult.status, affiliate_tracking: ebayResult.affiliate_tracking } },
+    external_sources: {
+      ebay: { status: ebayResult.status, affiliate_tracking: ebayResult.affiliate_tracking },
+      amazon: { status: amazonResult.status, affiliate_tracking: amazonResult.affiliate_tracking },
+      shopify: { status: shopifyResult.status, store_count: shopifyResult.store_count || 0 }
+    },
     results: filtered.slice(0, limit),
     note: shops.length === 0 && ebayResult.status !== "available"
       ? "No external live product catalogue is connected yet. Results may contain 343SHOP-owned books only. Official external marketplace search links are provided separately; they do not represent live feeds or affiliate tracking. Configure approved partner feeds in PARTNER_SHOPS_JSON or eBay API credentials."
