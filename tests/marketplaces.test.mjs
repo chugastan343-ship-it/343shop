@@ -15,7 +15,7 @@ test("marketplace status never marks unapproved sources as connected", async () 
   assert.equal(response.status, 200);
   const data = await response.json();
   const byId = Object.fromEntries(data.marketplaces.map((entry) => [entry.id, entry]));
-  assert.equal(data.marketplaces.length, 7);
+  assert.equal(data.marketplaces.length, 5);
   assert.equal(byId.amazon.api_configured, false);
   assert.equal(byId.alibaba.api_configured, false);
   assert.equal(byId.shopify.api_configured, false);
