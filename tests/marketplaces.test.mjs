@@ -733,3 +733,103 @@ test("Alibaba search only includes explicitly seller-authorised GGS partner cata
     globalThis.fetch = originalFetch;
   }
 });
+
+
+test("Gemini API status and chat use server-side secret with the official GenerateContent endpoint", async () => {
+  const statusMissing = await get("/api/ai/status");
+  assert.deepEqual(await statusMissing.json(), {
+    providers: { openai: false, claude: false, gemini: false }
+  });
+
+  const statusReady = await get("/api/ai/status", { GEMINI_API_KEY: "gemini-test-secret" });
+  assert.deepEqual(await statusReady.json(), {
+    providers: { openai: false, claude: false, gemini: true }
+  });
+
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init = {}) => {
+    calls.push({ url: String(input), init });
+    assert.equal(String(input), "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent");
+    const headers = new Headers(init.headers || {});
+    assert.equal(headers.get("x-goog-api-key"), "gemini-test-secret");
+    assert.equal(headers.get("content-type"), "application/json");
+    const body = JSON.parse(init.body);
+    assert.match(body.systemInstruction.parts[0].text, /343SHOP global shopping and brokerage marketplace assistant/);
+    assert.deepEqual(body.contents, [
+      { role: "user", parts: [{ text: "Habari 343SHOP" }] }
+    ]);
+    assert.equal(body.generationConfig.maxOutputTokens, 350);
+    return new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: "Karibu 343SHOP." }] } }]
+    }), { status: 200, headers: { "content-type": "application/json" } });
+  };
+  try {
+    const response = await worker.fetch(new Request(origin + "/api/ai/chat", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ provider: "gemini", messages: [{ role: "user", content: "Habari 343SHOP" }] })
+    }), { GEMINI_API_KEY: "gemini-test-secret" });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { reply: "Karibu 343SHOP.", provider: "gemini" });
+    assert.equal(calls.length, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("private owner APIs reject missing or invalid owner credentials and public first-party shelf waits for D1", async () => {
+  const missing = await get("/api/admin/status");
+  assert.equal(missing.status, 503);
+  assert.equal((await missing.json()).error, "owner_secret_not_configured");
+
+  const invalid = await worker.fetch(new Request(origin + "/api/admin/status", {
+    headers: { authorization: "Bearer wrong-token" }
+  }), { MCP_WRITE_TOKEN: "real-owner-token" });
+  assert.equal(invalid.status, 401);
+  assert.equal((await invalid.json()).error, "unauthorized");
+
+  const missingDb = await worker.fetch(new Request(origin + "/api/admin/status", {
+    headers: { authorization: "Bearer real-owner-token" }
+  }), { MCP_WRITE_TOKEN: "real-owner-token" });
+  assert.equal(missingDb.status, 503);
+  assert.equal((await missingDb.json()).error, "product_database_not_configured");
+
+  const publicShelf = await get("/api/store/owner-products");
+  assert.equal(publicShelf.status, 503);
+  assert.deepEqual(await publicShelf.json(), {
+    ok: false, products: [], error: "product_database_not_configured"
+  });
+});
+
+test("owner dashboard and dedicated Gift Cards page scripts parse and stay separate from the homepage", async () => {
+  const admin = await readFile(new URL("../public/admin.html", import.meta.url), "utf8");
+  const gift = await readFile(new URL("../public/gift-cards.html", import.meta.url), "utf8");
+  const homepage = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+
+  for (const [name, html] of [["admin.html", admin], ["gift-cards.html", gift]]) {
+    const start = html.lastIndexOf("<script>");
+    const bodyStart = html.indexOf(">", start) + 1;
+    const end = html.indexOf("</script>", bodyStart);
+    assert.ok(start >= 0 && end > bodyStart, name + " inline script should exist");
+    assert.doesNotThrow(() => new Script(html.slice(bodyStart, end), { filename: name + ".inline.js" }));
+  }
+  assert.match(admin, /id="productForm"/);
+  assert.match(admin, /id="walletForm"/);
+  assert.match(admin, /MCP_WRITE_TOKEN/);
+  assert.match(gift, /data-filter="gaming"/);
+  assert.match(gift, /data-filter="entertainment"/);
+  assert.match(gift, /Amazon\.com Gift Card is for eligible purchases on Amazon\.com only/);
+  assert.match(homepage, /href="gift-cards\.html"/);
+  assert.match(homepage, /href="\/admin\.html"/);
+  assert.doesNotMatch(homepage, /id="giftcards"/);
+});
+
+test("customer print portfolio loader references the six verified WebP chunks", async () => {
+  const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  assert.match(html, /Array\.from\(\{length:6\}/);
+  assert.match(html, /payload\.length<20000/);
+  assert.match(html, /data-print-sample="left"/);
+  assert.match(html, /data-print-sample="right"/);
+  assert.match(html, /id="printWorkTitle"/);
+});
