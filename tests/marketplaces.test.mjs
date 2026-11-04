@@ -178,8 +178,8 @@ function makeProductD1Mock() {
       return {
         bind(...args) { values = args; return this; },
         async run() {
-          if (/^\\s*CREATE TABLE IF NOT EXISTS store_products/i.test(sql) ||
-              /^\\s*CREATE INDEX IF NOT EXISTS idx_store_products_/i.test(sql)) {
+          if (/^\s*CREATE TABLE IF NOT EXISTS store_products/i.test(sql) ||
+              /^\s*CREATE INDEX IF NOT EXISTS idx_store_products_/i.test(sql)) {
             schemaStatements += 1;
             return { success: true, meta: { changes: 0 } };
           }
