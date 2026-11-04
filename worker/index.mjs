@@ -715,7 +715,7 @@ async function searchEbayProducts(query, env, limit = 12) {
     return { status: "available", affiliate_tracking: affiliateTracking, results };
   } catch (error) {
     const message = typeof error?.message === "string" ? error.message : "";
-    const safeError = /^(ebay_(?:oauth|browse)_(?:http_[1-5]\\d{2}|network_error|network_timeout|invalid_json))$/.exec(message);
+    const safeError = /^(ebay_(?:oauth|browse)_(?:http_[1-5]\d{2}|network_error|network_timeout|invalid_json))$/.exec(message);
     const errorCode = safeError
       ? safeError[1]
       : message === "ebay_token_invalid"
