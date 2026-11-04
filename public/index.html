@@ -1456,10 +1456,11 @@ async function loadOwnerStoreProducts(){
 async function loadPrintPortfolioArtwork(){
  const images=document.querySelectorAll("img[data-print-sample]");
  try{
-  const paths=Array.from({length:7},(_,i)=>"/images/portfolio/print-work.part"+(i+1)+".b64");
+  const paths=Array.from({length:6},(_,i)=>"/images/portfolio/print-work.part"+(i+1)+".b64");
   const chunks=await Promise.all(paths.map(async path=>{const r=await fetch(path,{cache:"force-cache"});if(!r.ok)throw Error("missing sample");return (await r.text()).trim()}));
-  const payload=chunks.join("");if(payload.length<50000||!/^[A-Za-z0-9+/]+={0,2}$/.test(payload))throw Error("bad sample");
-  images.forEach(img=>img.src="data:image/webp;base64,"+payload);
+  const payload=chunks.join("");
+  if(payload.length<20000||!/^[A-Za-z0-9+/]+={0,2}$/.test(payload)||!payload.startsWith("UklGR"))throw Error("bad sample");
+  images.forEach(img=>{img.src="data:image/webp;base64,"+payload;img.addEventListener("error",()=>img.closest(".print-work-image")?.classList.add("portfolio-image-unavailable"),{once:true})});
  }catch{images.forEach(img=>img.closest(".print-work-image")?.classList.add("portfolio-image-unavailable"))}
 }
 updateCount();renderCats();renderProducts();loadAiProviders();loadMarketplaceStatus();loadPrintPortfolioArtwork();
