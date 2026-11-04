@@ -292,13 +292,13 @@ test("343SHOP-owned storefront catalogue contains only its books and never inven
 });
 
 test("MCP owned-book search excludes independent seller products", async () => {
-  const own = await callMcpTool("search_marketplace_products", { query: "storybook", source: "343shop" });
+  const own = await callMcpTool("search_marketplace_products", { query: "storybook", source: "343shop" }, {});
   assert.equal(own.result.isError, false);
   const ownData = JSON.parse(own.result.content[0].text);
   assert.equal(ownData.result_count, 1);
   assert.equal(ownData.results[0].source_shop_id, "343shop");
   assert.equal(ownData.results[0].category, "books");
-  const external = await callMcpTool("search_marketplace_products", { query: "phone case", source: "343shop" });
+  const external = await callMcpTool("search_marketplace_products", { query: "phone case", source: "343shop" }, {});
   assert.equal(external.result.isError, false);
   const externalData = JSON.parse(external.result.content[0].text);
   assert.equal(externalData.result_count, 0);
