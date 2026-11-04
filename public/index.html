@@ -458,6 +458,87 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
   .department-photo-copy em{font-size:8px}
   .department-photo-arrow{right:10px;bottom:10px}
 }
+
+/* 343SHOP GIFT CARDS & VOUCHERS */
+.gift-hub{padding-top:45px;padding-bottom:62px}
+.gift-hub-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:23px}
+.gift-hub-head h2{font:500 clamp(31px,4vw,45px)/1.04 Georgia,serif;color:var(--forest);letter-spacing:-.05em;margin:9px 0 8px}
+.gift-hub-head p{font-size:11px;line-height:1.75;color:#758077;max-width:650px;margin:0}
+.gift-hub-all{flex:none;border:1px solid #d5ddcf;border-radius:30px;padding:11px 15px;color:var(--forest);font-size:9px;font-weight:900;white-space:nowrap}
+.gift-format-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.gift-format-card{min-width:0;overflow:hidden;border:1px solid #e5e9df;border-radius:18px;background:#fffefa;box-shadow:0 10px 28px rgba(20,50,37,.045);transition:transform .22s,box-shadow .22s,border-color .22s}
+.gift-format-card:hover{transform:translateY(-4px);box-shadow:0 20px 42px rgba(20,50,37,.10);border-color:#cbd7ca}
+.gift-format-art{height:220px;position:relative;overflow:hidden;display:grid;place-items:center}
+.gift-format-digital{background:radial-gradient(circle at 75% 18%,rgba(255,255,255,.6),transparent 33%),linear-gradient(135deg,#d9e9e2,#b7d1c6 55%,#e9dfc8)}
+.gift-phone{width:126px;height:176px;padding:12px 10px;border:5px solid #19392d;border-radius:22px;background:#fcfbf5;box-shadow:0 18px 35px rgba(22,53,40,.24);transform:rotate(-6deg);display:flex;flex-direction:column;gap:11px}
+.gift-phone-top{display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:900;color:#1e4736}
+.gift-phone-top span{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#1e4736;color:#f0dba9;font:700 12px Georgia,serif}
+.gift-phone-top i{font-style:normal;color:#97a49a;letter-spacing:2px}
+.gift-phone-card{height:87px;border-radius:10px;padding:12px 9px;background:linear-gradient(140deg,#254c3a,#456e57);color:white;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 7px 15px rgba(30,67,47,.18)}
+.gift-phone-card small{font-size:6px;letter-spacing:.16em;color:#efdbad}
+.gift-phone-card strong{font:500 19px Georgia,serif}
+.gift-phone-card em{font-size:6px;font-style:normal;color:#e8ede6}
+.gift-phone-lines{display:grid;gap:5px}
+.gift-phone-lines i{height:4px;border-radius:4px;background:#e6e9e0}
+.gift-phone-lines i:nth-child(2){width:74%}.gift-phone-lines i:nth-child(3){width:52%}
+.gift-format-physical{background:radial-gradient(circle at 28% 20%,rgba(255,255,255,.45),transparent 30%),linear-gradient(135deg,#d8c7a9,#f1e9da 55%,#c5b397)}
+.gift-envelope{position:relative;width:220px;height:139px;background:#f8f3e8;border-radius:7px;box-shadow:0 19px 35px rgba(70,51,28,.20);transform:rotate(5deg);display:grid;place-items:center}
+.gift-envelope:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,transparent 49.5%,#e5d9c4 50%),linear-gradient(215deg,transparent 49.5%,#e5d9c4 50%);border-radius:7px}
+.gift-envelope-card{position:absolute;width:150px;height:92px;top:-22px;left:33px;z-index:1;padding:11px;border-radius:6px;background:linear-gradient(140deg,#1c3d30,#315b43);color:#f5e5be;box-shadow:0 10px 22px rgba(36,59,44,.23);display:flex;flex-direction:column;justify-content:space-between}
+.gift-envelope-card span{font:700 12px Georgia,serif}
+.gift-envelope-card strong{font:600 15px/1.02 Georgia,serif;letter-spacing:.07em}
+.gift-envelope-card i{font-style:normal;align-self:flex-end;font-size:13px}
+.gift-seal{position:absolute;z-index:2;right:28px;bottom:22px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#c9a46a;color:#fff7df;font-size:13px;box-shadow:0 3px 8px rgba(90,60,27,.2)}
+.gift-format-voucher{background:radial-gradient(circle at 82% 12%,rgba(255,255,255,.44),transparent 31%),linear-gradient(135deg,#dce6d8,#bfcfbd 55%,#ece2ca)}
+.gift-voucher{width:245px;height:137px;position:relative;padding:15px 17px;border-radius:10px;background:#fffaf0;box-shadow:0 18px 34px rgba(25,57,42,.19);transform:rotate(-4deg);display:flex;flex-direction:column;justify-content:space-between;border:1px solid rgba(139,116,71,.22)}
+.gift-voucher:after{content:"";position:absolute;right:-20px;top:0;height:100%;width:40px;border-left:1px dashed #d9caa9;background:radial-gradient(circle at 0 7px,#c5d2c1 5px,transparent 6px) 0 0/100% 14px repeat-y}
+.gift-voucher small{font-size:7px;letter-spacing:.18em;font-weight:900;color:#9a7a48}
+.gift-voucher strong{font:500 25px/.95 Georgia,serif;color:#1c4332;letter-spacing:.06em}
+.gift-voucher span{font-size:6px;letter-spacing:.13em;font-weight:900;color:#8b968a}
+.gift-voucher i{position:absolute;right:29px;bottom:18px;font:700 24px Georgia,serif;color:#bd995d}
+.gift-art-label{position:absolute;left:14px;bottom:12px;font-size:7px;letter-spacing:.16em;font-weight:900;color:rgba(27,57,42,.65)}
+.gift-format-copy{padding:17px 17px 16px}
+.gift-format-copy>small{font-size:7px;letter-spacing:.15em;font-weight:900;color:#a0804d}
+.gift-format-copy h3{font:600 16px/1.2 Arial,sans-serif;color:var(--forest);margin:9px 0 8px}
+.gift-format-copy p{font-size:9px;line-height:1.7;color:#788278;min-height:61px;margin:0 0 16px}
+.gift-action{display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border-radius:30px;background:var(--forest);color:#fff;font-size:8px;font-weight:900}
+.gift-action:hover{background:#2b5744}
+.gift-occasion-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:31px 0 14px}
+.gift-occasion-kicker{font-size:7px;letter-spacing:.18em;font-weight:900;color:#a0804d}
+.gift-occasion-head h3{font:500 25px/1.1 Georgia,serif;color:var(--forest);margin:7px 0 0}
+.gift-occasion-head>span{font-size:9px;color:#818b81}
+.gift-occasion-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.gift-occasion{min-height:112px;border:1px solid #e7e9e1;border-radius:14px;padding:14px 15px;display:flex;flex-direction:column;justify-content:center;gap:5px;color:var(--forest);transition:transform .2s,box-shadow .2s}
+.gift-occasion:hover{transform:translateY(-3px);box-shadow:0 13px 27px rgba(22,50,37,.08)}
+.gift-occasion>span{font-size:21px}
+.gift-occasion strong{font-size:11px;font-weight:900}
+.gift-occasion em{font-size:8px;color:#788278;font-style:normal}
+.gift-birthday{background:#fbf0e4}.gift-thanks{background:#f0f3e7}.gift-congrats{background:#f0edf6}.gift-business{background:#e9f0ed}
+.gift-hub-note{display:flex;align-items:center;gap:12px;margin-top:16px;padding:13px 15px;border:1px solid #eadfca;border-radius:13px;background:#faf5e9;color:#7e7667}
+.gift-hub-note>span{flex:0 0 25px;height:25px;display:grid;place-items:center;border-radius:50%;background:#f0dfbc;color:#795b2e;font-weight:900}
+.gift-hub-note p{font-size:8px;line-height:1.7;margin:0;flex:1}
+.gift-hub-note a{font-size:8px;font-weight:900;color:#715832;white-space:nowrap}
+@media(min-width:901px) and (max-width:1200px){.nav{gap:15px;font-size:10px}}
+@media(max-width:900px){.gift-format-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gift-format-card:last-child{grid-column:1/-1}.gift-format-card:last-child .gift-format-art{height:185px}}
+@media(max-width:650px){
+  .gift-hub{padding-top:34px;padding-bottom:43px}
+  .gift-hub-head{align-items:flex-start;flex-direction:column;gap:12px}
+  .gift-hub-head h2{font-size:34px}
+  .gift-format-grid{grid-template-columns:1fr;gap:12px}
+  .gift-format-card:last-child{grid-column:auto}
+  .gift-format-art{height:190px}
+  .gift-format-card:last-child .gift-format-art{height:190px}
+  .gift-format-copy{padding:14px}
+  .gift-format-copy p{min-height:0}
+  .gift-occasion-head{align-items:flex-start;flex-direction:column;gap:6px}
+  .gift-occasion-head h3{font-size:23px}
+  .gift-occasion-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .gift-occasion{min-height:105px;padding:12px}
+  .gift-hub-note{align-items:flex-start;flex-wrap:wrap}
+  .gift-hub-note p{flex-basis:calc(100% - 42px)}
+  .gift-hub-note a{margin-left:37px}
+}
+
 </style>
 </head>
 <body>
@@ -465,9 +546,9 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 <div class="wrap">
 <header class="header">
 <a class="brand" href="#"><span class="brand-mark">3</span><span>343<span>SHOP</span></span></a>
-<nav class="nav"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#print-studio" data-sw="Printing" data-en="Print studio">Printing</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
+<nav class="nav"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#giftcards" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a><a href="#print-studio" data-sw="Printing" data-en="Print studio">Printing</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
 <div class="nav-actions"><button class="lang" id="langBtn" type="button">EN</button><button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Fungua menyu" aria-controls="mobileMenu" aria-expanded="false"><span aria-hidden="true">☰</span></button><button class="cart-button" id="cartBtn" type="button"><span data-sw="Kikapu" data-en="Bag">Kikapu</span><span class="count" id="cartCount">0</span></button></div>
-<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
+<nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#giftcards" data-sw="Gift Cards" data-en="Gift Cards">Gift Cards</a><a href="#print-studio" data-sw="Printing" data-en="Print studio">Printing</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
 </header>
 <section class="hero">
 <div><span class="eyebrow" data-sw="GLOBAL SHOPPING · UDALALI WA KIMATAIFA" data-en="GLOBAL SHOPPING · BROKERAGE MARKETPLACE">GLOBAL SHOPPING · UDALALI WA KIMATAIFA</span>
@@ -541,6 +622,75 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
     </article>
   </div>
   <div class="print-studio-note"><span>343</span><p data-sw="Picha ni mifano ya huduma. Bei nyingine zitathibitishwa kulingana na ukubwa, aina ya bidhaa na design kabla ya oda." data-en="Images illustrate our services. Other prices are quoted after confirming size, product type and artwork before ordering.">Picha ni mifano ya huduma. Bei nyingine zitathibitishwa kulingana na ukubwa, aina ya bidhaa na design kabla ya oda.</p></div>
+</section>
+
+
+<section class="gift-hub wrap" id="giftcards" aria-labelledby="giftHubTitle">
+  <div class="gift-hub-head">
+    <div>
+      <span class="section-kicker">343SHOP GLOBAL GIFTING · CARDS & VOUCHERS</span>
+      <h2 id="giftHubTitle" data-sw="Zawadi inayomfaa kila mtu." data-en="A gift for every kind of moment.">Zawadi inayomfaa kila mtu.</h2>
+      <p data-sw="Chagua kadi ya kidijitali, kadi halisi au voucher iliyobuniwa na kuchapishwa na studio yetu. Bidhaa za chapa nyingine hupatikana kupitia wauzaji walioidhinishwa pekee." data-en="Choose a digital card, a physical gift card, or a custom voucher designed and printed by our studio. Third-party branded cards are sourced only through authorised sellers.">Chagua kadi ya kidijitali, kadi halisi au voucher iliyobuniwa na kuchapishwa na studio yetu. Bidhaa za chapa nyingine hupatikana kupitia wauzaji walioidhinishwa pekee.</p>
+    </div>
+    <a class="gift-hub-all" href="https://www.amazon.com/gift-cards/b/?ie=UTF8&amp;node=2238192011&amp;ref_=nav_cs_gc" target="_blank" rel="noopener noreferrer" data-sw="Angalia Amazon Gift Cards ↗" data-en="Explore Amazon Gift Cards ↗">Angalia Amazon Gift Cards ↗</a>
+  </div>
+  <div class="gift-format-grid">
+    <article class="gift-format-card">
+      <div class="gift-format-art gift-format-digital" aria-label="Illustration of a digital gift card on a phone">
+        <div class="gift-phone">
+          <div class="gift-phone-top"><span>343</span><i>•••</i></div>
+          <div class="gift-phone-card"><small>GIFT CARD</small><strong>For you ✦</strong><em>Make someone's day</em></div>
+          <div class="gift-phone-lines"><i></i><i></i><i></i></div>
+        </div>
+        <span class="gift-art-label">SEND A LITTLE JOY</span>
+      </div>
+      <div class="gift-format-copy">
+        <small>DIGITAL · eGIFT CARDS</small>
+        <h3 data-sw="Gift Cards za kidijitali" data-en="Digital eGift cards">Gift Cards za kidijitali</h3>
+        <p data-sw="Kadi za kutumwa kwa email au njia ya kidijitali inayokubaliwa na mtoa huduma. Thibitisha nchi, currency na masharti kabla ya kununua." data-en="Cards delivered by email or a provider-supported digital method. Check country, currency and redemption terms before purchase.">Kadi za kutumwa kwa email au njia ya kidijitali inayokubaliwa na mtoa huduma. Thibitisha nchi, currency na masharti kabla ya kununua.</p>
+        <a class="gift-action" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20naomba%20mnisaidie%20kupata%20digital%20gift%20card.%20Tafadhali%20thibitisheni%20brand%2C%20nchi%20na%20delivery." target="_blank" rel="noopener noreferrer" data-sw="Omba eGift Card ↗" data-en="Request an eGift card ↗">Omba eGift Card ↗</a>
+      </div>
+    </article>
+    <article class="gift-format-card">
+      <div class="gift-format-art gift-format-physical" aria-label="Illustration of a physical gift card and envelope">
+        <div class="gift-envelope"><div class="gift-envelope-card"><span>343</span><strong>GIFT<br>WITH LOVE</strong><i>✦</i></div><div class="gift-seal">✦</div></div>
+        <span class="gift-art-label">A GIFT TO HOLD</span>
+      </div>
+      <div class="gift-format-copy">
+        <small>PHYSICAL · GIFT CARDS</small>
+        <h3 data-sw="Gift Cards za mkononi" data-en="Physical gift cards">Gift Cards za mkononi</h3>
+        <p data-sw="Kadi halisi zenye bahasha au packaging ya zawadi. Tunatafuta chanzo na kuthibitisha stock na eneo la matumizi kabla ya oda." data-en="Physical cards with gift envelopes or packaging. We confirm the supplier, stock and redemption region before an order.">Kadi halisi zenye bahasha au packaging ya zawadi. Tunatafuta chanzo na kuthibitisha stock na eneo la matumizi kabla ya oda.</p>
+        <a class="gift-action" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nataka%20physical%20gift%20card.%20Nisaidieni%20kutafuta%20muuzaji%20aliyeidhinishwa." target="_blank" rel="noopener noreferrer" data-sw="Tafuta kadi halisi ↗" data-en="Find a physical card ↗">Tafuta kadi halisi ↗</a>
+      </div>
+    </article>
+    <article class="gift-format-card gift-format-owned">
+      <div class="gift-format-art gift-format-voucher" aria-label="Illustration of a custom printed 343SHOP voucher">
+        <div class="gift-voucher"><small>MADE FOR YOU</small><strong>GIFT<br>VOUCHER</strong><span>YOUR BRAND · YOUR DESIGN</span><i>343</i></div>
+        <span class="gift-art-label">DESIGNED & PRINTED HERE</span>
+      </div>
+      <div class="gift-format-copy">
+        <small>343SHOP PRINT STUDIO · OUR SERVICE</small>
+        <h3 data-sw="Voucher za biashara yako" data-en="Custom business vouchers">Voucher za biashara yako</h3>
+        <p data-sw="Tunabuni na kuchapisha gift vouchers, coupon cards na kadi za ofa zenye brand yako. Hii ni huduma ya printing; masharti ya matumizi unaweka wewe." data-en="We design and print gift vouchers, coupon cards and branded offer cards. This is a print service; your business sets its redemption rules.">Tunabuni na kuchapisha gift vouchers, coupon cards na kadi za ofa zenye brand yako. Hii ni huduma ya printing; masharti ya matumizi unaweka wewe.</p>
+        <a class="gift-action" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nataka%20gift%20voucher%20ya%20biashara%20yangu%20ibuniwe%20na%20kuchapishwa." target="_blank" rel="noopener noreferrer" data-sw="Buni voucher yangu ↗" data-en="Create my voucher ↗">Buni voucher yangu ↗</a>
+      </div>
+    </article>
+  </div>
+  <div class="gift-occasion-head">
+    <div><span class="gift-occasion-kicker">SHOP BY OCCASION</span><h3 data-sw="Chagua kulingana na tukio." data-en="Find a card for the occasion.">Chagua kulingana na tukio.</h3></div>
+    <span data-sw="Pata muundo unaoendana na ujumbe wako." data-en="Choose a design that suits your message.">Pata muundo unaoendana na ujumbe wako.</span>
+  </div>
+  <div class="gift-occasion-grid">
+    <a class="gift-occasion gift-birthday" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20gift%20card%20ya%20Birthday." target="_blank" rel="noopener noreferrer"><span>🎂</span><strong>Birthday</strong><em data-sw="Siku ya kuzaliwa" data-en="Make their day">Siku ya kuzaliwa</em></a>
+    <a class="gift-occasion gift-thanks" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20gift%20card%20ya%20Thank%20You." target="_blank" rel="noopener noreferrer"><span>💛</span><strong>Thank You</strong><em data-sw="Shukrani na pongezi" data-en="Say thank you">Shukrani na pongezi</em></a>
+    <a class="gift-occasion gift-congrats" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20gift%20card%20ya%20Congratulations." target="_blank" rel="noopener noreferrer"><span>🎉</span><strong>Congratulations</strong><em data-sw="Hongera kwa mafanikio" data-en="Celebrate a win">Hongera kwa mafanikio</em></a>
+    <a class="gift-occasion gift-business" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20corporate%20gift%20cards%20au%20vouchers." target="_blank" rel="noopener noreferrer"><span>🏢</span><strong>Business & Events</strong><em data-sw="Zawadi za kampuni na matukio" data-en="For teams and events">Zawadi za kampuni na matukio</em></a>
+  </div>
+  <div class="gift-hub-note">
+    <span>!</span>
+    <p data-sw="Tahadhari: Amazon.com Gift Card hutumika kwa bidhaa na huduma zinazokubalika kwenye Amazon.com pekee. Usitumie claim code kulipia 343SHOP au mfanyabiashara mwingine. Angalia region na masharti ya kila mtoa kadi kabla ya kununua." data-en="Please note: Amazon.com Gift Cards are for eligible purchases on Amazon.com only. Never use a claim code to pay 343SHOP or another merchant. Check each issuer's region and terms before buying.">Tahadhari: Amazon.com Gift Card hutumika kwa bidhaa na huduma zinazokubalika kwenye Amazon.com pekee. Usitumie claim code kulipia 343SHOP au mfanyabiashara mwingine. Angalia region na masharti ya kila mtoa kadi kabla ya kununua.</p>
+    <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GGKDN3QZSKBFGNBF" target="_blank" rel="noopener noreferrer" data-sw="Soma tahadhari za Amazon ↗" data-en="Read Amazon's safety guidance ↗">Soma tahadhari za Amazon ↗</a>
+  </div>
 </section>
 
 <section class="global-departments wrap" id="departments" aria-labelledby="departmentsTitle">
