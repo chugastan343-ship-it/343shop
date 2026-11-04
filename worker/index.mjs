@@ -549,7 +549,7 @@ function marketplaceIntegrationsStatus(env) {
   const ebayAffiliate = Boolean(ebayConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
   const amazonConfigured = Boolean(env.AMAZON_CREATORS_CLIENT_ID && env.AMAZON_CREATORS_CLIENT_SECRET && env.AMAZON_PARTNER_TAG);
   const alibabaConfigured = Boolean(env.ALIBABA_APP_KEY && env.ALIBABA_APP_SECRET && env.ALIBABA_ACCESS_TOKEN);
-  const shopifyConfigured = Boolean(env.SHOPIFY_STORE_DOMAIN && env.SHOPIFY_STOREFRONT_ACCESS_TOKEN);
+  const shopifyConfigured = getShopifyPartnerStores(env).length > 0;
   return {
     checked_at: new Date().toISOString(),
     marketplace_count: 5,
@@ -943,28 +943,62 @@ async function searchAmazonProducts(query, env, limit = 10) {
   }
 }
 
-async function searchShopifyProducts(query, env, limit = 12) {
-  const domain = String(env.SHOPIFY_STORE_DOMAIN || "").trim().toLowerCase()
-    .replace(/^https?:\/\//, "").replace(/\/$/, "");
-  const token = String(env.SHOPIFY_STOREFRONT_ACCESS_TOKEN || "").trim();
-  if (!domain || !/^[a-z0-9][a-z0-9-]*\.myshopify\.com$/.test(domain) || !token) {
-    return { status: "not_configured", results: [] };
+function getShopifyPartnerStores(env = {}) {
+  const stores = [];
+  if (env.SHOPIFY_PARTNER_STORES_JSON) {
+    try {
+      const parsed = JSON.parse(env.SHOPIFY_PARTNER_STORES_JSON);
+      if (Array.isArray(parsed)) {
+        for (const item of parsed.slice(0, 20)) {
+          if (!item || typeof item !== "object") continue;
+          const domain = String(item.domain || "").trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
+          const publicToken = typeof item.public_access_token === "string" ? item.public_access_token.trim() : "";
+          const privateToken = typeof item.private_access_token === "string" ? item.private_access_token.trim() : "";
+          if (!/^[a-z0-9][a-z0-9-]*\.myshopify\.com$/.test(domain) || (!publicToken && !privateToken)) continue;
+          stores.push({
+            id: String(item.id || domain).slice(0, 50),
+            name: String(item.name || domain).slice(0, 100),
+            domain, publicToken, privateToken
+          });
+        }
+      }
+    } catch { return []; }
   }
-  const term = String(query || "").trim();
-  if (term.length < 2 || term.length > 100) return { status: "query_required", results: [] };
-  const endpoint = "https://" + domain + "/api/2026-10/graphql.json";
-  const gql = "query SearchProducts($query: String!, $first: Int!) { search(query: $query, first: $first, types: PRODUCT) { nodes { ... on Product { id title description productType onlineStoreUrl featuredImage { url altText } priceRange { minVariantPrice { amount currencyCode } } availableForSale } } } }";
+  if (!stores.length) {
+    const domain = String(env.SHOPIFY_STORE_DOMAIN || "").trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const publicToken = String(env.SHOPIFY_STOREFRONT_ACCESS_TOKEN || "").trim();
+    const privateToken = String(env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN || "").trim();
+    if (/^[a-z0-9][a-z0-9-]*\.myshopify\.com$/.test(domain) && (publicToken || privateToken)) {
+      stores.push({ id: "shopify-store", name: domain, domain, publicToken, privateToken });
+    }
+  }
+  return stores;
+}
+
+async function searchShopifyStore(query, store, limit, buyerIp) {
+  const token = store.privateToken || store.publicToken;
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  };
+  if (store.privateToken) {
+    headers["Shopify-Storefront-Private-Token"] = store.privateToken;
+    if (buyerIp) headers["Shopify-Storefront-Buyer-IP"] = buyerIp;
+  } else {
+    headers["X-Shopify-Storefront-Access-Token"] = store.publicToken;
+  }
+  const endpoint = "https://" + store.domain + "/api/2026-10/graphql.json";
+  const gql = "query SearchProducts($query: String!, $first: Int!) { search(query: $query, first: $first, types: [PRODUCT]) { nodes { ... on Product { id title description productType onlineStoreUrl featuredImage { url altText } priceRange { minVariantPrice { amount currencyCode } } availableForSale } } } }";
   try {
     const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json", "X-Shopify-Storefront-Access-Token": token },
-      body: JSON.stringify({ query: gql, variables: { query: term, first: Math.min(20, Math.max(1, limit)) } }),
+      method: "POST", headers,
+      body: JSON.stringify({ query: gql, variables: { query, first: Math.min(20, Math.max(1, limit)) } }),
       redirect: "manual", signal: AbortSignal.timeout(9000)
     });
     if (!response.ok) return { status: "temporarily_unavailable", results: [], error_code: "shopify_http_" + response.status };
     const payload = await response.json();
     if (Array.isArray(payload.errors) && payload.errors.length) {
-      console.warn("Shopify Storefront API returned GraphQL errors", { count: payload.errors.length });
+      console.warn("Shopify Storefront API returned GraphQL errors", { storeId: store.id, count: payload.errors.length });
       return { status: "permission_or_query_error", results: [], error_code: "shopify_graphql_error" };
     }
     const nodes = payload?.data?.search?.nodes;
@@ -978,8 +1012,8 @@ async function searchShopifyProducts(query, env, limit = 12) {
         id: String(item.id).slice(0, 160), name: String(item.title).slice(0, 180),
         description: String(item.description || "").slice(0, 500),
         category: String(item.productType || "shopify product").slice(0, 80),
-        price, currency, source_type: "external_marketplace", source_shop_id: "shopify",
-        source_shop: "Shopify partner store", city: "Merchant location not verified",
+        price, currency, source_type: "external_marketplace", source_shop_id: "shopify-" + store.id,
+        source_shop: store.name, city: "Merchant location not verified",
         availability: item.availableForSale ? "available_for_sale" : "not_available_for_sale",
         stock_last_updated: null, image_url: safeHttpsLink(item.featuredImage?.url), product_url: productUrl
       };
@@ -987,9 +1021,27 @@ async function searchShopifyProducts(query, env, limit = 12) {
     return { status: "available", results };
   } catch (error) {
     const code = error?.name === "TimeoutError" || error?.name === "AbortError" ? "shopify_network_timeout" : "shopify_network_or_response_error";
-    console.warn("Shopify Storefront API request failed", { errorCode: code });
+    console.warn("Shopify Storefront API request failed", { storeId: store.id, errorCode: code });
     return { status: "temporarily_unavailable", results: [], error_code: code };
   }
+}
+
+async function searchShopifyProducts(query, env, limit = 12, request) {
+  const stores = getShopifyPartnerStores(env);
+  if (!stores.length) return { status: "not_configured", results: [] };
+  const term = String(query || "").trim();
+  if (term.length < 2 || term.length > 100) return { status: "query_required", results: [] };
+  const buyerIp = request?.headers?.get("CF-Connecting-IP") || "";
+  const outcomes = await Promise.all(stores.map(store => searchShopifyStore(term, store, limit, buyerIp)));
+  const results = outcomes.flatMap(result => result.results || []).slice(0, limit);
+  const succeeded = outcomes.some(result => result.status === "available");
+  const failed = outcomes.some(result => !["available", "not_configured"].includes(result.status));
+  return {
+    status: succeeded ? "available" : failed ? "temporarily_unavailable" : "empty",
+    store_count: stores.length,
+    results,
+    ...(failed ? { error_code: "one_or_more_shopify_stores_unavailable" } : {})
+  };
 }
 
 async function handleMarketplaceSearch(request, env, url) {
