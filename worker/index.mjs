@@ -665,7 +665,8 @@ async function getEbayAccessToken(env) {
         "Accept": "application/json"
       },
       body: "grant_type=client_credentials&scope=" + encodeURIComponent("https://api.ebay.com/oauth/api_scope"),
-      redirect: "error",
+      // Let Fetch expose the upstream response instead of masking a redirect as a network failure.
+      redirect: "manual",
       signal: AbortSignal.timeout(8000)
     });
   } catch (error) {
@@ -712,7 +713,7 @@ async function searchEbayProducts(query, env, limit = 12) {
     let response;
     try {
       response = await fetch(config.apiBase + "/buy/browse/v1/item_summary/search?" + params.toString(), {
-        method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(9000)
+        method: "GET", headers, redirect: "manual", signal: AbortSignal.timeout(9000)
       });
     } catch (error) {
       throw new Error(error?.name === "TimeoutError" || error?.name === "AbortError"
