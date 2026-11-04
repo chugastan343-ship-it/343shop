@@ -201,6 +201,7 @@ const MCP_RATE_MAX = 30;
 const PARTNER_CATALOGUE_CACHE = new Map();
 const PARTNER_CACHE_TTL_MS = 45_000;
 const EBAY_TOKEN_CACHE = new Map();
+const AMAZON_CREATORS_TOKEN_CACHE = new Map();
 const MARKETPLACE_RATE_LIMIT = new Map();
 const MARKETPLACE_RATE_WINDOW_MS = 60_000;
 const MARKETPLACE_RATE_MAX = 18;
@@ -482,7 +483,9 @@ function parsePartnerShops(env) {
       id: shop.id, name: shop.name.trim(),
       city: typeof shop.city === "string" ? shop.city.slice(0, 80) : "Not supplied",
       categories: Array.isArray(shop.categories) ? shop.categories.filter(x => typeof x === "string").slice(0, 12) : [],
-      catalog_url: shop.catalog_url
+      catalog_url: shop.catalog_url,
+      marketplace: typeof shop.marketplace === "string" && shop.marketplace.toLowerCase() === "alibaba" ? "alibaba" : "partner",
+      seller_authorized: shop.seller_authorized === true
     }));
   } catch { return []; }
 }
@@ -791,6 +794,152 @@ async function searchEbayProducts(query, env, limit = 12) {
       errorCode
     });
     return { status: "temporarily_unavailable", error_code: errorCode, affiliate_tracking: false, results: [] };
+  }
+}
+
+function getAmazonCreatorsConfig(env = {}) {
+  const version = String(env.AMAZON_CREATORS_CREDENTIAL_VERSION || "3.1").trim();
+  const tokenEndpoints = {
+    "2.1": "https://creatorsapi.auth.us-east-1.amazoncognito.com/oauth2/token",
+    "2.2": "https://creatorsapi.auth.eu-south-2.amazoncognito.com/oauth2/token",
+    "2.3": "https://creatorsapi.auth.us-west-2.amazoncognito.com/oauth2/token",
+    "3.1": "https://api.amazon.com/auth/o2/token",
+    "3.2": "https://api.amazon.co.uk/auth/o2/token",
+    "3.3": "https://api.amazon.co.jp/auth/o2/token"
+  };
+  const marketplace = String(env.AMAZON_MARKETPLACE || "www.amazon.com").trim().toLowerCase();
+  const marketplaceAllowed = /^www\\.amazon\\.(com|co\\.uk|de|fr|it|es|nl|ca|com\\.mx|com\\.br|co\\.jp|com\\.au|in|ae|sg|se|pl|be|ie|com\\.tr|eg)$/.test(marketplace);
+  return {
+    version,
+    tokenUrl: tokenEndpoints[version] || null,
+    marketplace,
+    marketplaceAllowed,
+    clientId: env.AMAZON_CREATORS_CLIENT_ID,
+    clientSecret: env.AMAZON_CREATORS_CLIENT_SECRET,
+    partnerTag: env.AMAZON_PARTNER_TAG
+  };
+}
+
+async function getAmazonCreatorsAccessToken(env = {}) {
+  const config = getAmazonCreatorsConfig(env);
+  if (!config.tokenUrl || !config.clientId || !config.clientSecret) {
+    throw new Error("amazon_credentials_not_configured");
+  }
+  const cacheKey = [config.version, config.clientId].join(":");
+  const cached = AMAZON_CREATORS_TOKEN_CACHE.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) return cached.token;
+  const v3 = config.version.startsWith("3.");
+  const headers = { "Content-Type": v3 ? "application/json" : "application/x-www-form-urlencoded" };
+  let body;
+  if (v3) {
+    body = JSON.stringify({
+      grant_type: "client_credentials",
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      scope: "creatorsapi::default"
+    });
+  } else {
+    const form = new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      scope: "creatorsapi/default"
+    });
+    body = form.toString();
+  }
+  let response;
+  try {
+    response = await fetch(config.tokenUrl, {
+      method: "POST", headers, body, redirect: "manual", signal: AbortSignal.timeout(9000)
+    });
+  } catch (error) {
+    throw new Error(error?.name === "TimeoutError" || error?.name === "AbortError"
+      ? "amazon_oauth_network_timeout" : "amazon_oauth_network_error");
+  }
+  if (!response.ok) throw new Error("amazon_oauth_http_" + response.status);
+  const payload = await response.json().catch(() => null);
+  if (!payload || typeof payload.access_token !== "string" || !Number.isFinite(Number(payload.expires_in))) {
+    throw new Error("amazon_token_invalid");
+  }
+  const expiresAt = Date.now() + Math.max(60, Number(payload.expires_in) - 60) * 1000;
+  AMAZON_CREATORS_TOKEN_CACHE.set(cacheKey, { token: payload.access_token, expiresAt });
+  return payload.access_token;
+}
+
+async function searchAmazonProducts(query, env, limit = 10) {
+  const config = getAmazonCreatorsConfig(env);
+  if (!config.clientId || !config.clientSecret || !config.partnerTag || !config.tokenUrl) {
+    return { status: "not_configured", affiliate_tracking: false, results: [] };
+  }
+  if (!config.marketplaceAllowed) return { status: "invalid_marketplace_config", affiliate_tracking: false, results: [] };
+  const term = String(query || "").trim();
+  if (term.length < 2 || term.length > 100) return { status: "query_required", affiliate_tracking: false, results: [] };
+  try {
+    const token = await getAmazonCreatorsAccessToken(env);
+    const v3 = config.version.startsWith("3.");
+    const headers = {
+      "Authorization": "Bearer " + token + (v3 ? "" : ", Version " + config.version),
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "x-marketplace": config.marketplace
+    };
+    const payload = {
+      keywords: term,
+      marketplace: config.marketplace,
+      partnerTag: config.partnerTag,
+      itemCount: Math.min(10, Math.max(1, limit)),
+      resources: [
+        "images.primary.medium",
+        "itemInfo.title",
+        "itemInfo.features",
+        "offersV2.listings.price",
+        "offersV2.listings.availability"
+      ]
+    };
+    let response;
+    try {
+      response = await fetch("https://creatorsapi.amazon/catalog/v1/searchItems", {
+        method: "POST", headers, body: JSON.stringify(payload),
+        redirect: "manual", signal: AbortSignal.timeout(9000)
+      });
+    } catch (error) {
+      throw new Error(error?.name === "TimeoutError" || error?.name === "AbortError"
+        ? "amazon_search_network_timeout" : "amazon_search_network_error");
+    }
+    if (!response.ok) throw new Error("amazon_search_http_" + response.status);
+    const data = await response.json();
+    const items = Array.isArray(data?.searchResult?.items) ? data.searchResult.items : [];
+    const results = items.map(item => {
+      const listing = Array.isArray(item.offersV2?.listings) ? item.offersV2.listings[0] : null;
+      const money = listing?.price?.money;
+      const price = Number(money?.amount);
+      const currency = String(money?.currency || "").toUpperCase();
+      const title = item.itemInfo?.title?.displayValue || item.title || "";
+      const productUrl = safeHttpsLink(item.detailPageURL);
+      const imageUrl = safeHttpsLink(item.images?.primary?.medium?.url || item.images?.primary?.large?.url);
+      if (!title || !productUrl) return null;
+      const availabilityType = String(listing?.availability?.type || "UNKNOWN").toUpperCase();
+      return {
+        id: String(item.asin || title).slice(0, 120),
+        name: String(title).slice(0, 180),
+        description: Array.isArray(item.itemInfo?.features?.displayValues)
+          ? item.itemInfo.features.displayValues.join(" · ").slice(0, 500) : "",
+        category: "amazon marketplace",
+        ...(Number.isFinite(price) && price >= 0 && /^[A-Z]{3}$/.test(currency) ? { price, currency } : {}),
+        source_type: "external_marketplace", source_shop_id: "amazon",
+        source_shop: "Amazon (" + config.marketplace + ")", city: "International",
+        availability: availabilityType === "IN_STOCK" ? "in_stock" : availabilityType.toLowerCase(),
+        stock_last_updated: null, image_url: imageUrl, product_url: productUrl,
+        price_note: "Amazon marketplace price; confirm final delivered price and import costs at seller checkout."
+      };
+    }).filter(Boolean);
+    return { status: "available", affiliate_tracking: true, results };
+  } catch (error) {
+    const message = typeof error?.message === "string" ? error.message : "";
+    const safe = /^(amazon_(?:oauth|search)_http_[1-5]\\d{2}|amazon_(?:oauth|search)_network_(?:error|timeout))$/.exec(message);
+    const errorCode = safe ? safe[1] : message === "amazon_token_invalid" ? "amazon_token_invalid" : "amazon_upstream_error";
+    console.warn("Amazon Creators API request failed", { errorCode, credentialVersion: config.version });
+    return { status: "temporarily_unavailable", affiliate_tracking: false, results: [], error_code: errorCode };
   }
 }
 
