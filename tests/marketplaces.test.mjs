@@ -647,7 +647,7 @@ test("Shopify multi-store search uses private/public token headers and preserves
     const headers = new Headers(init.headers || {});
     calls.push(url);
     assert.equal(init.method, "POST");
-    assert.match(String(JSON.parse(init.body).query), /types: \\[PRODUCT\\]/);
+        assert.match(String(JSON.parse(init.body).query), /types: \[PRODUCT\]/);
     if (url.includes("private-store.myshopify.com")) {
       assert.equal(headers.get("shopify-storefront-private-token"), "private-storefront-token");
       assert.equal(headers.get("shopify-storefront-buyer-ip"), "203.0.113.8");
