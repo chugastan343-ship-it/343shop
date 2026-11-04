@@ -843,7 +843,7 @@ function getAmazonCreatorsConfig(env = {}) {
     "www.amazon.com.mx", "www.amazon.com.br", "www.amazon.co.jp", "www.amazon.com.au",
     "www.amazon.in", "www.amazon.ae", "www.amazon.sg", "www.amazon.se",
     "www.amazon.pl", "www.amazon.com.be", "www.amazon.ie", "www.amazon.com.tr",
-    "www.amazon.eg", "www.amazon.sa", "www.amazon.cn"
+    "www.amazon.eg", "www.amazon.sa"
   ]);
   const marketplaceAllowed = allowedMarketplaces.has(marketplace);
   return {
