@@ -630,8 +630,34 @@ async function handleMarketplaceConnectivity(env) {
     }
   };
 
-  const [ebay, control] = await Promise.all([
-    probe(config.apiBase + "/identity/v1/oauth2/token"),
+  const oauthUrl = config.apiBase + "/identity/v1/oauth2/token";
+  const postProbe = async () => {
+    try {
+      const response = await fetch(oauthUrl, {
+        method: "POST",
+        headers: {
+          "Authorization": "Basic " + btoa("343SHOP-connectivity-probe:invalid"),
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Accept": "application/json"
+        },
+        body: "grant_type=client_credentials&scope=" + encodeURIComponent("https://api.ebay.com/oauth/api_scope"),
+        redirect: "manual",
+        signal: AbortSignal.timeout(7000)
+      });
+      return { reachable: true, http_status: response.status };
+    } catch (error) {
+      return {
+        reachable: false,
+        error_code: error?.name === "TimeoutError" || error?.name === "AbortError"
+          ? "network_timeout"
+          : "network_error"
+      };
+    }
+  };
+
+  const [ebay, oauth_post, control] = await Promise.all([
+    probe(oauthUrl),
+    postProbe(),
     probe("https://example.com/")
   ]);
 
@@ -640,9 +666,10 @@ async function handleMarketplaceConnectivity(env) {
     environment: config.environment,
     probes: {
       ebay_api_host: ebay,
+      ebay_oauth_post: oauth_post,
       external_control_host: control
     },
-    note: "Connectivity only. This check does not authenticate with eBay or verify API permissions."
+    note: "Connectivity only. The OAuth POST uses deliberately invalid diagnostic credentials; it never reads or tests your eBay secrets."
   });
 }
 
