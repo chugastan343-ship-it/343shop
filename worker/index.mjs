@@ -233,6 +233,18 @@ const GLOBAL_MARKETPLACE_DIRECTORY = [
   { id: "dhgate", name: "DHgate", region: "Global · Wholesale", type: "B2B", website: "https://www.dhgate.com/", search_prefix: "https://www.dhgate.com/wholesale/search.do?searchkey=", mode: "keyword", integration: "Authorized affiliate/API feed", integration_status: "website_only", integration_note: "Website search only in this release. No live catalogue or affiliate feed is connected." }
 ];
 
+function getEbayConfig(env = {}) {
+  const environment = String(env.EBAY_ENVIRONMENT || "production").trim().toLowerCase() === "sandbox"
+    ? "sandbox" : "production";
+  const sandbox = environment === "sandbox";
+  return {
+    environment,
+    apiBase: sandbox ? "https://api.sandbox.ebay.com" : "https://api.ebay.com",
+    clientId: sandbox ? env.EBAY_SANDBOX_CLIENT_ID : env.EBAY_CLIENT_ID,
+    clientSecret: sandbox ? env.EBAY_SANDBOX_CLIENT_SECRET : env.EBAY_CLIENT_SECRET
+  };
+}
+
 function buildGlobalMarketplaceSearchLinks(query, env = {}, marketplaceId) {
   const term = typeof query === "string" ? query.trim().slice(0, 100) : "";
   const selected = marketplaceId
@@ -245,7 +257,8 @@ function buildGlobalMarketplaceSearchLinks(query, env = {}, marketplaceId) {
     let apiConfigured = false;
     let affiliateTracking = false;
     if (item.id === "ebay") {
-      apiConfigured = Boolean(env.EBAY_CLIENT_ID && env.EBAY_CLIENT_SECRET);
+      const ebay = getEbayConfig(env);
+      apiConfigured = Boolean(ebay.clientId && ebay.clientSecret);
       affiliateTracking = Boolean(apiConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
       state = affiliateTracking ? "api_and_affiliate_configured"
         : apiConfigured ? "api_credentials_configured" : "api_credentials_required";
@@ -536,7 +549,8 @@ async function fetchPartnerCatalogue(shop) {
 
 function marketplaceIntegrationsStatus(env) {
   const partners = parsePartnerShops(env);
-  const ebayConfigured = Boolean(env.EBAY_CLIENT_ID && env.EBAY_CLIENT_SECRET);
+  const ebayConfig = getEbayConfig(env);
+  const ebayConfigured = Boolean(ebayConfig.clientId && ebayConfig.clientSecret);
   const ebayAffiliate = Boolean(ebayConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
   return {
     checked_at: new Date().toISOString(),
@@ -558,11 +572,14 @@ function marketplaceIntegrationsStatus(env) {
       },
       {
         id: "ebay", name: "eBay", website: "https://www.ebay.com",
-        integration: "browse_api", state: ebayAffiliate ? "api_and_affiliate_configured" : ebayConfigured ? "api_credentials_configured" : "api_credentials_required",
+        integration: "browse_api", environment: ebayConfig.environment,
+        state: ebayAffiliate ? "api_and_affiliate_configured" : ebayConfigured ? "api_credentials_configured" : "api_credentials_required",
         api_configured: ebayConfigured, affiliate_tracking: ebayAffiliate,
         next_step: ebayConfigured
-          ? (ebayAffiliate ? "eBay Browse API credentials and a 10-digit Partner Network campaign ID are configured." : "Add the approved 10-digit eBay Partner Network campaign ID to enable affiliate tracking.")
-          : "Create an eBay developer application and configure EBAY_CLIENT_ID and EBAY_CLIENT_SECRET as Worker Secrets."
+          ? (ebayAffiliate ? "eBay Browse API credentials are configured for " + ebayConfig.environment + " and a 10-digit Partner Network campaign ID is present." : "Credentials are configured for " + ebayConfig.environment + ". Add an approved 10-digit eBay Partner Network campaign ID only when affiliate tracking is approved.")
+          : (ebayConfig.environment === "sandbox"
+            ? "Create Sandbox keys and configure EBAY_SANDBOX_CLIENT_ID and EBAY_SANDBOX_CLIENT_SECRET as Worker Secrets."
+            : "Create an eBay developer application and configure EBAY_CLIENT_ID and EBAY_CLIENT_SECRET as Worker Secrets. Production Browse API use may require eBay partner approval.")
       },
       {
         id: "kikuu", name: "KiKUU Tanzania", website: "https://www.kikuu.co.tz/",
@@ -592,14 +609,15 @@ function marketplaceRateLimited(ip) {
 }
 
 async function getEbayAccessToken(env) {
-  const clientId = env.EBAY_CLIENT_ID;
-  const clientSecret = env.EBAY_CLIENT_SECRET;
+  const config = getEbayConfig(env);
+  const { clientId, clientSecret, apiBase, environment } = config;
   if (!clientId || !clientSecret) throw new Error("ebay_not_configured");
-  const cached = EBAY_TOKEN_CACHE.get(clientId);
+  const cacheKey = environment + ":" + clientId;
+  const cached = EBAY_TOKEN_CACHE.get(cacheKey);
   if (cached && cached.expiresAt > Date.now() + 30_000) return cached.token;
 
   const auth = btoa(clientId + ":" + clientSecret);
-  const response = await fetch("https://api.ebay.com/identity/v1/oauth2/token", {
+  const response = await fetch(apiBase + "/identity/v1/oauth2/token", {
     method: "POST",
     headers: {
       "Authorization": "Basic " + auth,
@@ -616,12 +634,13 @@ async function getEbayAccessToken(env) {
     throw new Error("ebay_token_invalid");
   }
   const expiresAt = Date.now() + Math.max(60, Number(data.expires_in) - 60) * 1000;
-  EBAY_TOKEN_CACHE.set(clientId, { token: data.access_token, expiresAt });
+  EBAY_TOKEN_CACHE.set(cacheKey, { token: data.access_token, expiresAt });
   return data.access_token;
 }
 
 async function searchEbayProducts(query, env, limit = 12) {
-  if (!env.EBAY_CLIENT_ID || !env.EBAY_CLIENT_SECRET) {
+  const config = getEbayConfig(env);
+  if (!config.clientId || !config.clientSecret) {
     return { status: "not_configured", affiliate_tracking: false, results: [] };
   }
   const term = String(query || "").trim();
@@ -641,7 +660,7 @@ async function searchEbayProducts(query, env, limit = 12) {
     if (affiliateTracking) {
       headers["X-EBAY-C-ENDUSERCTX"] = "affiliateCampaignId=" + campaign + ",affiliateReferenceId=343SHOP";
     }
-    const response = await fetch("https://api.ebay.com/buy/browse/v1/item_summary/search?" + params.toString(), {
+    const response = await fetch(config.apiBase + "/buy/browse/v1/item_summary/search?" + params.toString(), {
       method: "GET", headers, redirect: "error", signal: AbortSignal.timeout(9000)
     });
     if (!response.ok) throw new Error("ebay_search_failed");
