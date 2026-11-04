@@ -750,6 +750,57 @@ async function searchMarketplaceProducts(args, env) {
 }
 
 
+const PRODUCT_SCHEMA_READY = new WeakMap();
+
+async function ensureProductSchema(db) {
+  let ready = PRODUCT_SCHEMA_READY.get(db);
+  if (!ready) {
+    ready = (async () => {
+      await db.prepare(`
+        CREATE TABLE IF NOT EXISTS store_products (
+          id TEXT PRIMARY KEY,
+          slug TEXT NOT NULL UNIQUE,
+          product_name TEXT NOT NULL CHECK(length(product_name) BETWEEN 2 AND 120),
+          description TEXT NOT NULL CHECK(length(description) BETWEEN 5 AND 700),
+          category TEXT NOT NULL CHECK(length(category) BETWEEN 2 AND 60),
+          source_marketplace TEXT NOT NULL CHECK(length(source_marketplace) BETWEEN 2 AND 80),
+          source_seller TEXT NOT NULL DEFAULT 'Not supplied',
+          source_url TEXT NOT NULL UNIQUE,
+          source_price REAL NOT NULL CHECK(source_price >= 0),
+          currency TEXT NOT NULL CHECK(length(currency) = 3),
+          image_url TEXT,
+          availability TEXT NOT NULL DEFAULT 'unknown'
+            CHECK(availability IN ('in_stock', 'out_of_stock', 'limited', 'unknown')),
+          status TEXT NOT NULL DEFAULT 'draft'
+            CHECK(status IN ('draft', 'published', 'archived')),
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          published_at TEXT
+        )
+      `).run();
+
+      await db.prepare(`
+        CREATE INDEX IF NOT EXISTS idx_store_products_status_published
+        ON store_products(status, published_at DESC)
+      `).run();
+
+      await db.prepare(`
+        CREATE INDEX IF NOT EXISTS idx_store_products_category_status
+        ON store_products(category, status)
+      `).run();
+    })();
+    PRODUCT_SCHEMA_READY.set(db, ready);
+  }
+
+  try {
+    await ready;
+  } catch (error) {
+    PRODUCT_SCHEMA_READY.delete(db);
+    const detail = String(error?.message || "D1 schema setup failed").slice(0, 180);
+    throw new Error("product_schema_initialization_failed: " + detail);
+  }
+}
+
 const OWNER_MCP_TOOLS = new Set(["save_product_draft", "list_product_drafts", "publish_store_product"]);
 
 function requireProductDatabase(env) {
@@ -803,6 +854,7 @@ function slugifyStoreProduct(value, id) {
 
 async function saveStoreProductDraft(args, env) {
   const db = requireProductDatabase(env);
+  await ensureProductSchema(db);
   const product = validateStoreProductDraft(args);
   const id = crypto.randomUUID();
   const slug = slugifyStoreProduct(product.product_name, id);
@@ -833,6 +885,7 @@ async function saveStoreProductDraft(args, env) {
 
 async function listStoreProductDrafts(args, env) {
   const db = requireProductDatabase(env);
+  await ensureProductSchema(db);
   const limit = Number.isInteger(args.limit) ? Math.min(50, Math.max(1, args.limit)) : 30;
   const result = await db.prepare(
     "SELECT id, slug, product_name, description, category, source_marketplace, source_seller, source_url, source_price, currency, image_url, availability, status, created_at, updated_at, published_at FROM store_products WHERE status = 'draft' ORDER BY created_at DESC LIMIT ?"
@@ -847,6 +900,7 @@ async function listStoreProductDrafts(args, env) {
 
 async function publishStoreProduct(args, env) {
   const db = requireProductDatabase(env);
+  await ensureProductSchema(db);
   if (args.confirmation_phrase !== "PUBLISH") throw new Error("Explicit publication confirmation is required. Set confirmation_phrase to PUBLISH only after the owner approves.");
   if (args.owner_confirmed_source_rights !== true || args.owner_confirmed_price_and_stock !== true ||
       args.owner_confirmed_seller_terms !== true) {
@@ -885,6 +939,7 @@ async function handlePublishedStoreProducts(request, env) {
     return json({ error: "product_database_not_configured", products: [] }, 503);
   }
   try {
+    await ensureProductSchema(env.DB);
     const result = await env.DB.prepare(
       "SELECT id, slug, product_name, description, category, source_marketplace, source_seller, source_url, source_price, currency, image_url, availability, published_at FROM store_products WHERE status = 'published' ORDER BY published_at DESC LIMIT 60"
     ).all();
