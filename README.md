@@ -1,10 +1,10 @@
 # 343SHOP
 
-Bilingual global shopping and brokerage marketplace connecting buyers with external marketplaces and approved supplier catalogues.
+Bilingual global shopping and brokerage marketplace connecting buyers with external marketplaces and approved supplier catalogues. 343SHOP-owned listings are reserved for its original books and scripts; all other goods remain the property of independent sellers.
 
 ## Live order flow
 
-Customers browse, search, filter products, add items to the cart and submit order details through WhatsApp. An order is only submitted after the customer presses Send in WhatsApp. No payment is collected or marked as paid by this site.
+Customers can order 343SHOP-owned books and approved original scripts through the WhatsApp request flow. External seller listings stay outside the owned-products cart and link to the original seller; customers may ask 343SHOP for a brokerage quote. An order request is only submitted after the customer presses Send in WhatsApp. No card payment is collected or marked as paid by this site.
 
 ## AI shopping assistant
 
@@ -39,7 +39,7 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 - `get_marketplace_profile` — explains the broker/agent workflow and policies.
 - `list_partner_shops` — lists only partner shops configured by the owner.
 - `get_partner_integration_guide` — explains the public supplier catalogue API.
-- `search_marketplace_products` — searches the 343SHOP showcase catalogue, registered partner catalogues and eBay when its official API credentials are configured.
+- `search_marketplace_products` — searches 343SHOP-owned books/scripts, registered partner catalogues and eBay when its official API credentials are configured.
 - `compare_partner_offers` — compares supplier offers only within the same currency.
 - `calculate_brokerage_margin` — calculates an owner-supplied commission proposal.
 - `create_whatsapp_quote_link` — prepares a WhatsApp link; it does not send a message or create an order.
@@ -58,7 +58,7 @@ The MCP describes 343SHOP as a **brokerage marketplace**: it connects buyers wit
 
 ## AI-managed product catalogue (Cloudflare D1)
 
-MCP can now save sourced products as private drafts and publish them to a separate **AI Sourced Products** section on the storefront. This is separate from the existing showcase cart: external products link to their source seller and are never added to the WhatsApp checkout bag.
+MCP can now save sourced products as private drafts and publish them to a separate **AI Sourced Products** section on the storefront. This is separate from the owned-books cart: external products link to their source seller and are never added to the WhatsApp checkout bag.
 
 ### One-time Cloudflare setup
 
@@ -121,7 +121,7 @@ There are no preset commission rates. A partner application does not automatical
 
 - MCP product management is write-capable only for the owner: `save_product_draft` and `publish_store_product` require `MCP_WRITE_TOKEN` and a configured D1 binding. It cannot modify third-party inventory, message suppliers or run paid advertising.
 - WhatsApp links and ad drafts are prepared for a person to review and send. Sourced product drafts can be saved privately; publication still requires explicit owner approval.
-- The current 343SHOP catalogue is a showcase list, not proof of physical stock.
+- The current 343SHOP-owned catalogue contains its original books; it is not proof of physical stock or supplier availability.
 - No commission rate is assumed. The owner supplies the agreed amount when calculating a brokerage deal.
 - Partner shops are not automatically discovered. They must be registered with the owner's permission.
 - The existing storefront and WhatsApp checkout continue to work without D1. The sourced-product catalogue appears only after a D1 database and Worker binding are configured.
@@ -143,7 +143,7 @@ Server routes and tools:
 - `get_marketplace_integrations_status` — exposes the integration readiness report to AI clients.
 - `list_global_marketplaces` — lists all official source destinations and clearly marks what is not connected.
 - `prepare_global_marketplace_search` — prepares direct search links for a chosen product keyword and optional marketplace ID.
-- `search_marketplace_products` — returns live results only from configured partner feeds, configured eBay API, or clearly labelled 343SHOP showcase entries. It also includes official website search links separately.
+- `search_marketplace_products` — returns live results only from configured partner feeds, configured eBay API, or clearly labelled 343SHOP-owned book entries. It also includes official website search links separately.
 
 ### eBay Browse API (implemented; Sandbox and Production)
 
@@ -211,7 +211,7 @@ This project is a Cloudflare Worker with Static Assets. It has no database depen
 
 The WhatsApp order destination is set in `public/index.html` as `WHATSAPP_NUMBER`. Update it there if the store contact changes.
 
-Product prices are displayed in USD as supplied in the original project catalogue. Confirm currency, delivery terms and product availability with the customer before accepting payment.
+343SHOP-owned book prices are displayed in USD as supplied in the current catalogue. The cart shows a products subtotal only: delivery cost and final total must be confirmed before accepting an order. External seller products are not added to the 343SHOP-owned cart.
 
 ## Local preview
 

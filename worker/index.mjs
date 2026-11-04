@@ -11,27 +11,26 @@ const AI_RATE_MAX = 8;
 
 const STORE_SYSTEM_PROMPT = [
   "You are the 343SHOP global shopping and brokerage marketplace assistant.",
-  "343SHOP is a broker/agent (winga) that connects buyers to independent sellers and international marketplaces. Do not imply 343SHOP owns third-party stock.",
+  "343SHOP is a brokerage marketplace (dalali/winga) connecting buyers with independent sellers, supplier catalogues and international marketplaces. Do not imply that 343SHOP owns third-party products or stock.",
+  "Ownership policy: 343SHOP owns its original books and original scripts/software it creates. The current 343SHOP-owned catalogue contains only the three book listings below. Do not invent script titles, downloadable files or prices; add a script only after the owner provides and approves its product details.",
+  "All other physical products and services displayed through Global Market, partner catalogues or external marketplaces belong to independent sellers. Never describe phones, laptops, clothing, mugs, accessories, prints, design packs or other supplier listings as 343SHOP stock unless the owner explicitly confirms ownership.",
   "Be warm, concise and useful. Reply in Swahili by default; use English when the customer uses English.",
-  "Explain the difference between 343SHOP showcase services/products and external marketplace listings. External listings remain owned, priced and fulfilled by their source seller or marketplace.",
+  "Explain the difference between 343SHOP-owned books/scripts and external seller listings. External listings remain owned, priced and fulfilled by their source seller or marketplace.",
   "The website Global Market search displays live product results only from configured sources, and it also offers official website search links for other marketplaces. The chat assistant itself does not run live product searches; direct customers to the Global Market section for live results or direct source searches.",
-  "The marketplace directory includes Amazon, Alibaba.com, AliExpress, eBay, KiKUU Tanzania, Jumia Tanzania, Etsy, Temu, Made-in-China.com and DHgate. Directory membership only means a source website is listed; it does not mean an API, affiliate programme or partnership is connected.",
+  "The marketplace directory includes Amazon, Alibaba.com, AliExpress, eBay, KiKUU Tanzania, Jumia Tanzania, Etsy, Temu, Made-in-China.com and DHgate. Directory membership does not mean an API, affiliate programme or partnership is connected.",
   "Never claim any marketplace or supplier is connected unless the live integration context below explicitly says its API credentials are configured. Never invent product offers, prices, sellers, stock or trends.",
   "Do not claim that stock, availability, delivery dates, customs/tax costs, seller quality or final delivery prices are confirmed. Seller-reported stock must still be confirmed before payment.",
-  "The showcase catalogue prices are displayed in USD. Never convert to TZS unless a current exchange rate is supplied; tell customers to confirm the final total and currency with the seller.",
-  "For 343SHOP showcase items and services, customers may add items to the bag and submit an order request through WhatsApp. An order is not submitted until the customer presses Send in WhatsApp.",
-  "For external marketplace listings, direct customers to open the source seller/marketplace link and complete checkout there. Do not tell them to add an external listing to the 343SHOP bag or pay 343SHOP for that listing.",
+  "The 343SHOP-owned book catalogue prices are displayed in USD. Never convert to TZS unless a current exchange rate is supplied. Confirm the current price, delivery cost and final total before accepting an order.",
+  "For 343SHOP-owned books and approved original scripts, customers may submit an order request through WhatsApp. An order is not submitted until the customer presses Send in WhatsApp. Delivery is not included in the displayed subtotal unless explicitly confirmed.",
+  "For external marketplace listings, direct customers to open the source seller/marketplace link and complete checkout there. A buyer may also ask 343SHOP to arrange a brokerage quote through WhatsApp; this is a request only, not an order or payment.",
+  "External listings must never be added to the 343SHOP-owned books/scripts checkout bag or described as inventory owned by 343SHOP.",
   "Brokerage commission is agreed with each partner; there is no default percentage. Never add a fee or promise earnings without an owner-approved agreement.",
   "The website does not collect card payments. Never ask for passwords, card numbers, PINs or one-time codes.",
   "Do not invent discounts, delivery promises, returns, warranty or business policies.",
   "",
-  "343SHOP showcase catalogue (not proof of stock):",
-  "Custom Photo Print — $15; Canvas Wall Art — $45; Logo Design Pack — $79; Full Brand Kit — $149;",
-  "Baraka's Storybook — $18; Author Paperback Print — $22; Custom Story eBook — $35; Social Content Pack — $29;",
-  "The Everyday Photo Mug — $24; Your Story Comfort Tee — $32; Memory Lane Phone Case — $29.",
-  "The showcase cart currently displays shipping as $6.99 below a $75 subtotal and free at or above $75. These rules apply only to the 343SHOP showcase cart, not external marketplace orders."
+  "Current 343SHOP-owned catalogue (USD; reconfirm before ordering): Baraka's Storybook — $18; Author Paperback Print — $22; Custom Story eBook — $35.",
+  "Original scripts/software are 343SHOP intellectual property, but are not publicly listed for sale until the owner approves exact product details and pricing."
 ].join("\n");
-
 function buildStoreSystemPrompt(env) {
   const status = marketplaceIntegrationsStatus(env);
   const enabled = status.marketplaces.filter((item) => item.api_configured).map((item) => item.name);
@@ -207,19 +206,10 @@ const MARKETPLACE_RATE_WINDOW_MS = 60_000;
 const MARKETPLACE_RATE_MAX = 18;
 
 const MARKETPLACE_CATALOGUE = [
-  { id: "custom-photo-print", name: "Custom Photo Print", name_sw: "Printi ya Picha Binafsi", category: "prints", description: "High-quality photo print on premium paper.", price: 15, currency: "USD" },
-  { id: "canvas-wall-art", name: "Canvas Wall Art", name_sw: "Canvas ya Ukuta", category: "prints", description: "Gallery-wrapped canvas with your photo or design.", price: 45, currency: "USD" },
-  { id: "logo-design-pack", name: "Logo Design Pack", name_sw: "Pakiti ya Logo Design", category: "branding", description: "Professional logo design with source files and variations.", price: 79, currency: "USD" },
-  { id: "brand-kit", name: "Full Brand Kit", name_sw: "Brand Kit Kamili", category: "branding", description: "Logo, colour palette, fonts and social templates.", price: 149, currency: "USD" },
-  { id: "storybook-baraka", name: "Baraka's Storybook", name_sw: "Kitabu cha Hadithi cha Baraka", category: "books", description: "A personalised Swahili storybook for little readers.", price: 18, currency: "USD" },
-  { id: "author-paperback", name: "Author Paperback Print", name_sw: "Kitabu cha Mwandishi", category: "books", description: "Print your own book with quality layout guidance.", price: 22, currency: "USD" },
-  { id: "custom-story-ebook", name: "Custom Story eBook", name_sw: "Hadithi Binafsi (eBook)", category: "digital", description: "Your story written and formatted as a digital book.", price: 35, currency: "USD" },
-  { id: "content-pack-social", name: "Social Content Pack", name_sw: "Pakiti ya Content ya Social", category: "digital", description: "Captions and story templates tailored to your niche.", price: 29, currency: "USD" },
-  { id: "custom-photo-mug", name: "The Everyday Photo Mug", name_sw: "Kikombe cha Picha", category: "mugs", description: "A ceramic mug printed with your favourite photo.", price: 24, currency: "USD" },
-  { id: "personalized-comfort-tee", name: "Your Story Comfort Tee", name_sw: "Fulana ya Hadithi Yako", category: "apparel", description: "Soft cotton tee with your name, logo or message.", price: 32, currency: "USD" },
-  { id: "memory-phone-case", name: "Memory Lane Phone Case", name_sw: "Kava la Simu", category: "accessories", description: "A durable phone case with your photo or design.", price: 29, currency: "USD" }
+  { id: "storybook-baraka", name: "Baraka's Storybook", name_sw: "Kitabu cha Hadithi cha Baraka", category: "books", description: "An original personalised Swahili storybook for young readers.", price: 18, currency: "USD", ownership: "343SHOP" },
+  { id: "author-paperback", name: "Author Paperback Print", name_sw: "Kitabu cha Mwandishi", category: "books", description: "A 343SHOP book publishing and paperback option for authors.", price: 22, currency: "USD", ownership: "343SHOP" },
+  { id: "custom-story-ebook", name: "Custom Story eBook", name_sw: "Hadithi Binafsi (eBook)", category: "books", description: "An original digital story created and formatted by 343SHOP.", price: 35, currency: "USD", ownership: "343SHOP" }
 ];
-
 const GLOBAL_MARKETPLACE_DIRECTORY = [
   { id: "amazon", name: "Amazon", region: "Global", type: "Retail", website: "https://www.amazon.com/", search_prefix: "https://www.amazon.com/s?k=", mode: "keyword", integration: "Creators API", integration_status: "approval_required", integration_note: "Live product data requires Amazon Associates approval in an eligible marketplace, Creators API eligibility and valid credentials." },
   { id: "alibaba", name: "Alibaba.com", region: "Global · Wholesale", type: "B2B", website: "https://www.alibaba.com/", search_prefix: "https://www.alibaba.com/trade/search?SearchText=", mode: "keyword", integration: "Affiliate feeds / Open Platform", integration_status: "affiliate_approval_required", integration_note: "Affiliate deep links and approved feeds require account approval. Open Platform API access requires developer application and granted permissions." },
@@ -286,7 +276,7 @@ const MCP_TOOLS = [
   { name: "get_partner_integration_guide", description: "Returns the public JSON catalogue API format a partner shop must expose to be searchable.", inputSchema: { type: "object", properties: {}, additionalProperties: false }, annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } },
   {
     name: "search_marketplace_products",
-    description: "Searches 343SHOP showcase listings, configured partner catalogues and eBay Browse API when official credentials are configured. Returns source attribution and stock-verification status.",
+    description: "Searches 343SHOP-owned books, configured partner catalogues and eBay Browse API when official credentials are configured. Returns source attribution and stock-verification status.",
     inputSchema: { type: "object", properties: {
       query: { type: "string", maxLength: 100, description: "Product name or keyword; empty means browse." },
       category: { type: "string", maxLength: 60 },
@@ -840,7 +830,7 @@ async function searchMarketplaceProducts(args, env) {
   const limit = Number.isInteger(args.limit) ? Math.min(25, Math.max(1, args.limit)) : 15;
   const own = ["partners", "ebay"].includes(source) ? [] : MARKETPLACE_CATALOGUE.map(p => ({
     ...p, source_type: "343shop_showcase", source_shop_id: "343shop",
-    source_shop: "343SHOP curated catalogue", city: "Online",
+    source_shop: "343SHOP original books & scripts", city: "Online",
     availability: "confirm_with_supplier", stock_last_updated: null, image_url: null, product_url: null
   }));
   const shops = ["343shop", "ebay"].includes(source) ? [] : parsePartnerShops(env);
@@ -862,7 +852,7 @@ async function searchMarketplaceProducts(args, env) {
     external_sources: { ebay: { status: ebayResult.status, affiliate_tracking: ebayResult.affiliate_tracking } },
     results: filtered.slice(0, limit),
     note: shops.length === 0 && ebayResult.status !== "available"
-      ? "No external live product catalogue is connected yet. Results may contain 343SHOP showcase listings only. Official external marketplace search links are provided separately; they do not represent live feeds or affiliate tracking. Configure approved partner feeds in PARTNER_SHOPS_JSON or eBay API credentials."
+      ? "No external live product catalogue is connected yet. Results may contain 343SHOP-owned books only. Official external marketplace search links are provided separately; they do not represent live feeds or affiliate tracking. Configure approved partner feeds in PARTNER_SHOPS_JSON or eBay API credentials."
       : "External product data is supplied by the source marketplace or partner seller. Direct marketplace search links are not live product results. Confirm current stock, final price, delivery, seller terms and brokerage commission before accepting an order."
   };
 }
@@ -1109,7 +1099,7 @@ async function runMcpTool(name, args, env) {
     customer_flow: ["search the global marketplace directory or connected live feeds", "identify the source seller", "confirm current stock, price, delivery, customs and seller terms", "agree any brokerage or affiliate attribution before purchase", "complete external purchases at the source marketplace or through an owner-approved process"],
     order_contact_whatsapp: "+255695981035",
     payment: "The current site does not collect card payments. Do not claim that any external order or payment is complete.",
-    inventory_policy: "343SHOP showcase listings do not prove stock. Partner and marketplace stock must be confirmed with the source seller.",
+    inventory_policy: "343SHOP-owned books are subject to order confirmation. Partner and marketplace stock must be confirmed with the source seller.",
     commission_policy: "No broker commission is assumed. Affiliate commissions require separate programme approval and valid tracking links."
   };
 
