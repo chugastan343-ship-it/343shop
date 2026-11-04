@@ -185,6 +185,7 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 .hero-search-meta span{display:inline-flex;align-items:center;gap:6px}
 .hero-search-meta i{width:6px;height:6px;border-radius:50%;background:#7eaa83;box-shadow:0 0 0 3px rgba(126,170,131,.15)}
 .trust{background:rgba(255,255,255,.42);border-color:rgba(18,59,48,.10);padding:19px 0}
+
 .global-departments{padding-top:62px;padding-bottom:38px}
 .departments-head{display:flex;align-items:end;justify-content:space-between;gap:22px;margin-bottom:22px}
 .departments-head h2{font:500 clamp(31px,4vw,45px)/1.04 Georgia,serif;color:var(--forest);letter-spacing:-.05em;margin:9px 0 8px}
@@ -382,6 +383,81 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 @media(max-width:390px){.marketplace-grid,.marketplace-results{grid-template-columns:1fr}.marketplace-card{min-height:0}.marketplace-card p{min-height:0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
+
+/* Amazon-inspired visual browsing and 343SHOP in-house print catalogue */
+.hero-art{background:#172c24;isolation:isolate}
+.hero-art:before{display:none}
+.hero-art:after{display:none}
+.hero-art-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:saturate(.86)}
+.hero-art-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,25,19,.68),rgba(11,25,19,.10) 76%),linear-gradient(0deg,rgba(11,25,19,.58),transparent 55%);z-index:-1}
+.hero-art .art-label{top:23px;left:24px;color:#f4dfb7;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.hero-art-message{position:absolute;left:25px;right:20px;bottom:78px;display:flex;flex-direction:column;gap:8px;color:white}
+.hero-art-message strong{font:500 clamp(27px,3vw,39px)/1.05 Georgia,serif;max-width:380px}
+.hero-art-message em{font:700 10px/1.5 Arial,sans-serif;color:#f0dfc2;font-style:normal;letter-spacing:.06em}
+.hero-art .art-caption{color:#183628;font-weight:900}
+.print-studio{padding-top:58px;padding-bottom:31px}
+.print-studio-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:23px}
+.print-studio-head h2{font:500 clamp(30px,4vw,44px)/1.04 Georgia,serif;color:var(--forest);letter-spacing:-.05em;margin:9px 0 8px}
+.print-studio-head p{max-width:660px;font-size:11px;line-height:1.75;color:#758077;margin:0}
+.print-studio-link{flex:none;font-size:10px;font-weight:900;color:var(--forest);border:1px solid #cbd5c9;border-radius:30px;padding:11px 16px;white-space:nowrap}
+.print-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.print-card{min-width:0;overflow:hidden;border:1px solid #e5e8df;border-radius:17px;background:#fffefa;box-shadow:0 9px 26px rgba(20,50,37,.045);transition:transform .22s,box-shadow .22s,border-color .22s}
+.print-card:hover{transform:translateY(-4px);box-shadow:0 19px 38px rgba(20,50,37,.10);border-color:#cbd7ca}
+.print-card-media{position:relative;height:174px;background:#ebece5;overflow:hidden}
+.print-card-media img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .5s}
+.print-card:hover .print-card-media img{transform:scale(1.045)}
+.print-card-media>span{position:absolute;left:11px;top:11px;padding:7px 9px;border-radius:30px;background:rgba(24,53,42,.88);color:#fff;font-size:7px;font-weight:900;letter-spacing:.12em}
+.print-card-content{padding:14px 14px 13px}
+.print-card-content>small{font-size:7px;letter-spacing:.15em;font-weight:900;color:#a0804d}
+.print-card-content h3{font:600 15px/1.25 Arial,sans-serif;color:var(--forest);margin:8px 0 7px;min-height:38px}
+.print-card-content p{font-size:9px;line-height:1.6;color:#788278;min-height:43px;margin:0 0 13px}
+.print-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:11px;border-top:1px solid #edf0e9}
+.print-price{color:#1d4837;font-size:16px;font-weight:900;white-space:nowrap}
+.print-quote{color:#795f36;font-size:11px;font-weight:900}
+.print-card-bottom a{font-size:8px;font-weight:900;color:#fff;background:var(--forest);padding:9px 10px;border-radius:30px;white-space:nowrap}
+.print-card-bottom a:hover{background:#2b5744}
+.print-studio-note{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 15px;border-radius:13px;background:#edf0e8;color:#778278}
+.print-studio-note>span{display:grid;place-items:center;flex:0 0 31px;height:31px;border-radius:9px;background:var(--forest);color:#e9d7ad;font:700 13px Georgia,serif}
+.print-studio-note p{margin:0;font-size:9px;line-height:1.6}
+.department-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.department-card.department-photo{display:block;min-height:220px;padding:0;border:0;border-radius:17px;background:#243d31;box-shadow:0 9px 28px rgba(20,50,37,.07)}
+.department-card.department-photo:before{display:none}
+.department-photo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .55s}
+.department-photo-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(7,20,14,.02) 15%,rgba(7,20,14,.76) 100%)}
+.department-card.department-photo:hover .department-photo-img{transform:scale(1.055)}
+.department-photo-copy{position:absolute;z-index:2;left:17px;right:35px;bottom:17px;display:flex;flex-direction:column;gap:6px;color:white}
+.department-photo-copy small{font-size:7px;font-weight:900;letter-spacing:.16em;color:#f1d8a8}
+.department-photo-copy strong{font:600 16px/1.15 Arial,sans-serif;color:#fff}
+.department-photo-copy em{font:400 9px/1.4 Arial,sans-serif;color:rgba(255,255,255,.84);font-style:normal}
+.department-photo-arrow{position:absolute;right:14px;bottom:15px;z-index:2;color:#fff;font-size:16px}
+@media(max-width:1050px){.print-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.department-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.department-card.department-photo{min-height:205px}}
+@media(max-width:650px){
+  .hero-art{min-height:260px}
+  .hero-art-message{left:17px;bottom:67px}
+  .hero-art-message strong{font-size:29px}
+  .hero-art .art-label{left:17px;top:17px;font-size:8px}
+  .print-studio{padding-top:39px;padding-bottom:22px}
+  .print-studio-head{align-items:flex-start;flex-direction:column;gap:11px}
+  .print-studio-head h2{font-size:33px}
+  .print-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .print-card{border-radius:13px}
+  .print-card-media{height:135px}
+  .print-card-content{padding:10px 10px 11px}
+  .print-card-content h3{font-size:12px;min-height:42px}
+  .print-card-content p{font-size:8px;min-height:53px}
+  .print-price{font-size:13px}
+  .print-quote{font-size:9px}
+  .print-card-bottom{align-items:flex-start;flex-direction:column;gap:9px}
+  .print-card-bottom a{font-size:8px}
+  .department-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .department-card.department-photo{min-height:170px;border-radius:13px}
+  .department-photo-copy{left:11px;right:26px;bottom:12px;gap:5px}
+  .department-photo-copy small{font-size:6px}
+  .department-photo-copy strong{font-size:12px}
+  .department-photo-copy em{font-size:8px}
+  .department-photo-arrow{right:10px;bottom:10px}
+}
 </style>
 </head>
 <body>
@@ -389,14 +465,14 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 <div class="wrap">
 <header class="header">
 <a class="brand" href="#"><span class="brand-mark">3</span><span>343<span>SHOP</span></span></a>
-<nav class="nav"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
+<nav class="nav"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#print-studio" data-sw="Printing" data-en="Print studio">Printing</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
 <div class="nav-actions"><button class="lang" id="langBtn" type="button">EN</button><button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-label="Fungua menyu" aria-controls="mobileMenu" aria-expanded="false"><span aria-hidden="true">☰</span></button><button class="cart-button" id="cartBtn" type="button"><span data-sw="Kikapu" data-en="Bag">Kikapu</span><span class="count" id="cartCount">0</span></button></div>
 <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation" aria-hidden="true"><a href="#departments" data-sw="Makundi" data-en="Departments">Makundi</a><a href="#marketplaces" data-sw="Masoko" data-en="Marketplaces">Masoko</a><a href="#shop" data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</a><a href="#about" data-sw="Jinsi tunavyofanya" data-en="How it works">Jinsi tunavyofanya</a><a href="#partners" data-sw="Wauzaji" data-en="For sellers">Wauzaji</a><a href="#contact" data-sw="Mawasiliano" data-en="Contact">Mawasiliano</a></nav>
 </header>
 <section class="hero">
 <div><span class="eyebrow" data-sw="GLOBAL SHOPPING · UDALALI WA KIMATAIFA" data-en="GLOBAL SHOPPING · BROKERAGE MARKETPLACE">GLOBAL SHOPPING · UDALALI WA KIMATAIFA</span>
 <h1 data-html-sw="Dunia nzima<br><em>karibu.</em>" data-html-en="The world<br><em>within reach.</em>">Dunia nzima<br><em>karibu.</em></h1>
-<p class="hero-copy" data-sw="Tafuta bidhaa kutoka marketplaces za kimataifa na wauzaji washirika sehemu moja. Tunakusaidia kulinganisha vyanzo, kuthibitisha bei na upatikanaji, kisha kukuunganisha na muuzaji." data-en="Discover products from international marketplaces and supplier partners in one place. Compare sources, verify price and availability, then connect with the seller.">Tafuta bidhaa kutoka marketplaces za kimataifa na wauzaji washirika sehemu moja. Tunakusaidia kulinganisha vyanzo, kuthibitisha bei na upatikanaji, kisha kukuunganisha na muuzaji.</p>
+<p class="hero-copy" data-sw="Tafuta bidhaa duniani, au agiza huduma zetu za printing tunazotengeneza wenyewe: T-shirt, chupa, vikombe, mabango na picha." data-en="Shop products worldwide, or order our in-house printing: T-shirts, bottles, mugs, banners and photo prints.">Tafuta bidhaa duniani, au agiza huduma zetu za printing tunazotengeneza wenyewe: T-shirt, chupa, vikombe, mabango na picha.</p>
 <div class="hero-actions"><a class="btn" href="#marketplaces"><span data-sw="Tafuta bidhaa duniani" data-en="Search global products">Tafuta bidhaa duniani</span> <span>↗</span></a><a class="btn btn-outline" href="#about" data-sw="Jinsi inavyofanya kazi" data-en="How it works">Jinsi inavyofanya kazi</a></div>
 <form class="hero-search" id="heroSearchForm" role="search">
   <span class="hero-search-icon" aria-hidden="true">⌕</span>
@@ -405,7 +481,13 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 </form>
 <div class="hero-search-meta"><span><i></i><span data-sw="Masoko ya kimataifa + maduka ya Tanzania" data-en="Global marketplaces + Tanzania stores">Masoko ya kimataifa + maduka ya Tanzania</span></span><span data-sw="Bei na stock huthibitishwa kwa muuzaji" data-en="Seller confirms final price and stock">Bei na stock huthibitishwa kwa muuzaji</span></div>
 <div class="hero-note"><span class="avatars"><i>✦</i><i>3</i><i>↗</i></span><span data-sw="Vyanzo wazi. Bei na stock huthibitishwa kwa muuzaji." data-en="Transparent sources. Sellers confirm price and stock.">Vyanzo wazi. Bei na stock huthibitishwa kwa muuzaji.</span></div></div>
-<div class="hero-art"><span class="art-label">GLOBAL SOURCE NETWORK · 2026</span><div class="art-card main">343</div><div class="art-card side">✦</div><div class="art-card low">♡</div><span class="art-caption">DISCOVER · COMPARE · CONNECT</span></div>
+<div class="hero-art">
+  <img class="hero-art-photo" src="https://unsplash.com/photos/Tzm3Oyu_6sk/download?force=true" alt="Printing press producing printed sheets" loading="eager" decoding="async">
+  <span class="hero-art-shade"></span>
+  <span class="art-label">343SHOP · PRINT & GLOBAL MARKET</span>
+  <span class="hero-art-message"><strong data-sw="Tengeneza kitu chako." data-en="Make it yours.">Tengeneza kitu chako.</strong><em data-sw="T-shirt · chupa · vikombe · mabango" data-en="T-shirts · bottles · mugs · banners">T-shirt · chupa · vikombe · mabango</em></span>
+  <span class="art-caption">PRINT · BRAND · DISCOVER</span>
+</div>
 </section>
 <div class="trust">
 <div class="trust-item"><span class="trust-icon">✦</span><span><strong data-sw="Vitabu na scripts" data-en="Our books & scripts">Vitabu na scripts</strong><span data-sw="Kazi za asili za 343SHOP" data-en="Original 343SHOP work">Kazi za asili za 343SHOP</span></span></div>
@@ -414,6 +496,52 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 <div class="trust-item"><span class="trust-icon">♡</span><span><strong data-sw="Huduma ya karibu" data-en="Personal service">Huduma ya karibu</strong><span data-sw="Tupo kukusaidia" data-en="Here to help">Tupo kukusaidia</span></span></div>
 </div>
 
+
+<section class="print-studio wrap" id="print-studio" aria-labelledby="printStudioTitle">
+  <div class="print-studio-head">
+    <div>
+      <span class="section-kicker">343SHOP PRINT STUDIO · MADE BY US</span>
+      <h2 id="printStudioTitle" data-sw="Tunachapisha. Tunabunifu. Tunatengeneza." data-en="We print. We design. We make.">Tunachapisha. Tunabunifu. Tunatengeneza.</h2>
+      <p data-sw="Hizi ni huduma zetu za ndani ya studio—si bidhaa za dalali. Chagua huduma, tuma design au picha WhatsApp, tupange oda yako." data-en="These are our own in-house services—not brokered seller products. Choose a service, send your design or photo on WhatsApp, and arrange your order.">Hizi ni huduma zetu za ndani ya studio—si bidhaa za dalali. Chagua huduma, tuma design au picha WhatsApp, tupange oda yako.</p>
+    </div>
+    <a class="print-studio-link" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20naomba%20quotation%20ya%20huduma%20za%20printing." target="_blank" rel="noopener noreferrer" data-sw="Omba quotation ↗" data-en="Request a quote ↗">Omba quotation ↗</a>
+  </div>
+  <div class="print-grid">
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?auto=format&fit=crop&w=900&q=85" alt="Plain T-shirt prepared for custom printing" loading="lazy" decoding="async"><span>HUDUMA YETU</span></div>
+      <div class="print-card-content"><small>T-SHIRT PRINTING</small><h3 data-sw="Chapisha kwenye T-shirt yako" data-en="Print on your own T-shirt">Chapisha kwenye T-shirt yako</h3><p data-sw="Leta nguo yako; sisi tunachapisha design yako." data-en="Bring your own shirt and we print your design.">Leta nguo yako; sisi tunachapisha design yako.</p><div class="print-card-bottom"><strong class="print-price">TSh 13,000</strong><a href="https://wa.me/255695981035?text=Habari%2C%20nataka%20kuchapisha%20design%20kwenye%20T-shirt%20yangu.%20Bei%20iliyooneshwa%3A%20TSh%2013%2C000." target="_blank" rel="noopener noreferrer" data-sw="Oda WhatsApp ↗" data-en="Order on WhatsApp ↗">Oda WhatsApp ↗</a></div></div>
+    </article>
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?auto=format&fit=crop&w=900&q=85" alt="White T-shirt product mockup" loading="lazy" decoding="async"><span>343SHOP PRODUCT</span></div>
+      <div class="print-card-content"><small>OUR T-SHIRT + PRINT</small><h3 data-sw="T-shirt yetu pamoja na printing" data-en="Our T-shirt with custom print">T-shirt yetu pamoja na printing</h3><p data-sw="Tunatoa T-shirt yenyewe na tunakuchapishia design unayoomba." data-en="We supply the T-shirt and print the design you request.">Tunatoa T-shirt yenyewe na tunakuchapishia design unayoomba.</p><div class="print-card-bottom"><strong class="print-price">TSh 24,000</strong><a href="https://wa.me/255695981035?text=Habari%2C%20nataka%20T-shirt%20yenu%20pamoja%20na%20printing.%20Bei%20iliyooneshwa%3A%20TSh%2024%2C000." target="_blank" rel="noopener noreferrer" data-sw="Oda WhatsApp ↗" data-en="Order on WhatsApp ↗">Oda WhatsApp ↗</a></div></div>
+    </article>
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://unsplash.com/photos/reEySFadyJQ/download?force=true" alt="Reusable water bottle for custom branding" loading="lazy" decoding="async"><span>BRANDED GIFTS</span></div>
+      <div class="print-card-content"><small>WATER BOTTLES</small><h3 data-sw="Chupa za maji zenye picha au logo" data-en="Custom water bottles">Chupa za maji zenye picha au logo</h3><p data-sw="Weka jina, logo au ujumbe kwenye chupa ya zawadi." data-en="Add a name, logo or message to a personalised bottle.">Weka jina, logo au ujumbe kwenye chupa ya zawadi.</p><div class="print-card-bottom"><strong class="print-quote" data-sw="Bei kwa oda" data-en="Request a quote">Bei kwa oda</strong><a href="https://wa.me/255695981035?text=Habari%2C%20naomba%20chupa%20ya%20maji%20yenye%20logo%20au%20picha." target="_blank" rel="noopener noreferrer" data-sw="Omba bei ↗" data-en="Get a quote ↗">Omba bei ↗</a></div></div>
+    </article>
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://images.pexels.com/photos/6786613/pexels-photo-6786613.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Ceramic mug ready for personalised printing" loading="lazy" decoding="async"><span>PERSONALISED</span></div>
+      <div class="print-card-content"><small>MUG PRINTING</small><h3 data-sw="Vikombe vya picha na logo" data-en="Printed mugs">Vikombe vya picha na logo</h3><p data-sw="Chapisha picha, jina au logo kwenye kikombe cha zawadi." data-en="Print a photo, name or logo on a gift mug.">Chapisha picha, jina au logo kwenye kikombe cha zawadi.</p><div class="print-card-bottom"><strong class="print-quote" data-sw="Bei kwa oda" data-en="Request a quote">Bei kwa oda</strong><a href="https://wa.me/255695981035?text=Habari%2C%20naomba%20kikombe%20chenye%20picha%20au%20logo." target="_blank" rel="noopener noreferrer" data-sw="Omba bei ↗" data-en="Get a quote ↗">Omba bei ↗</a></div></div>
+    </article>
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://unsplash.com/photos/Tzm3Oyu_6sk/download?force=true" alt="Professional printing press at work" loading="lazy" decoding="async"><span>LARGE FORMAT</span></div>
+      <div class="print-card-content"><small>BANNERS & SIGNAGE</small><h3 data-sw="Mabango, roll-up na signage" data-en="Banners, roll-ups & signage">Mabango, roll-up na signage</h3><p data-sw="Mabango ya biashara, matangazo, matukio na mabango ya ukutani." data-en="Business banners, event graphics, promotional and wall signage.">Mabango ya biashara, matangazo, matukio na mabango ya ukutani.</p><div class="print-card-bottom"><strong class="print-quote" data-sw="Bei kwa ukubwa" data-en="Priced by size">Bei kwa ukubwa</strong><a href="https://wa.me/255695981035?text=Habari%2C%20naomba%20bango%20au%20roll-up.%20Nitatuma%20vipimo%20na%20design." target="_blank" rel="noopener noreferrer" data-sw="Omba bei ↗" data-en="Get a quote ↗">Omba bei ↗</a></div></div>
+    </article>
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://images.pexels.com/photos/7319336/pexels-photo-7319336.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Photo frame and printed keepsake display" loading="lazy" decoding="async"><span>PHOTO & WALL ART</span></div>
+      <div class="print-card-content"><small>PHOTO PRINTS</small><h3 data-sw="Picha, posters na canvas" data-en="Photo prints, posters & canvas">Picha, posters na canvas</h3><p data-sw="Chapisha picha zako, posters, picha za ukutani na kazi za sanaa." data-en="Print your photos, posters, wall pictures and artwork.">Chapisha picha zako, posters, picha za ukutani na kazi za sanaa.</p><div class="print-card-bottom"><strong class="print-quote" data-sw="Bei kwa ukubwa" data-en="Priced by size">Bei kwa ukubwa</strong><a href="https://wa.me/255695981035?text=Habari%2C%20nataka%20photo%20prints%2C%20poster%20au%20canvas." target="_blank" rel="noopener noreferrer" data-sw="Omba bei ↗" data-en="Get a quote ↗">Omba bei ↗</a></div></div>
+    </article>
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://images.pexels.com/photos/7598018/pexels-photo-7598018.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Branding and print design materials" loading="lazy" decoding="async"><span>BRANDING</span></div>
+      <div class="print-card-content"><small>STICKERS & BUSINESS PRINT</small><h3 data-sw="Stickers, labels na business cards" data-en="Stickers, labels & business cards">Stickers, labels na business cards</h3><p data-sw="Branding ya bidhaa, vibandiko, lebo na kadi za biashara." data-en="Product branding, stickers, labels and business cards.">Branding ya bidhaa, vibandiko, lebo na kadi za biashara.</p><div class="print-card-bottom"><strong class="print-quote" data-sw="Bei kwa oda" data-en="Request a quote">Bei kwa oda</strong><a href="https://wa.me/255695981035?text=Habari%2C%20naomba%20stickers%2C%20labels%20au%20business%20cards." target="_blank" rel="noopener noreferrer" data-sw="Omba bei ↗" data-en="Get a quote ↗">Omba bei ↗</a></div></div>
+    </article>
+    <article class="print-card">
+      <div class="print-card-media"><img src="https://images.unsplash.com/photo-1620799139507-2a76f79a2f4d?auto=format&fit=crop&w=900&q=85" alt="Printed apparel and custom garment design" loading="lazy" decoding="async"><span>TEAM & EVENTS</span></div>
+      <div class="print-card-content"><small>JERSEYS & CAPS</small><h3 data-sw="Jezi, kofia na uniform" data-en="Jerseys, caps & uniforms">Jezi, kofia na uniform</h3><p data-sw="Majina, namba, nembo na branding kwa timu na vikundi." data-en="Names, numbers, logos and branding for teams and groups.">Majina, namba, nembo na branding kwa timu na vikundi.</p><div class="print-card-bottom"><strong class="print-quote" data-sw="Bei kwa oda" data-en="Request a quote">Bei kwa oda</strong><a href="https://wa.me/255695981035?text=Habari%2C%20naomba%20jezi%20au%20kofia%20zenye%20nembo." target="_blank" rel="noopener noreferrer" data-sw="Omba bei ↗" data-en="Get a quote ↗">Omba bei ↗</a></div></div>
+    </article>
+  </div>
+  <div class="print-studio-note"><span>343</span><p data-sw="Picha ni mifano ya huduma. Bei nyingine zitathibitishwa kulingana na ukubwa, aina ya bidhaa na design kabla ya oda." data-en="Images illustrate our services. Other prices are quoted after confirming size, product type and artwork before ordering.">Picha ni mifano ya huduma. Bei nyingine zitathibitishwa kulingana na ukubwa, aina ya bidhaa na design kabla ya oda.</p></div>
+</section>
 
 <section class="global-departments wrap" id="departments" aria-labelledby="departmentsTitle">
   <div class="departments-head">
@@ -425,35 +553,29 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
     <a class="departments-all" href="#marketplaces" data-sw="Masoko yote ↗" data-en="All marketplaces ↗">Masoko yote ↗</a>
   </div>
   <div class="department-grid">
-    <button class="department-card dept-tech" type="button" data-global-query="android smartphone">
-      <span class="department-symbol">⌁</span><span class="department-copy"><small>01 · TECH</small><strong data-sw="Simu na vifaa" data-en="Phones & accessories">Simu na vifaa</strong><em data-sw="Smartphones, cases, chargers" data-en="Smartphones, cases, chargers">Smartphones, cases, chargers</em></span><b class="department-arrow">↗</b>
+    <button class="department-card department-photo" type="button" data-global-query="smartphone phone wallpapers phone cases accessories">
+      <img class="department-photo-img" src="https://images.pexels.com/photos/7742503/pexels-photo-7742503.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1100" alt="Smartphone and protective phone accessories" loading="lazy" decoding="async">
+      <span class="department-photo-shade"></span><span class="department-photo-copy"><small>01 · MOBILE & WALLPAPERS</small><strong data-sw="Simu na picha za ndani" data-en="Phones & wallpapers">Simu na picha za ndani</strong><em data-sw="Simu, wallpapers, kava na accessories" data-en="Phones, wallpapers, cases and accessories">Simu, wallpapers, kava na accessories</em></span><b class="department-photo-arrow">↗</b>
     </button>
-    <button class="department-card dept-compute" type="button" data-global-query="laptop computer">
-      <span class="department-symbol">▣</span><span class="department-copy"><small>02 · COMPUTING</small><strong data-sw="Kompyuta na tablets" data-en="Computers & tablets">Kompyuta na tablets</strong><em data-sw="Laptops, tablets, accessories" data-en="Laptops, tablets, accessories">Laptops, tablets, accessories</em></span><b class="department-arrow">↗</b>
+    <button class="department-card department-photo" type="button" data-global-query="laptops computers tablets electronics">
+      <img class="department-photo-img" src="https://images.pexels.com/photos/18105/pexels-photo.jpg?auto=compress&amp;cs=tinysrgb&amp;w=1100" alt="Laptop computer product photography" loading="lazy" decoding="async">
+      <span class="department-photo-shade"></span><span class="department-photo-copy"><small>02 · COMPUTING</small><strong data-sw="Kompyuta na tablets" data-en="Computers & tablets">Kompyuta na tablets</strong><em data-sw="Laptops, tablets na vifaa vya kazi" data-en="Laptops, tablets and work accessories">Laptops, tablets na vifaa vya kazi</em></span><b class="department-photo-arrow">↗</b>
     </button>
-    <button class="department-card dept-fashion" type="button" data-global-query="sneakers fashion clothing">
-      <span class="department-symbol">◇</span><span class="department-copy"><small>03 · STYLE</small><strong data-sw="Fashion na viatu" data-en="Fashion & footwear">Fashion na viatu</strong><em data-sw="Sneakers, bags, clothing" data-en="Sneakers, bags, clothing">Sneakers, bags, clothing</em></span><b class="department-arrow">↗</b>
+    <button class="department-card department-photo" type="button" data-global-query="shoes sneakers fashion clothing">
+      <img class="department-photo-img" src="https://images.unsplash.com/photo-1553835584-c3eab150319e?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="Sneakers and casual fashion footwear" loading="lazy" decoding="async">
+      <span class="department-photo-shade"></span><span class="department-photo-copy"><small>03 · FASHION</small><strong data-sw="Viatu na fashion" data-en="Shoes & fashion">Viatu na fashion</strong><em data-sw="Sneakers, nguo, mifuko na mitindo" data-en="Sneakers, clothing, bags and style">Sneakers, nguo, mifuko na mitindo</em></span><b class="department-photo-arrow">↗</b>
     </button>
-    <button class="department-card dept-home" type="button" data-global-query="home kitchen appliances">
-      <span class="department-symbol">⌂</span><span class="department-copy"><small>04 · LIVING</small><strong data-sw="Nyumbani na jikoni" data-en="Home & kitchen">Nyumbani na jikoni</strong><em data-sw="Blenders, décor, appliances" data-en="Blenders, décor, appliances">Blenders, décor, appliances</em></span><b class="department-arrow">↗</b>
+    <button class="department-card department-photo" type="button" data-global-query="excavators construction machinery cement mixer block making machine power tools">
+      <img class="department-photo-img" src="https://images.unsplash.com/photo-1752342625685-bc342beb248e?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" alt="Excavator working on a construction site" loading="lazy" decoding="async">
+      <span class="department-photo-shade"></span><span class="department-photo-copy"><small>04 · CONSTRUCTION</small><strong data-sw="Mashine za ujenzi" data-en="Construction machinery">Mashine za ujenzi</strong><em data-sw="Excavators, mixers, block machines na tools" data-en="Excavators, mixers, block machines and tools">Excavators, mixers, block machines na tools</em></span><b class="department-photo-arrow">↗</b>
     </button>
-    <button class="department-card dept-audio" type="button" data-global-query="wireless earbuds headphones speaker">
-      <span class="department-symbol">♫</span><span class="department-copy"><small>05 · AUDIO</small><strong data-sw="Audio na gadgets" data-en="Audio & gadgets">Audio na gadgets</strong><em data-sw="Earbuds, speakers, smartwatches" data-en="Earbuds, speakers, smartwatches">Earbuds, speakers, smartwatches</em></span><b class="department-arrow">↗</b>
+    <button class="department-card department-photo" type="button" data-global-query="books school books novels ebooks stationery">
+      <img class="department-photo-img" src="https://images.pexels.com/photos/32055406/pexels-photo-32055406.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1100" alt="Books and notebooks arranged on a desk" loading="lazy" decoding="async">
+      <span class="department-photo-shade"></span><span class="department-photo-copy"><small>05 · BOOKS & LEARNING</small><strong data-sw="Vitabu na stationery" data-en="Books & learning">Vitabu na stationery</strong><em data-sw="Vitabu vyetu, school books na eBooks" data-en="Our books, school books and eBooks">Vitabu vyetu, school books na eBooks</em></span><b class="department-photo-arrow">↗</b>
     </button>
-    <button class="department-card dept-gaming" type="button" data-global-query="gaming console video games">
-      <span class="department-symbol">⌘</span><span class="department-copy"><small>06 · PLAY</small><strong data-sw="Gaming" data-en="Gaming">Gaming</strong><em data-sw="Consoles, controllers, games" data-en="Consoles, controllers, games">Consoles, controllers, games</em></span><b class="department-arrow">↗</b>
-    </button>
-    <button class="department-card dept-beauty" type="button" data-global-query="beauty skincare personal care">
-      <span class="department-symbol">✳</span><span class="department-copy"><small>07 · SELF CARE</small><strong data-sw="Beauty na care" data-en="Beauty & care">Beauty na care</strong><em data-sw="Skincare, grooming, accessories" data-en="Skincare, grooming, accessories">Skincare, grooming, accessories</em></span><b class="department-arrow">↗</b>
-    </button>
-    <button class="department-card dept-camera" type="button" data-global-query="camera photography">
-      <span class="department-symbol">◎</span><span class="department-copy"><small>08 · CREATE</small><strong data-sw="Camera na photography" data-en="Cameras & photography">Camera na photography</strong><em data-sw="Cameras, lenses, creator gear" data-en="Cameras, lenses, creator gear">Cameras, lenses, creator gear</em></span><b class="department-arrow">↗</b>
-    </button>
-    <button class="department-card dept-sports" type="button" data-global-query="sports fitness equipment">
-      <span class="department-symbol">◉</span><span class="department-copy"><small>09 · ACTIVE</small><strong data-sw="Sports na fitness" data-en="Sports & fitness">Sports na fitness</strong><em data-sw="Training, outdoor, cycling" data-en="Training, outdoor, cycling">Training, outdoor, cycling</em></span><b class="department-arrow">↗</b>
-    </button>
-    <button class="department-card dept-tools" type="button" data-global-query="power tools home workshop">
-      <span class="department-symbol">⚒</span><span class="department-copy"><small>10 · WORKSHOP</small><strong data-sw="Tools na vifaa" data-en="Tools & equipment">Tools na vifaa</strong><em data-sw="Power tools, hardware, work gear" data-en="Power tools, hardware, work gear">Power tools, hardware, work gear</em></span><b class="department-arrow">↗</b>
+    <button class="department-card department-photo" type="button" data-global-query="home kitchen appliances audio gadgets">
+      <img class="department-photo-img" src="https://images.pexels.com/photos/6786613/pexels-photo-6786613.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1100" alt="Kitchenware and ceramic mug product category" loading="lazy" decoding="async">
+      <span class="department-photo-shade"></span><span class="department-photo-copy"><small>06 · HOME & LIFESTYLE</small><strong data-sw="Nyumbani na gadgets" data-en="Home & gadgets">Nyumbani na gadgets</strong><em data-sw="Vifaa vya nyumbani, jikoni na audio" data-en="Home, kitchen and audio products">Vifaa vya nyumbani, jikoni na audio</em></span><b class="department-photo-arrow">↗</b>
     </button>
   </div>
   <div class="department-foot"><span class="department-foot-mark">343</span><span data-sw="Hujapata unachotaka? Tuma picha au link ya bidhaa WhatsApp; tutakusaidia kutafuta muuzaji na kupata bei ya mwisho." data-en="Can't find what you need? Send us a product photo or link on WhatsApp. We can help locate a seller and confirm the final quote.">Hujapata unachotaka? Tuma picha au link ya bidhaa WhatsApp; tutakusaidia kutafuta muuzaji na kupata bei ya mwisho.</span><a href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20naomba%20mnisaidie%20kutafuta%20bidhaa." target="_blank" rel="noopener noreferrer" data-sw="Omba msaada ↗" data-en="Request sourcing ↗">Omba msaada ↗</a></div>
