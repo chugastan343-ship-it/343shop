@@ -15,9 +15,10 @@ test("marketplace status never marks unapproved sources as connected", async () 
   assert.equal(response.status, 200);
   const data = await response.json();
   const byId = Object.fromEntries(data.marketplaces.map((entry) => [entry.id, entry]));
-  assert.equal(data.marketplaces.length, 4);
+  assert.equal(data.marketplaces.length, 5);
   assert.equal(byId.amazon.api_configured, false);
   assert.equal(byId.alibaba.api_configured, false);
+  assert.equal(byId.shopify.api_configured, false);
   assert.equal(byId.ebay.api_configured, false);
   assert.equal(byId.kikuu.api_configured, false);
   assert.equal(data.configured_partner_catalogue_count, 0);
@@ -510,3 +511,43 @@ test("public sourced-product endpoint stays unavailable until D1 is configured",
   assert.equal(data.product_database_configured, false);
   assert.equal(data.writes_enabled, false);
 });
+test("Shopify Storefront API search is server-side and preserves source attribution", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init = {}) => {
+    calls.push({ url: String(input), init });
+    assert.equal(String(input), "https://sample-store.myshopify.com/api/2026-10/graphql.json");
+    const headers = new Headers(init.headers || {});
+    assert.equal(headers.get("x-shopify-storefront-access-token"), "storefront-test-token");
+    assert.equal(init.method, "POST");
+    return new Response(JSON.stringify({
+      data: { search: { nodes: [{
+        id: "gid://shopify/Product/1",
+        title: "Cotton T-Shirt",
+        description: "Supplier product",
+        productType: "Apparel",
+        onlineStoreUrl: "https://sample-store.myshopify.com/products/cotton-shirt",
+        featuredImage: { url: "https://cdn.shopify.com/s/files/1/shirt.jpg", altText: "shirt" },
+        priceRange: { minVariantPrice: { amount: "12.50", currencyCode: "USD" } },
+        availableForSale: true
+      }] } }
+    }), { status: 200, headers: { "content-type": "application/json" } });
+  };
+  try {
+    const response = await get("/api/marketplaces/search?q=cotton%20shirt&source=shopify", {
+      SHOPIFY_STORE_DOMAIN: "sample-store.myshopify.com",
+      SHOPIFY_STOREFRONT_ACCESS_TOKEN: "storefront-test-token"
+    });
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.result_count, 1);
+    assert.equal(data.results[0].source_shop_id, "shopify");
+    assert.equal(data.results[0].name, "Cotton T-Shirt");
+    assert.equal(data.results[0].price, 12.5);
+    assert.equal(data.sources.shopify.status, "available");
+    assert.equal(calls.length, 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
