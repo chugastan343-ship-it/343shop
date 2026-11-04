@@ -541,7 +541,7 @@ test("Shopify Storefront API search is server-side and preserves source attribut
     assert.equal(response.status, 200);
     const data = await response.json();
     assert.equal(data.result_count, 1);
-    assert.equal(data.results[0].source_shop_id, "shopify");
+    assert.equal(data.results[0].source_shop_id, "shopify-shopify-store");
     assert.equal(data.results[0].name, "Cotton T-Shirt");
     assert.equal(data.results[0].price, 12.5);
     assert.equal(data.sources.shopify.status, "available");
