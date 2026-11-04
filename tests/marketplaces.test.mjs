@@ -36,6 +36,62 @@ test("global search validates query length and does not invent listings", async 
   assert.deepEqual(data.results, []);
 });
 
+test("eBay Sandbox credentials use Sandbox OAuth and Browse API endpoints", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init = {}) => {
+    const url = String(input);
+    calls.push(url);
+    if (url.includes("api.sandbox.ebay.com/identity/v1/oauth2/token")) {
+      const headers = new Headers(init.headers || {});
+      assert.match(headers.get("authorization") || "", /^Basic /);
+      return new Response(JSON.stringify({ access_token: "sandbox-test-token", expires_in: 7200 }), {
+        status: 200, headers: { "content-type": "application/json" }
+      });
+    }
+    if (url.includes("api.sandbox.ebay.com/buy/browse/v1/item_summary/search")) {
+      const headers = new Headers(init.headers || {});
+      assert.equal(headers.get("authorization"), "Bearer sandbox-test-token");
+      assert.equal(headers.get("x-ebay-c-marketplace-id"), "EBAY_US");
+      return new Response(JSON.stringify({
+        itemSummaries: [{
+          itemId: "v1|sandbox-123|0",
+          title: "Sandbox Android Phone",
+          price: { value: "99.00", currency: "USD" },
+          itemWebUrl: "https://sandbox.ebay.com/itm/sandbox-123",
+          categories: [{ categoryName: "Cell Phones" }]
+        }]
+      }), { status: 200, headers: { "content-type": "application/json" } });
+    }
+    throw new Error("Unexpected endpoint for Sandbox environment: " + url);
+  };
+
+  try {
+    const env = {
+      EBAY_ENVIRONMENT: "sandbox",
+      EBAY_SANDBOX_CLIENT_ID: "sandbox-client-id",
+      EBAY_SANDBOX_CLIENT_SECRET: "sandbox-client-secret",
+      EBAY_CLIENT_ID: "production-client-id",
+      EBAY_CLIENT_SECRET: "production-client-secret"
+    };
+    const response = await get("/api/marketplaces/search?q=android%20phone&source=ebay", env);
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.sources.ebay.status, "available");
+    assert.equal(data.result_count, 1);
+    assert.equal(data.results[0].name, "Sandbox Android Phone");
+    assert.equal(data.results[0].source_shop, "eBay");
+    assert.ok(calls.every(url => url.includes("api.sandbox.ebay.com")));
+    const status = await get("/api/marketplaces/status", env);
+    const statusData = await status.json();
+    const ebay = statusData.marketplaces.find(item => item.id === "ebay");
+    assert.equal(ebay.environment, "sandbox");
+    assert.equal(ebay.api_configured, true);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("eBay Browse API uses server-side OAuth and preserves affiliate URL", async () => {
   const originalFetch = globalThis.fetch;
   const calls = [];
