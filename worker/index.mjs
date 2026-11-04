@@ -249,7 +249,20 @@ function buildGlobalMarketplaceSearchLinks(query, env = {}, marketplaceId) {
     let state = item.integration_status;
     let apiConfigured = false;
     let affiliateTracking = false;
-    if (item.id === "ebay") {
+    let liveCatalogueConnected = false;
+    if (item.id === "amazon") {
+      const amazon = getAmazonCreatorsConfig(env);
+      apiConfigured = Boolean(amazon.clientId && amazon.clientSecret && amazon.partnerTag && amazon.tokenUrl && amazon.marketplaceAllowed);
+      affiliateTracking = apiConfigured;
+      state = apiConfigured ? "creators_api_credentials_configured" : "creators_api_approval_and_credentials_required";
+    } else if (item.id === "alibaba") {
+      const feeds = parsePartnerShops(env).filter(shop => shop.marketplace === "alibaba" && shop.seller_authorized);
+      liveCatalogueConnected = feeds.length > 0;
+      state = liveCatalogueConnected ? "authorized_seller_catalogues_connected" : "developer_app_and_seller_authorization_required";
+    } else if (item.id === "shopify") {
+      apiConfigured = getShopifyPartnerStores(env).length > 0;
+      state = apiConfigured ? "storefront_credentials_configured" : "merchant_store_and_token_required";
+    } else if (item.id === "ebay") {
       const ebay = getEbayConfig(env);
       apiConfigured = Boolean(ebay.clientId && ebay.clientSecret);
       affiliateTracking = Boolean(apiConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
@@ -265,7 +278,7 @@ function buildGlobalMarketplaceSearchLinks(query, env = {}, marketplaceId) {
       integration_status: state,
       api_configured: apiConfigured,
       affiliate_tracking: affiliateTracking,
-      live_catalogue_connected: false,
+      live_catalogue_connected: liveCatalogueConnected,
       integration_note: item.integration_note
     };
   });
@@ -547,34 +560,48 @@ function marketplaceIntegrationsStatus(env) {
   const ebayConfig = getEbayConfig(env);
   const ebayConfigured = Boolean(ebayConfig.clientId && ebayConfig.clientSecret);
   const ebayAffiliate = Boolean(ebayConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
-  const amazonConfigured = Boolean(env.AMAZON_CREATORS_CLIENT_ID && env.AMAZON_CREATORS_CLIENT_SECRET && env.AMAZON_PARTNER_TAG);
-  const alibabaConfigured = Boolean(env.ALIBABA_APP_KEY && env.ALIBABA_APP_SECRET && env.ALIBABA_ACCESS_TOKEN);
-  const shopifyConfigured = getShopifyPartnerStores(env).length > 0;
+  const amazonConfig = getAmazonCreatorsConfig(env);
+  const amazonConfigured = Boolean(amazonConfig.clientId && amazonConfig.clientSecret && amazonConfig.partnerTag && amazonConfig.tokenUrl && amazonConfig.marketplaceAllowed);
+  const alibabaFeeds = partners.filter(shop => shop.marketplace === "alibaba" && shop.seller_authorized);
+  const shopifyStores = getShopifyPartnerStores(env);
   return {
     checked_at: new Date().toISOString(),
     marketplace_count: 5,
     marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
     marketplace_directory: buildGlobalMarketplaceSearchLinks("", env),
     configured_partner_catalogue_count: partners.length,
-    configured_partner_catalogues: partners.map(({ id, name, city, categories }) => ({ id, name, city, categories })),
+    configured_partner_catalogues: partners.map(({ id, name, city, categories, marketplace, seller_authorized }) => ({
+      id, name, city, categories, marketplace, seller_authorized
+    })),
     marketplaces: [
       {
         id: "amazon", name: "Amazon", website: "https://www.amazon.com",
         integration: "creators_api", state: amazonConfigured ? "credentials_configured_pending_live_test" : "approval_and_credentials_required",
         api_configured: amazonConfigured, affiliate_tracking: amazonConfigured,
-        next_step: amazonConfigured ? "Amazon Creators API credentials and partner tag are present; verify marketplace eligibility and run an approved live API test." : "Complete Amazon Associates acceptance and Creators API eligibility for the target marketplace, then add AMAZON_CREATORS_CLIENT_ID, AMAZON_CREATORS_CLIENT_SECRET and AMAZON_PARTNER_TAG as Worker Secrets."
+        marketplace: amazonConfig.marketplace, credential_version: amazonConfig.version,
+        next_step: amazonConfigured
+          ? "Creators API credentials are present. Run a live SearchItems test; Amazon affiliate attribution is based on the approved marketplace partner tag."
+          : "Join an eligible Amazon Associates marketplace, obtain final acceptance and Creators API credentials, then configure AMAZON_CREATORS_CLIENT_ID, AMAZON_CREATORS_CLIENT_SECRET, AMAZON_PARTNER_TAG, AMAZON_MARKETPLACE and AMAZON_CREATORS_CREDENTIAL_VERSION as Worker Secrets."
       },
       {
         id: "alibaba", name: "Alibaba.com", website: "https://www.alibaba.com",
-        integration: "open_platform", state: alibabaConfigured ? "credentials_configured_pending_live_test" : "developer_approval_and_credentials_required",
-        api_configured: alibabaConfigured, affiliate_tracking: false,
-        next_step: alibabaConfigured ? "Alibaba Open Platform credentials are present; verify granted API permissions and run a signed live API test." : "Register 343SHOP as an Alibaba.com Open Platform developer, obtain approved API permissions and authorized account tokens, then configure ALIBABA_APP_KEY, ALIBABA_APP_SECRET and ALIBABA_ACCESS_TOKEN as Worker Secrets."
+        integration: "open_platform_ggs_authorized_seller_catalogues",
+        state: alibabaFeeds.length ? "authorized_seller_catalogues_connected" : "developer_app_and_seller_authorization_required",
+        api_configured: false, affiliate_tracking: false,
+        authorized_seller_catalogue_count: alibabaFeeds.length,
+        next_step: alibabaFeeds.length
+          ? "Authorized GGS seller catalogue feeds are connected. The direct Open Platform buyer-sourcing adapter is still pending Alibaba's approved API product/permission details."
+          : "Register 343SHOP as an Alibaba.com Open Platform GGS developer, obtain the approved buyer/supplier API permissions, then obtain explicit authorization from each seller before adding their approved catalogue feed."
       },
       {
         id: "shopify", name: "Shopify partner stores", website: "https://www.shopify.com",
-        integration: "storefront_graphql_api", state: shopifyConfigured ? "credentials_configured_pending_live_test" : "merchant_store_and_token_required",
-        api_configured: shopifyConfigured, affiliate_tracking: false,
-        next_step: shopifyConfigured ? "Shopify store domain and Storefront API token are present; verify the store's granted Storefront API scopes with a live search." : "Each merchant must authorize a Shopify app/storefront connection. Configure SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_ACCESS_TOKEN as Worker Secrets; do not use a private token in browser code."
+        integration: "storefront_graphql_api",
+        state: shopifyStores.length ? "storefront_credentials_configured_pending_live_test" : "merchant_store_and_token_required",
+        api_configured: shopifyStores.length > 0, affiliate_tracking: false,
+        connected_store_count: shopifyStores.length,
+        next_step: shopifyStores.length
+          ? "Shopify Storefront credentials are present. Live search is used to verify token scopes and each store."
+          : "Obtain authorization from each merchant and configure SHOPIFY_PARTNER_STORES_JSON with their myshopify.com domain and Storefront public/private token. Keep this JSON in a Cloudflare Worker Secret."
       },
       {
         id: "ebay", name: "eBay", website: "https://www.ebay.com",
@@ -593,10 +620,9 @@ function marketplaceIntegrationsStatus(env) {
         next_step: "Contact KiKUU through its official business/support channels and request a written partnership plus an approved product catalogue/feed. No public product-search API has been configured."
       }
     ],
-    note: "Amazon Creators API and Alibaba Open Platform are tracked as official connectors but are not live product feeds until their approved credentials, scopes and API adapters are verified. Shopify Storefront API search is enabled when an authorized merchant store domain and Storefront token are configured. eBay Browse API remains separately supported. Never treat credentials-present as proof of a successful live connection."
+    note: "Amazon Creators API and Shopify Storefront GraphQL requests are implemented server-side and require approved account credentials. Alibaba Open Platform GGS requires developer/API approval and per-seller authorization; approved seller feeds can be shown separately, but are not represented as a live global Alibaba search API. Credentials-present is not proof that a live provider call succeeds."
   };
 }
-
 function marketplaceRateLimited(ip) {
   const now = Date.now();
   const current = MARKETPLACE_RATE_LIMIT.get(ip);
@@ -808,7 +834,7 @@ function getAmazonCreatorsConfig(env = {}) {
     "3.3": "https://api.amazon.co.jp/auth/o2/token"
   };
   const marketplace = String(env.AMAZON_MARKETPLACE || "www.amazon.com").trim().toLowerCase();
-  const marketplaceAllowed = /^www\\.amazon\\.(com|co\\.uk|de|fr|it|es|nl|ca|com\\.mx|com\\.br|co\\.jp|com\\.au|in|ae|sg|se|pl|be|ie|com\\.tr|eg)$/.test(marketplace);
+  const marketplaceAllowed = /^www\.amazon\.(com|co\.uk|de|fr|it|es|nl|ca|com\.mx|com\.br|co\.jp|com\.au|in|ae|sg|se|pl|be|ie|com\.tr|eg)$/.test(marketplace);
   return {
     version,
     tokenUrl: tokenEndpoints[version] || null,
@@ -936,7 +962,7 @@ async function searchAmazonProducts(query, env, limit = 10) {
     return { status: "available", affiliate_tracking: true, results };
   } catch (error) {
     const message = typeof error?.message === "string" ? error.message : "";
-    const safe = /^(amazon_(?:oauth|search)_http_[1-5]\\d{2}|amazon_(?:oauth|search)_network_(?:error|timeout))$/.exec(message);
+    const safe = /^(amazon_(?:oauth|search)_http_[1-5]\d{2}|amazon_(?:oauth|search)_network_(?:error|timeout))$/.exec(message);
     const errorCode = safe ? safe[1] : message === "amazon_token_invalid" ? "amazon_token_invalid" : "amazon_upstream_error";
     console.warn("Amazon Creators API request failed", { errorCode, credentialVersion: config.version });
     return { status: "temporarily_unavailable", affiliate_tracking: false, results: [], error_code: errorCode };
@@ -1061,35 +1087,42 @@ async function handleMarketplaceSearch(request, env, url) {
     return json({ error: "invalid_source" }, 400);
   }
 
-  const base = ["ebay", "amazon", "alibaba", "shopify"].includes(source)
+  const base = ["ebay", "amazon", "shopify"].includes(source)
     ? { results: [], connected_partner_count: 0 }
     : await searchMarketplaceProducts({ query, source: source === "all" ? "partners" : source, limit }, env);
-  const ebay = ["partners", "343shop", "amazon", "alibaba", "shopify"].includes(source)
-    ? { status: "not_requested", affiliate_tracking: false, results: [] }
-    : await searchEbayProducts(query, env, limit);
-  const shopify = ["all", "shopify"].includes(source)
-    ? await searchShopifyProducts(query, env, limit)
-    : { status: "not_requested", results: [] };
-  const results = [...base.results, ...ebay.results, ...shopify.results].slice(0, limit);
+  const [ebay, amazon, shopify] = await Promise.all([
+    ["all", "ebay"].includes(source)
+      ? searchEbayProducts(query, env, limit)
+      : { status: "not_requested", affiliate_tracking: false, results: [] },
+    ["all", "amazon"].includes(source)
+      ? searchAmazonProducts(query, env, limit)
+      : { status: "not_requested", affiliate_tracking: false, results: [] },
+    ["all", "shopify"].includes(source)
+      ? searchShopifyProducts(query, env, limit, request)
+      : { status: "not_requested", results: [] }
+  ]);
+  const results = [...base.results, ...ebay.results, ...amazon.results, ...shopify.results].slice(0, limit);
   const providers = marketplaceIntegrationsStatus(env).marketplaces;
-  const ebayProvider = providers.find((p) => p.id === "ebay");
+  const ebayProvider = providers.find(p => p.id === "ebay");
   return json({
     ok: true, query, checked_at: new Date().toISOString(), result_count: results.length,
     results,
     sources: {
       partner_catalogues: { status: base.connected_partner_count ? "checked" : "none_configured", count: base.connected_partner_count },
       ebay: { status: ebay.status, count: ebay.results.length, affiliate_tracking: ebay.affiliate_tracking, ...(ebay.error_code ? { error_code: ebay.error_code } : {}) },
-      shopify: { status: shopify.status, count: shopify.results.length, ...(shopify.error_code ? { error_code: shopify.error_code } : {}) },
-      amazon: { status: "approval_and_adapter_pending", count: 0 },
-      alibaba: { status: "developer_authorization_and_adapter_pending", count: 0 }
+      amazon: { status: amazon.status, count: amazon.results.length, affiliate_tracking: amazon.affiliate_tracking, ...(amazon.error_code ? { error_code: amazon.error_code } : {}) },
+      alibaba: {
+        status: source === "all" || source === "alibaba" ? (base.connected_partner_count ? "authorized_seller_feeds_checked" : "seller_authorization_and_feed_required") : "not_requested",
+        count: source === "all" || source === "alibaba" ? base.results.filter(p => p.source_marketplace === "Alibaba.com").length : 0
+      },
+      shopify: { status: shopify.status, count: shopify.results.length, store_count: shopify.store_count || 0, ...(shopify.error_code ? { error_code: shopify.error_code } : {}) }
     },
     external_marketplace_search_links: buildGlobalMarketplaceSearchLinks(query, env),
     marketplace_directory_count: GLOBAL_MARKETPLACE_DIRECTORY.length,
-    note: "These are external seller listings, not stock owned by 343SHOP. Confirm current price, stock, shipping, taxes, seller reliability and final terms with the seller before paying. The external search links open official source websites; they are not live product results or proof of affiliate approval. Follow the source marketplace or seller checkout; 343SHOP does not collect payment for these external listings.",
+    note: "Third-party offers remain owned and fulfilled by their source merchants. Prices, stock, international delivery, customs, tax, returns and supplier terms must be confirmed with the source. Alibaba search results, when present, are from explicitly seller-authorized partner catalogues, not a public global Alibaba search endpoint. 343SHOP does not collect payment for these external listings.",
     integration_status: ebayProvider
   });
 }
-
 async function searchMarketplaceProducts(args, env) {
   const query = normaliseSearchText(args.query || "");
   const category = normaliseSearchText(args.category || "");
