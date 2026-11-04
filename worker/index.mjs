@@ -213,7 +213,7 @@ const MARKETPLACE_CATALOGUE = [
 ];
 const GLOBAL_MARKETPLACE_DIRECTORY = [
   { id: "amazon", name: "Amazon", region: "Global", type: "Retail", website: "https://www.amazon.com/", search_prefix: "https://www.amazon.com/s?k=", mode: "keyword", integration: "Creators API", integration_status: "approval_required", integration_note: "Live product data requires Amazon Associates approval in an eligible marketplace, Creators API eligibility and valid credentials." },
-  { id: "alibaba", name: "Alibaba.com", region: "Global · Wholesale", type: "B2B", website: "https://www.alibaba.com/", search_prefix: "https://www.alibaba.com/trade/search?SearchText=", mode: "keyword", integration: "Affiliate feeds / Open Platform", integration_status: "affiliate_approval_required", integration_note: "Affiliate deep links and approved feeds require account approval. Open Platform API access requires developer application and granted permissions." },
+  { id: "alibaba", name: "Alibaba.com", region: "Global · Wholesale", type: "B2B", website: "https://www.alibaba.com/", search_prefix: "https://www.alibaba.com/trade/search?SearchText=", mode: "keyword", integration: "Open Platform GGS · authorised supplier feeds", integration_status: "developer_app_and_seller_authorization_required", integration_note: "Official GGS access requires developer application, approved API permissions and explicit authorisation from each supplier. No public global product-search endpoint is assumed." },
   { id: "aliexpress", name: "AliExpress", region: "Global", type: "Retail", website: "https://www.aliexpress.com/", search_prefix: "https://www.aliexpress.com/w/wholesale.html?SearchText=", mode: "keyword", integration: "Approved affiliate/API feed", integration_status: "access_not_verified", integration_note: "Direct website search is available. Confirm current affiliate programme and API documentation before implementing product feeds; older API guides may be deprecated." },
   { id: "ebay", name: "eBay", region: "Global", type: "Retail", website: "https://www.ebay.com/", search_prefix: "https://www.ebay.com/sch/i.html?_nkw=", mode: "keyword", integration: "Browse API + Partner Network", integration_status: "api_credentials_required", integration_note: "Live search is implemented but needs EBAY_CLIENT_ID and EBAY_CLIENT_SECRET. Affiliate tracking additionally needs an approved 10-digit EPN campaign ID." },
   { id: "kikuu", name: "KiKUU Tanzania", region: "Tanzania", type: "Retail", website: "https://www.kikuu.co.tz/", search_prefix: null, mode: "manual", integration: "Business partnership / approved feed", integration_status: "partnership_contact_required", integration_note: "Official Tanzania storefront. No public product-search API has been verified; request written partnership and an authorized catalogue/feed." },
@@ -272,7 +272,9 @@ function buildGlobalMarketplaceSearchLinks(query, env = {}, marketplaceId) {
     return {
       id: item.id, name: item.name, region: item.region, type: item.type,
       website: item.website,
-      search_url: term && item.search_prefix ? item.search_prefix + encodeURIComponent(term) : item.website,
+      search_url: term && item.id === "amazon" && apiConfigured
+        ? "https://" + getAmazonCreatorsConfig(env).marketplace + "/s?k=" + encodeURIComponent(term)
+        : term && item.search_prefix ? item.search_prefix + encodeURIComponent(term) : item.website,
       search_mode: item.mode,
       integration: item.integration,
       integration_status: state,
@@ -557,7 +559,7 @@ async function fetchPartnerCatalogue(shop) {
 }
 
 function marketplaceIntegrationsStatus(env) {
-  const partners = parsePartnerShops(env);
+  const partners = parsePartnerShops(env).filter(shop => shop.marketplace !== "alibaba" || shop.seller_authorized);
   const ebayConfig = getEbayConfig(env);
   const ebayConfigured = Boolean(ebayConfig.clientId && ebayConfig.clientSecret);
   const ebayAffiliate = Boolean(ebayConfigured && /^[0-9]{10}$/.test(String(env.EBAY_CAMPAIGN_ID || "")));
@@ -835,7 +837,15 @@ function getAmazonCreatorsConfig(env = {}) {
     "3.3": "https://api.amazon.co.jp/auth/o2/token"
   };
   const marketplace = String(env.AMAZON_MARKETPLACE || "www.amazon.com").trim().toLowerCase();
-  const marketplaceAllowed = /^www\.amazon\.(com|co\.uk|de|fr|it|es|nl|ca|com\.mx|com\.br|co\.jp|com\.au|in|ae|sg|se|pl|be|ie|com\.tr|eg)$/.test(marketplace);
+  const allowedMarketplaces = new Set([
+    "www.amazon.com", "www.amazon.co.uk", "www.amazon.de", "www.amazon.fr",
+    "www.amazon.it", "www.amazon.es", "www.amazon.nl", "www.amazon.ca",
+    "www.amazon.com.mx", "www.amazon.com.br", "www.amazon.co.jp", "www.amazon.com.au",
+    "www.amazon.in", "www.amazon.ae", "www.amazon.sg", "www.amazon.se",
+    "www.amazon.pl", "www.amazon.com.be", "www.amazon.ie", "www.amazon.com.tr",
+    "www.amazon.eg", "www.amazon.sa", "www.amazon.cn"
+  ]);
+  const marketplaceAllowed = allowedMarketplaces.has(marketplace);
   return {
     version,
     tokenUrl: tokenEndpoints[version] || null,
