@@ -825,10 +825,13 @@ test("owner dashboard and dedicated Gift Cards page scripts parse and stay separ
   assert.doesNotMatch(homepage, /id="giftcards"/);
 });
 
-test("customer print portfolio loader references the six verified WebP chunks", async () => {
+test("customer print portfolio embeds a verified WebP directly for reliable rendering", async () => {
   const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
-  assert.match(html, /Array\.from\(\{length:6\}/);
-  assert.match(html, /payload\.length<20000/);
+  const match = html.match(/const PRINT_PORTFOLIO_WEBP="([A-Za-z0-9+/=]+)";/);
+  assert.ok(match, "the compressed portfolio WebP should be embedded");
+  assert.equal(match[1].length, 30144);
+  assert.ok(match[1].startsWith("UklGR"), "the payload should have a WebP RIFF header");
+  assert.match(html, /data:image\/webp;base64,/);
   assert.match(html, /data-print-sample="left"/);
   assert.match(html, /data-print-sample="right"/);
   assert.match(html, /id="printWorkTitle"/);
