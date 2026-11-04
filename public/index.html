@@ -272,6 +272,36 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
 @media(max-width:390px){.department-grid,.local-store-grid{grid-template-columns:1fr 1fr}.hero-search button{gap:7px}.hero-search button b{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 
+
+/* Curated products from an independent Tanzania store, not 343SHOP inventory. */
+.featured-local-picks{margin:28px 0 32px;padding:25px;border:1px solid #e2e7dd;border-radius:22px;background:linear-gradient(145deg,#fffefa 0%,#f1f4ec 100%);box-shadow:0 18px 45px rgba(22,52,38,.045)}
+.featured-local-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:19px}
+.featured-local-head h3{font:500 clamp(25px,3vw,34px)/1.08 Georgia,serif;color:var(--forest);letter-spacing:-.04em;margin:8px 0}
+.featured-local-head p{max-width:650px;font-size:10px;line-height:1.7;color:#778278;margin:0}
+.featured-local-all{font-size:9px;font-weight:900;color:#91764a;white-space:nowrap}
+.featured-local-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.featured-local-product{min-width:0;overflow:hidden;border:1px solid #e6e9e1;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(20,48,35,.035);transition:transform .22s,box-shadow .22s,border-color .22s}
+.featured-local-product:hover{transform:translateY(-4px);border-color:#c6d3c6;box-shadow:0 18px 42px rgba(20,48,35,.10)}
+.featured-local-visual{height:205px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at 50% 15%,#fff 0%,#eef1e9 72%,#e4e9de 100%);text-decoration:none}
+.featured-local-visual img{width:100%;height:100%;object-fit:contain;padding:14px;transition:transform .35s}
+.featured-local-product:hover .featured-local-visual img{transform:scale(1.045)}
+.featured-product-tag{position:absolute;left:12px;top:12px;padding:7px 9px;border-radius:99px;background:rgba(255,254,250,.92);border:1px solid rgba(226,231,222,.9);color:#6b796c;font-size:7px;font-weight:900;letter-spacing:.13em}
+.featured-local-placeholder{flex-direction:column;gap:5px;background:radial-gradient(circle at 30% 20%,#6f8b78,#1b3c30 75%);color:#fff}
+.featured-placeholder-brand{font:900 62px Arial,sans-serif;letter-spacing:-.1em}
+.featured-placeholder-model{font:800 10px Arial,sans-serif;letter-spacing:.22em;color:#e4d1a6}
+.featured-local-info{padding:15px}
+.featured-source{font-size:7px;letter-spacing:.15em;font-weight:900;color:#9a8058}
+.featured-local-info h4{font:600 14px/1.35 Arial,sans-serif;color:#173a2d;margin:8px 0 6px;min-height:38px}
+.featured-local-info p{font-size:9px;line-height:1.55;color:#7c877d;min-height:29px;margin:0 0 11px}
+.featured-price{font:600 19px Georgia,serif;color:#173d30;margin:0 0 4px}
+.featured-local-info small{display:block;font-size:8px;line-height:1.5;color:#8b9389}
+.featured-buy{display:inline-flex;margin-top:12px;padding:10px 13px;border-radius:9px;background:#153c30;color:#fff;text-decoration:none;font-size:8px;font-weight:900;transition:background .2s}
+.featured-buy:hover{background:#2a634b}
+.featured-local-disclaimer{margin:14px 0 0;font-size:8px;line-height:1.6;color:#858e83}
+@media(max-width:900px){.featured-local-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.featured-local-visual{height:175px}}
+@media(max-width:650px){.featured-local-picks{padding:14px;margin:22px 0;border-radius:16px}.featured-local-head{align-items:flex-start;flex-direction:column;gap:8px}.featured-local-head h3{font-size:26px}.featured-local-grid{grid-template-columns:1fr 1fr;gap:8px}.featured-local-visual{height:145px}.featured-local-info{padding:11px}.featured-local-info h4{font-size:11px;min-height:44px}.featured-local-info p{font-size:8px;min-height:42px}.featured-price{font-size:16px}.featured-buy{font-size:7px;padding:9px 10px}}
+@media(max-width:390px){.featured-local-grid{grid-template-columns:1fr 1fr}.featured-local-visual{height:125px}}
+
 </style>
 </head>
 <body>
@@ -426,6 +456,29 @@ body{background:linear-gradient(180deg,#faf9f4 0%,#f5f4ed 48%,#fbfaf6 100%);colo
         <a class="local-store-card" href="https://www.kikuu.co.tz/" target="_blank" rel="noopener noreferrer"><span class="local-store-logo kikuu-logo">KiKUU</span><span class="local-store-type">TANZANIA · RETAIL</span><strong>KiKUU Tanzania</strong><span data-sw="Simu, fashion, beauty, home na accessories." data-en="Phones, fashion, beauty, home and accessories.">Simu, fashion, beauty, home na accessories.</span><b data-sw="Tembelea duka ↗" data-en="Visit store ↗">Tembelea duka ↗</b></a>
         <a class="local-store-card" href="https://www.jumia.co.tz/" target="_blank" rel="noopener noreferrer"><span class="local-store-logo jumia-logo">JUMIA</span><span class="local-store-type">TANZANIA · RETAIL</span><strong>Jumia Tanzania</strong><span data-sw="Electronics, home, fashion na bidhaa za kila siku." data-en="Electronics, home, fashion and everyday products.">Electronics, home, fashion na bidhaa za kila siku.</span><b data-sw="Tembelea duka ↗" data-en="Visit store ↗">Tembelea duka ↗</b></a>
       </div>
+    </section>
+
+
+    <section class="featured-local-picks" aria-labelledby="featuredLocalTitle">
+      <div class="featured-local-head">
+        <div><span class="section-kicker">REAL STORE LISTINGS · TANZANIA</span><h3 id="featuredLocalTitle" data-sw="Bidhaa zilizopatikana Tanzania." data-en="Featured finds in Tanzania.">Bidhaa zilizopatikana Tanzania.</h3><p data-sw="Mifano hii imetolewa kwenye product listings za Empire Online Shopping. 343SHOP si muuzaji wala mmiliki wa stock; fungua bidhaa uone taarifa za sasa na ununue kwa muuzaji." data-en="These examples are sourced from Empire Online Shopping product listings. 343SHOP does not own the stock or act as the seller; open the source for current details and checkout.">Mifano hii imetolewa kwenye product listings za Empire Online Shopping. 343SHOP si muuzaji wala mmiliki wa stock; fungua bidhaa uone taarifa za sasa na ununue kwa muuzaji.</p></div>
+        <a class="featured-local-all" href="https://empire.co.tz/collections/electronics" target="_blank" rel="noopener noreferrer" data-sw="Tazama catalogue nzima ↗" data-en="Browse full catalogue ↗">Tazama catalogue nzima ↗</a>
+      </div>
+      <div class="featured-local-grid">
+        <article class="featured-local-product">
+          <a class="featured-local-visual" href="https://empire.co.tz/products/jbl-go-4-portable-waterproof-speaker" target="_blank" rel="noopener noreferrer" aria-label="Open JBL GO 4 listing at Empire Online Shopping"><img src="https://empire.co.tz/cdn/shop/files/jblgo4.jpg?v=1726294565&amp;width=900" alt="JBL GO 4 portable speaker product photo" loading="lazy" referrerpolicy="no-referrer"><span class="featured-product-tag">AUDIO · JBL</span></a>
+          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>JBL GO 4 Portable Waterproof Speaker</h4><p data-sw="Speaker ndogo ya Bluetooth, IP67 water na dust resistant." data-en="Compact Bluetooth speaker with IP67 water and dust resistance.">Speaker ndogo ya Bluetooth, IP67 water na dust resistant.</p><div class="featured-price">TZS 164,000</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><a class="featured-buy" href="https://empire.co.tz/products/jbl-go-4-portable-waterproof-speaker" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
+        </article>
+        <article class="featured-local-product">
+          <a class="featured-local-visual featured-local-placeholder" href="https://empire.co.tz/products/jbl-tune-310c-wired-usb-c-in-ear-headphones" target="_blank" rel="noopener noreferrer" aria-label="Open JBL Tune 310C listing at Empire Online Shopping"><span class="featured-placeholder-brand">JBL</span><span class="featured-placeholder-model">TUNE 310C · USB-C</span><span class="featured-product-tag">AUDIO · WIRED</span></a>
+          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>JBL TUNE 310C USB-C Headphones</h4><p data-sw="Earphones za USB-C zenye mic, remote na Hi-Res Audio." data-en="USB-C earphones with microphone, remote and Hi-Res Audio.">Earphones za USB-C zenye mic, remote na Hi-Res Audio.</p><div class="featured-price">TZS 92,500</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><a class="featured-buy" href="https://empire.co.tz/products/jbl-tune-310c-wired-usb-c-in-ear-headphones" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
+        </article>
+        <article class="featured-local-product">
+          <a class="featured-local-visual" href="https://empire.co.tz/products/sandisk-128gb-ultra-micro-uhs-i-sdxc-card" target="_blank" rel="noopener noreferrer" aria-label="Open SanDisk 128GB listing at Empire Online Shopping"><img src="https://empire.co.tz/cdn/shop/products/sandiskultramicrosd128gb.png?v=1687943246&amp;width=900" alt="SanDisk 128GB Ultra microSD card product photo" loading="lazy" referrerpolicy="no-referrer"><span class="featured-product-tag">STORAGE · 128GB</span></a>
+          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>SanDisk 128GB Ultra microSDXC</h4><p data-sw="Memory card kwa smartphones, tablets na camera zinazotumia microSDXC." data-en="microSDXC memory card for compatible phones, tablets and cameras.">Memory card kwa smartphones, tablets na camera zinazotumia microSDXC.</p><div class="featured-price">TZS 109,600</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><a class="featured-buy" href="https://empire.co.tz/products/sandisk-128gb-ultra-micro-uhs-i-sdxc-card" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
+        </article>
+      </div>
+      <p class="featured-local-disclaimer" data-sw="Bei zinaweza kubadilika. Thibitisha bei, stock, delivery na warranty kwa muuzaji kabla ya kulipa. Hizi si bidhaa za stock ya 343SHOP." data-en="Prices may change. Confirm price, stock, delivery and warranty with the seller before paying. These are not 343SHOP-owned products.">Bei zinaweza kubadilika. Thibitisha bei, stock, delivery na warranty kwa muuzaji kabla ya kulipa. Hizi si bidhaa za stock ya 343SHOP.</p>
     </section>
 
     <div class="marketplace-grid">
@@ -601,7 +654,7 @@ function openCart(){$("overlay").classList.add("show");$("drawer").classList.add
 function closeCart(){$("overlay").classList.remove("show");$("drawer").classList.remove("show")}
 function renderCart(){const rows=Object.entries(cart).filter(([slug,n])=>n>0).map(([slug,n])=>({p:PRODUCTS.find(p=>p.slug===slug),n})).filter(x=>x.p);if(!rows.length){$("cartLines").innerHTML='<div class="empty-cart">'+tr("Kikapu chako bado kiko tupu.","Your bag is waiting for something lovely.")+'<br><br><a class="btn" href="#shop" id="continueShop">'+tr("Endelea na duka","Continue shopping")+'</a></div>';$("cartTotal").innerHTML="";const c=$("continueShop");if(c)c.onclick=closeCart;return}
 $("cartLines").innerHTML=rows.map(({p,n})=>'<div class="cart-line"><div><strong>'+(lang==="sw"?p.sw:p.en)+'</strong><small>'+money(p.price)+' · '+(lang==="sw"?p.catSw:p.catEn)+'</small><div class="qty"><button data-dec="'+p.slug+'">−</button><b>'+n+'</b><button data-inc="'+p.slug+'">+</button></div></div><b>'+money(p.price*n)+'</b></div>').join("");$("cartLines").querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{cart[b.dataset.dec]=Math.max(0,(cart[b.dataset.dec]||0)-1);if(!cart[b.dataset.dec])delete cart[b.dataset.dec];save();renderCart()});$("cartLines").querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{if((cart[b.dataset.inc]||0)>=MAX_QTY){toast(tr("Kikomo ni bidhaa 10 kwa kila aina.","Limit is 10 per product."));return}cart[b.dataset.inc]=(cart[b.dataset.inc]||0)+1;save();renderCart()});const t=totals();$("cartTotal").innerHTML='<div class="total-row"><span>'+tr("Jumla ndogo","Subtotal")+'</span><b>'+money(t.subtotal)+'</b></div><div class="total-row"><span>'+tr("Usafirishaji","Delivery")+'</span><b>'+(t.shipping?money(t.shipping):tr("Bure","Complimentary"))+'</b></div><div class="total-row grand"><span>'+tr("Jumla","Total")+'</span><b>'+money(t.total)+'</b></div><button class="btn" id="checkoutBtn">'+tr("Endelea kulipia","Continue to checkout")+' ↗</button>';$("checkoutBtn").onclick=()=>{closeCart();$("checkoutModal").classList.add("show")}}
-function applyLang(){$("langBtn").textContent=lang==="sw"?"EN":"SW";document.documentElement.lang=lang;document.querySelectorAll("[data-sw][data-en]").forEach(el=>{el.textContent=lang==="sw"?el.dataset.sw:el.dataset.en});document.querySelectorAll("[data-html-sw][data-html-en]").forEach(el=>{el.innerHTML=lang==="sw"?el.dataset.htmlSw:el.dataset.htmlEn});$("search").placeholder=tr("Tafuta bidhaa...","Search products...");renderCats();renderProducts();if($("drawer").classList.contains("show"))renderCart()}
+function applyLang(){$("langBtn").textContent=lang==="sw"?"EN":"SW";document.documentElement.lang=lang;document.querySelectorAll("[data-sw][data-en]").forEach(el=>{el.textContent=lang==="sw"?el.dataset.sw:el.dataset.en});document.querySelectorAll("[data-html-sw][data-html-en]").forEach(el=>{el.innerHTML=lang==="sw"?el.dataset.htmlSw:el.dataset.htmlEn});$("search").placeholder=tr("Tafuta bidhaa...","Search products...");$("heroSearchInput").placeholder=tr("Tafuta simu, laptop, viatu, perfume...","Search phones, laptops, shoes, perfume...");renderCats();renderProducts();if($("drawer").classList.contains("show"))renderCart()}
 
 $("partnerJoinForm").addEventListener("submit",e=>{
   e.preventDefault();
