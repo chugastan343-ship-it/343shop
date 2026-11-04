@@ -118,6 +118,29 @@ test("eBay Sandbox returns a safe OAuth failure code without exposing credential
   }
 });
 
+
+test("eBay Sandbox identifies OAuth network failures without exposing secrets", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    throw new TypeError("simulated network failure");
+  };
+
+  try {
+    const response = await get("/api/marketplaces/search?q=android%20phone&source=ebay", {
+      EBAY_ENVIRONMENT: "sandbox",
+      EBAY_SANDBOX_CLIENT_ID: "diagnostic-client-id",
+      EBAY_SANDBOX_CLIENT_SECRET: "diagnostic-client-secret"
+    });
+    const data = await response.json();
+    assert.equal(data.sources.ebay.status, "temporarily_unavailable");
+    assert.equal(data.sources.ebay.error_code, "ebay_oauth_network_error");
+    assert.equal(JSON.stringify(data).includes("diagnostic-client-secret"), false);
+    assert.equal(JSON.stringify(data).includes("simulated network failure"), false);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("eBay Browse API uses server-side OAuth and preserves affiliate URL", async () => {
   const originalFetch = globalThis.fetch;
   const calls = [];
