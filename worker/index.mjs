@@ -234,7 +234,9 @@ const GLOBAL_MARKETPLACE_DIRECTORY = [
 ];
 
 function getEbayConfig(env = {}) {
-  const environment = String(env.EBAY_ENVIRONMENT || "production").trim().toLowerCase() === "sandbox"
+  const requested = String(env.EBAY_ENVIRONMENT || "").trim().toLowerCase();
+  const hasSandboxCredentials = Boolean(env.EBAY_SANDBOX_CLIENT_ID && env.EBAY_SANDBOX_CLIENT_SECRET);
+  const environment = requested === "sandbox" || (!requested && hasSandboxCredentials)
     ? "sandbox" : "production";
   const sandbox = environment === "sandbox";
   return {
