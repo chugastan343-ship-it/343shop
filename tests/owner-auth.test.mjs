@@ -59,14 +59,18 @@ test("owner login requires a same-origin browser request", async () => {
   assert.equal((await response.json()).error, "origin_not_allowed");
 });
 
-test("owner login requires a separate OWNER_PASSWORD secret of at least 16 characters", async () => {
+test("owner login requires a separate OWNER_PASSWORD secret of at least 8 characters", async () => {
   const missing = await login(ownerPassword, { MCP_WRITE_TOKEN: "existing-mcp-secret" }, "198.51.100.34");
   assert.equal(missing.status, 503);
   assert.equal((await missing.json()).error, "owner_password_not_configured");
 
-  const short = await login("short", { OWNER_PASSWORD: "short" }, "198.51.100.35");
+  const short = await login("1234567", { OWNER_PASSWORD: "1234567" }, "198.51.100.35");
   assert.equal(short.status, 503);
   assert.equal((await short.json()).error, "owner_password_too_short");
+
+  const eightChars = "12345678";
+  const accepted = await login(eightChars, { OWNER_PASSWORD: eightChars }, "198.51.100.36");
+  assert.equal(accepted.status, 200);
 });
 
 test("owner logout expires the session cookie", async () => {
