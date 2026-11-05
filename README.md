@@ -62,12 +62,13 @@ MCP can now save sourced products as private drafts and publish them to a separa
 
 ### One-time Cloudflare setup
 
-The Cloudflare Worker needs a D1 database binding named exactly `DB` and an owner-only Worker Secret named `MCP_WRITE_TOKEN`. Once those two settings are present, the Worker automatically creates the `store_products` table and its indexes on the first product-catalogue request. You do not need to open the D1 Console or paste SQL manually.
+The Cloudflare Worker needs a D1 database binding named exactly `DB`, a separate dashboard password Secret named `OWNER_PASSWORD`, and an AI/MCP write Secret named `MCP_WRITE_TOKEN`. Keep the two secrets different. The Worker automatically creates the `store_products` table and its indexes on the first product-catalogue request. You do not need to open the D1 Console or paste SQL manually.
 
 1. Create a D1 database named `343shop-products` only if it does not already exist.
 2. Bind it to **Workers & Pages → 343shop → Settings → Bindings** using the variable name `DB`.
-3. Add `MCP_WRITE_TOKEN` under **Settings → Variables and Secrets** as a Secret. Generate a long, random private token. Do not commit it to GitHub, put it in website JavaScript, or paste it into a chat.
-4. Connect the remote MCP endpoint `https://343shop.chugastan343.workers.dev/mcp` in an MCP client that supports custom Authorization headers. Set the header to `Authorization: Bearer YOUR_MCP_WRITE_TOKEN`. Keep this credential private. If `MCP_ACCESS_TOKEN` is also configured, the write token is accepted for the owner write operations.
+3. Add `OWNER_PASSWORD` under **Settings → Variables and Secrets** as a Secret. Use a unique password/passphrase of at least 16 characters. This is only for the Owner Dashboard login; the Worker issues an HttpOnly, Secure, SameSite=Strict session cookie that expires after 8 hours. The password is not stored in browser local storage.
+4. Add `MCP_WRITE_TOKEN` as a different Secret. Generate a long random token for AI/MCP write tools. Never reuse `OWNER_PASSWORD`, commit the token to GitHub, put it in website JavaScript, or paste it into a chat.
+5. Connect `https://343shop.chugastan343.workers.dev/mcp` in an MCP client that supports a fixed bearer Authorization header, then configure `Authorization: Bearer YOUR_MCP_WRITE_TOKEN` in that client's private connection settings. If `MCP_ACCESS_TOKEN` is also configured, it remains the general MCP access token; `MCP_WRITE_TOKEN` authorizes owner write tools.
 
 The migration file `migrations/0001_store_products.sql` remains available for manual database administration, but it is no longer required for initial setup. Check readiness at `https://343shop.chugastan343.workers.dev/api/mcp/status`. The status endpoint confirms the D1 binding and owner secret; the first catalogue request performs the actual table setup.
 
@@ -108,7 +109,7 @@ Do not place private access tokens, passwords or customer information in `PARTNE
 
 The public **For shops / Kwa maduka** form now submits partner applications to `POST /api/partner/applications`. The Worker validates the shop details, accepts HTTPS catalogue links only, rejects duplicate active applications for the same shop and phone number, and stores each application privately in Cloudflare D1 with status `pending`. A basic per-IP request limit and a hidden honeypot reduce low-effort abuse; configure Cloudflare WAF/Rate Limiting and Turnstile for stronger production protection.
 
-The owner can review applications at `/admin.html` after authenticating with the existing `MCP_WRITE_TOKEN`. The **Maombi ya wauzaji / Seller Network** section supports `pending`, `contacted`, `approved` and `rejected` review statuses. Applicant contact details are not exposed through a public listing endpoint.
+The owner can review applications at `/admin.html` after logging in with the separate `OWNER_PASSWORD`. Dashboard sessions are signed by the Worker, stored in an HttpOnly cookie, and expire after 8 hours. The AI/MCP `MCP_WRITE_TOKEN` does not unlock the dashboard. The **Maombi ya wauzaji / Seller Network** section supports `pending`, `contacted`, `approved` and `rejected` review statuses. Applicant contact details are not exposed through a public listing endpoint.
 
 **Approval does not automatically make a shop live.** Verify the business, permission to share its catalogue, stock/price update process, fulfilment and commission terms. Then test its authorised public HTTPS catalogue and add it to `PARTNER_SHOPS_JSON`. The current release adds application intake and owner review; independent seller logins, seller self-service product uploads and seller payouts are not enabled yet.
 
@@ -134,11 +135,11 @@ There are no preset commission rates. A partner application does not automatical
 - Partner shops are not automatically discovered. They must be registered with the owner's permission.
 - The existing storefront and WhatsApp checkout continue to work without D1. The sourced-product catalogue appears only after a D1 database and Worker binding are configured.
 
-The server supports Streamable HTTP, validates browser origins, limits request size and applies a basic per-IP request limit. If `MCP_ACCESS_TOKEN` is configured as a Worker Secret, requests must include `Authorization: Bearer <token>`; leave it unset for the initial read-only connector unless a fixed-token authentication setup is intended.
+The server supports Streamable HTTP, validates browser origins, limits request size and applies a basic per-IP request limit. If `MCP_ACCESS_TOKEN` is configured as a Worker Secret, all MCP requests must include `Authorization: Bearer <token>`. If it is unset, read/discovery tools are public; owner write tools still require the separate `MCP_WRITE_TOKEN`. The dashboard password is never used for MCP authorization.
 
 ### Connecting an AI client
 
-Add a custom remote MCP connector using the endpoint above. It can be connected to clients that support remote MCP, subject to each client's account-plan and authentication requirements. In ChatGPT, custom MCP access and write permissions depend on the workspace plan; read-only access is the safe starting point. Claude and other clients may ask you to choose OAuth or fixed request-header authentication.
+Add a custom remote MCP connector using the endpoint above. The current Worker supports anonymous read-only discovery (when `MCP_ACCESS_TOKEN` is unset) and bearer-token authorization for owner write tools. For compatible MCP clients, put `MCP_WRITE_TOKEN` in the private Authorization header field. ChatGPT custom apps that require authenticated write actions use OAuth 2.1; this Worker does not yet implement an OAuth authorization server, so do not choose "no-auth" for write access. OpenAI currently limits full custom MCP write connections to supported Business and Enterprise/Edu workspaces; personal plan capabilities vary. The separate Owner Dashboard remains accessible with `OWNER_PASSWORD` at `/admin.html`.
 
 ## Global marketplace integrations
 
