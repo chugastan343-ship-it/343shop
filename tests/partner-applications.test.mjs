@@ -17,7 +17,7 @@ class FakeD1 {
           const [id, shop_name, location, contact_name, phone, phone_normalized, categories, catalogue_url, created_at, updated_at] = values;
           db.applications.push({
             id, shop_name, location, contact_name, phone, phone_normalized, categories, catalogue_url,
-            status: "pending", owner_note: owner_note || "", created_at, updated_at, reviewed_at: null
+            status: "pending", owner_note: "", created_at, updated_at, reviewed_at: null
           });
         } else if (sql.startsWith("UPDATE partner_applications")) {
           const [status, owner_note, updated_at, reviewed_at, id] = values;
