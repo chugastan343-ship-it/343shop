@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#03050b">
+<meta name="description" content="343SHOP Deals — browse and filter real product listings from connected marketplace sources.">
+<link rel="icon" href="/images/343shop-icon.svg" type="image/svg+xml">
+<title>Deals & New Arrivals — 343SHOP</title>
+<style>
+:root{color-scheme:dark;--bg:#03050b;--panel:#080f1b;--panel2:#0b1422;--line:#1c2d45;--text:#edf5ff;--muted:#91a5bf;--blue:#19bfff;--pink:#ff55a5;--yellow:#ffda45;--radius:16px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--bg)}body{margin:0;background:radial-gradient(ellipse at 80% 0%,#10203a55,transparent 32%),radial-gradient(ellipse at 10% 28%,#17102b55,transparent 25%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{cursor:pointer}.wrap{width:min(1400px,calc(100% - 48px));margin:auto}
+.announcement{height:31px;display:flex;align-items:center;justify-content:center;background:#02040a;border-bottom:1px solid var(--line);color:#9eb3ce;font-size:9px;letter-spacing:.16em}.announcement b{color:var(--yellow)}
+.header{position:sticky;top:0;z-index:30;background:#03050bf2;border-bottom:1px solid #1d3049;backdrop-filter:blur(18px);box-shadow:0 10px 34px #0008}
+.header-main{min-height:75px;display:grid;grid-template-columns:190px minmax(220px,1fr) auto;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;min-width:0}.brand img{display:block;width:174px;height:48px;object-fit:contain}
+.search{height:43px;display:flex;align-items:center;gap:10px;border:1px solid #29415f;background:#080f1b;border-radius:10px;overflow:hidden}.search span{padding-left:14px;color:var(--blue);font-size:20px}.search input{height:100%;min-width:0;flex:1;border:0;outline:0;background:transparent;color:var(--text);font-size:12px}.search input::placeholder{color:#7790ae}.search button{height:100%;padding:0 19px;border:0;background:linear-gradient(115deg,#0876f5,#12c8ff);color:white;font-size:10px;font-weight:900}
+.header-actions{display:flex;align-items:center;gap:9px}.header-actions a{padding:10px 13px;border:1px solid #263b58;border-radius:9px;color:#c9d8eb;font-size:10px;font-weight:800}.header-actions a:hover{border-color:var(--pink);color:#ff93c7}
+.nav{min-height:43px;display:flex;align-items:center;gap:28px;border-top:1px solid #15253a;color:#b6c8de;font-size:10px;font-weight:800}.nav a{height:43px;display:flex;align-items:center;white-space:nowrap}.nav a:hover,.nav a.active{color:var(--blue)}.nav a.active{border-bottom:2px solid var(--pink)}
+.mobile-nav{display:none}
+.hero{padding:38px 0 24px}.crumb{display:flex;gap:8px;align-items:center;color:#758ba7;font-size:9px;margin-bottom:18px}.crumb a:hover{color:var(--blue)}.hero-row{display:flex;align-items:end;justify-content:space-between;gap:25px}.hero h1{margin:0 0 10px;font-size:clamp(32px,4.5vw,53px);line-height:1;letter-spacing:-.06em}.hero h1 span{background:linear-gradient(95deg,#44d8ff,#328dff 45%,#ff65b1 76%,#ffdc4c);background-clip:text;-webkit-background-clip:text;color:transparent}.hero p{max-width:730px;margin:0;color:#9db0c8;font-size:12px;line-height:1.8}.hero-side{display:flex;gap:9px;flex:none}.hero-pill{border:1px solid #263b58;border-radius:10px;padding:12px 14px;background:#080f1b}.hero-pill strong{display:block;color:var(--yellow);font-size:18px}.hero-pill small{display:block;margin-top:3px;color:#8298b3;font-size:8px;letter-spacing:.08em}
+.deal-links{display:flex;gap:8px;overflow:auto;padding:17px 0 15px;scrollbar-width:thin;scrollbar-color:#253a58 transparent}.deal-chip{flex:none;border:1px solid #233751;border-radius:30px;padding:10px 15px;background:#08111e;color:#b9cce2;font-size:9px;font-weight:850;transition:.18s}.deal-chip:hover,.deal-chip.active{border-color:#139bff;background:#0b2540;color:#69dcff;box-shadow:0 5px 18px #007bff22}
+.page-layout{display:grid;grid-template-columns:238px minmax(0,1fr);gap:22px;padding:10px 0 70px;align-items:start}
+.filters{position:sticky;top:139px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(155deg,#0a1423,#060b13);overflow:hidden}
+.filter-head{padding:17px 17px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.filter-head strong{font-size:12px}.filter-head button{border:0;background:none;color:var(--blue);font-size:9px;font-weight:900}
+.filter-group{padding:16px 17px;border-bottom:1px solid #182940}.filter-group:last-child{border-bottom:0}.filter-group h3{margin:0 0 12px;color:#eff6ff;font-size:10px;font-weight:900;letter-spacing:.04em}
+.filter-option{display:flex;align-items:center;gap:9px;margin:10px 0;color:#9fb2c9;font-size:10px;line-height:1.4}.filter-option input{accent-color:#13bfff}.filter-option small{margin-left:auto;color:#6d839f;font-size:8px}
+.filter-group input[type="search"],.filter-group select{width:100%;height:37px;padding:0 10px;border:1px solid #263b58;border-radius:8px;background:#07101d;color:#e8f2ff;outline:0;font-size:10px}.filter-group input::placeholder{color:#7187a1}
+.filter-hint{color:#7289a6;font-size:8px;line-height:1.6;margin:10px 0 0}
+.results-top{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 0 15px;border-bottom:1px solid #1b2b40}.results-top strong{font-size:12px}.results-top p{margin:5px 0 0;color:#8297b1;font-size:9px}.sort{display:flex;align-items:center;gap:8px;color:#90a5be;font-size:9px;white-space:nowrap}.sort select{border:1px solid #293e5c;border-radius:8px;padding:9px 11px;background:#091320;color:#e9f3ff;font-size:9px}
+.status{margin:13px 0;color:#8fa6c2;font-size:9px;line-height:1.6;min-height:18px}.product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.product-card{min-width:0;overflow:hidden;border:1px solid #20334e;border-radius:13px;background:linear-gradient(160deg,#0d1727,#070c15);transition:transform .2s,border-color .2s,box-shadow .2s}.product-card:hover{transform:translateY(-4px);border-color:#20bfff;box-shadow:0 16px 35px #007bff24}
+.product-image{height:180px;position:relative;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 42%,#17375c,#091321 73%)}.product-image img{width:100%;height:100%;padding:13px;object-fit:contain}.product-placeholder{font:900 40px Arial,sans-serif;letter-spacing:-.12em;color:#70dfff;text-shadow:0 5px 22px #047cdb66}
+.product-badge{position:absolute;top:10px;left:10px;max-width:calc(100% - 20px);padding:6px 8px;border:1px solid #244667;border-radius:30px;background:#061629eF;color:var(--yellow);font-size:7px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.product-copy{padding:12px}.product-source{color:#5fd7ff;font-size:7px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.product-copy h3{min-height:38px;margin:7px 0;color:#f1f6ff;font-size:12px;line-height:1.4}.product-copy p{min-height:35px;margin:0;color:#94a8c1;font-size:8px;line-height:1.6}.price-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;padding-top:10px;border-top:1px solid #1c2d43}.price{color:var(--yellow);font-size:14px;font-weight:900}.stock{color:#8ba1ba;font-size:7px;text-align:right}.stock.good{color:#71dca6}.product-actions{display:flex;gap:7px;margin-top:11px}.product-actions a{flex:1;display:flex;align-items:center;justify-content:center;min-height:33px;padding:7px 6px;border:1px solid #177fd0;border-radius:7px;background:linear-gradient(110deg,#086de4,#10bcea);color:white;font-size:7px;font-weight:900;text-align:center}.product-actions a.ask{border-color:#a82c72;background:#211020;color:#ff91c9}.product-actions a:hover{filter:brightness(1.15)}
+.empty{grid-column:1/-1;padding:45px 22px;text-align:center;border:1px dashed #29405e;border-radius:14px;background:#080f1b}.empty strong{display:block;color:#edf5ff;font-size:14px}.empty p{max-width:560px;margin:9px auto 0;color:#8fa5c0;font-size:10px;line-height:1.8}.empty a{color:#66dfff;font-weight:900}
+.source-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}.source-links a{padding:9px 11px;border:1px solid #293c57;border-radius:8px;color:#9cb3cd;font-size:8px;font-weight:850}.source-links a:hover{border-color:var(--pink);color:#ff8bc5}
+.note{margin-top:22px;padding:14px 16px;border:1px solid #283951;border-radius:11px;background:#080f1b;color:#899eb8;font-size:9px;line-height:1.7}.note b{color:#ffdc55}
+.footer{border-top:1px solid #1d3048;background:#02040a;padding:25px 0;color:#8096b2;font-size:9px}.footer-row{display:flex;justify-content:space-between;align-items:center;gap:18px}.footer img{width:126px;height:auto}.footer a{color:#66dfff}
+@media(max-width:1100px){.product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.header-main{grid-template-columns:160px minmax(180px,1fr) auto;gap:13px}.brand img{width:155px}.nav{gap:20px}}
+@media(max-width:850px){.page-layout{grid-template-columns:205px minmax(0,1fr);gap:14px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-side{display:none}.nav{gap:14px}.header-actions a:first-child{display:none}}
+@media(max-width:650px){.wrap{width:calc(100% - 26px)}.header-main{min-height:0;grid-template-columns:1fr auto;padding:9px 0;gap:8px}.brand img{width:137px;height:39px}.header-actions a{padding:8px 9px;font-size:8px}.search{grid-column:1/-1;grid-row:2;height:40px}.search button{padding:0 13px}.nav{display:none}.mobile-nav{display:flex;gap:16px;overflow:auto;min-height:39px;border-top:1px solid #17283e;scrollbar-width:none}.mobile-nav a{display:flex;align-items:center;white-space:nowrap;color:#b7cbe2;font-size:9px;font-weight:850}.mobile-nav a.active{color:var(--blue)}.hero{padding:27px 0 15px}.hero-row{align-items:start}.hero h1{font-size:36px}.hero p{font-size:10px}.deal-links{padding:14px 0}.page-layout{display:flex;flex-direction:column;padding-bottom:45px}.filters{position:static;width:100%}.filter-head{padding:12px 14px}.filter-body{display:grid;grid-template-columns:1fr 1fr}.filter-group{padding:12px;border-bottom:1px solid #182940}.filter-group h3{margin-bottom:8px}.filter-option{margin:7px 0;font-size:9px}.results{width:100%}.results-top{align-items:flex-start}.results-top strong{font-size:11px}.sort{font-size:8px}.sort select{padding:8px 7px;max-width:125px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.product-image{height:140px}.product-copy{padding:9px}.product-copy h3{font-size:10px;min-height:43px}.product-copy p{font-size:8px;min-height:43px}.price{font-size:12px}.product-actions{flex-direction:column}.product-actions a{min-height:30px}.footer-row{align-items:flex-start;flex-direction:column}}
+@media(max-width:370px){.filter-body{grid-template-columns:1fr}.product-grid{grid-template-columns:1fr}.product-image{height:175px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="announcement"><b>343SHOP</b>&nbsp; · &nbsp; DEALS DISCOVERY &nbsp; · &nbsp; TAFUTA DUNIA NZIMA</div>
+<header class="header">
+  <div class="wrap">
+    <div class="header-main">
+      <a class="brand" href="/" aria-label="343SHOP home"><img src="/images/343shop-logo.svg" alt="343SHOP"></a>
+      <form class="search" id="searchForm" role="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" minlength="2" maxlength="100" placeholder="Tafuta simu, laptop, viatu, gadgets..." aria-label="Tafuta bidhaa"><button type="submit">TAFUTA ↗</button></form>
+      <div class="header-actions"><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a></div>
+    </div>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/">Home</a><a class="active" href="/deals.html">Today's Deals</a><a href="/#departments">Makundi yote</a><a href="/#marketplaces">Soko la Dunia</a><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a><a href="/gift-cards.html">Gift Cards</a>
+    </nav>
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <a href="/">Home</a><a class="active" href="/deals.html">Deals</a><a href="/#departments">Makundi</a><a href="/#marketplaces">Soko la Dunia</a><a href="/#shop">Vitabu</a><a href="/#print-studio">Print Studio</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <div class="crumb"><a href="/">343SHOP</a><span>›</span><span>Deals & New Arrivals</span></div>
+    <div class="hero-row">
+      <div><h1>Deals & <span>New Arrivals.</span></h1><p>Chunguza bidhaa kutoka vyanzo vinavyopatikana, tafuta kwa category na chagua muuzaji. Bei, punguzo, ratings na stock huonyeshwa tu pale chanzo kinapotoa taarifa hizo.</p></div>
+      <div class="hero-side"><div class="hero-pill"><strong>LIVE</strong><small>CONNECTED SEARCH</small></div><div class="hero-pill"><strong>343</strong><small>GLOBAL SOURCING</small></div></div>
+    </div>
+  </section>
+  <nav class="deal-links" aria-label="Browse departments">
+    <button class="deal-chip active" type="button" data-query="">All categories</button>
+    <button class="deal-chip" type="button" data-query="smartphones mobile phones accessories">Phones & Accessories</button>
+    <button class="deal-chip" type="button" data-query="electronics gadgets headphones speakers">Electronics</button>
+    <button class="deal-chip" type="button" data-query="laptops computers accessories">Computers</button>
+    <button class="deal-chip" type="button" data-query="fashion clothing shoes sneakers">Fashion & Footwear</button>
+    <button class="deal-chip" type="button" data-query="home kitchen appliances">Home & Kitchen</button>
+    <button class="deal-chip" type="button" data-query="beauty personal care">Beauty</button>
+    <button class="deal-chip" type="button" data-query="sports outdoor equipment">Sports & Outdoors</button>
+    <button class="deal-chip" type="button" data-query="video games gaming accessories">Gaming</button>
+  </nav>
+  <div class="page-layout">
+    <aside class="filters" aria-label="Product filters">
+      <div class="filter-head"><strong>Filter results</strong><button id="clearFilters" type="button">CLEAR ALL</button></div>
+      <div class="filter-body">
+        <section class="filter-group">
+          <h3>Department</h3>
+          <label class="filter-option"><input type="radio" name="department" value="all" checked> All departments</label>
+          <label class="filter-option"><input type="radio" name="department" value="phone"> Phones</label>
+          <label class="filter-option"><input type="radio" name="department" value="electronics"> Electronics</label>
+          <label class="filter-option"><input type="radio" name="department" value="computer"> Computers</label>
+          <label class="filter-option"><input type="radio" name="department" value="fashion"> Fashion</label>
+          <label class="filter-option"><input type="radio" name="department" value="home"> Home & Kitchen</label>
+          <label class="filter-option"><input type="radio" name="department" value="beauty"> Beauty</label>
+          <label class="filter-option"><input type="radio" name="department" value="sports"> Sports</label>
+        </section>
+        <section class="filter-group">
+          <h3>Marketplace source</h3>
+          <select id="sourceFilter" aria-label="Filter by marketplace">
+            <option value="all">All connected sources</option><option value="amazon">Amazon</option><option value="alibaba">Alibaba</option><option value="shopify">Shopify stores</option><option value="ebay">eBay</option><option value="partners">Partner catalogues</option>
+          </select>
+          <p class="filter-hint">Only sources enabled by the 343SHOP server can return live results.</p>
+        </section>
+        <section class="filter-group">
+          <h3>Seller information</h3>
+          <input id="sellerFilter" type="search" placeholder="Search brand or seller..." aria-label="Search seller or brand">
+          <label class="filter-option"><input id="stockFilter" type="checkbox"> Seller reports in stock</label>
+          <p class="filter-hint">Ratings and discount filters appear only when a source provides verified values.</p>
+        </section>
+      </div>
+    </aside>
+    <section class="results" aria-labelledby="resultsTitle">
+      <div class="results-top"><div><strong id="resultsTitle">Explore products</strong><p id="resultCount">Browse a category or search for a product.</p></div><label class="sort">Sort by <select id="sortFilter"><option value="relevance">Relevance</option><option value="name">Name A–Z</option><option value="source">Seller A–Z</option></select></label></div>
+      <p class="status" id="status" role="status" aria-live="polite">Tafuta bidhaa au chagua category. Matokeo ya live yataonekana kutoka vyanzo vilivyounganishwa tu.</p>
+      <div class="product-grid" id="productGrid"><div class="empty"><strong>Karibu 343SHOP Deals</strong><p>Chagua category juu au andika bidhaa unayotaka. Unaweza pia kufungua <a href="https://www.amazon.com/gp/goldbox/?ie=UTF8&amp;ref_=topnav_storetab_subnav_goldbox&amp;bubble-id=deals-collection-new-arrivals" target="_blank" rel="noopener noreferrer">Amazon Deals ↗</a> moja kwa moja.</p></div></div>
+      <div class="source-links" id="sourceLinks">
+        <a href="https://www.amazon.com/gp/goldbox/?ie=UTF8&amp;ref_=topnav_storetab_subnav_goldbox&amp;bubble-id=deals-collection-new-arrivals" target="_blank" rel="noopener noreferrer">Amazon Deals ↗</a>
+        <a href="https://www.ebay.com/" target="_blank" rel="noopener noreferrer">eBay ↗</a>
+        <a href="https://www.alibaba.com/" target="_blank" rel="noopener noreferrer">Alibaba ↗</a>
+        <a href="https://www.jumia.co.tz/" target="_blank" rel="noopener noreferrer">Jumia Tanzania ↗</a>
+        <a href="https://empire.co.tz/collections/all" target="_blank" rel="noopener noreferrer">Empire Tanzania ↗</a>
+      </div>
+      <div class="note"><b>MUHIMU:</b> 343SHOP ni dalali/kiunganishi. Hatubuni bei, punguzo, reviews, stock au bidhaa. Muuzaji husika ndiye anayethibitisha taarifa za mwisho na kupokea malipo ya bidhaa zake. Vitabu vyetu vina ukurasa wake tofauti kwenye <a href="/#shop">343SHOP Originals</a>.</div>
+    </section>
+  </div>
+</main>
+<footer class="footer"><div class="wrap footer-row"><a href="/"><img src="/images/343shop-logo.svg" alt="343SHOP"></a><span>© 2026 343SHOP · <a href="/privacy.html">Privacy</a></span><span>Shopping from Tanzania · <a href="https://wa.me/255695981035" target="_blank" rel="noopener noreferrer">WhatsApp support ↗</a></span></div></footer>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const state={products:[],query:"",source:"all",externalLinks:[],category:"all"};
+const categoryWords={phone:["phone","mobile","smartphone","iphone","android"],electronics:["electronic","headphone","speaker","camera","gadget","jbl","audio"],computer:["computer","laptop","notebook","pc","keyboard","monitor"],fashion:["fashion","clothing","shoe","sneaker","dress","bag","watch"],home:["home","kitchen","appliance","furniture","blender"],beauty:["beauty","skin","makeup","perfume","personal care"],sports:["sport","outdoor","fitness","gym","bicycle"]};
+function textValue(value){return String(value==null?"":value).trim()}
+function safeUrl(value){const s=textValue(value);return s.startsWith("https://")?s:""}
+function productName(p){return textValue(p.name||p.product_name||p.title||"Product listing")}
+function productSource(p){return textValue(p.source_shop||p.source_marketplace||p.source_type||p.marketplace||"Marketplace")}
+function productPrice(p){const n=Number(p.price!=null?p.price:p.source_price);if(!Number.isFinite(n))return "";const c=textValue(p.currency||"");return new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(n)+(c?" "+c:"")}
+function productCategory(p){return textValue(p.category||p.category_name||"").toLowerCase()}
+function isInStock(p){return p.availability==="in_stock"||p.availability==="available"||p.in_stock===true}
+function makeNode(tag,className,content){const n=document.createElement(tag);if(className)n.className=className;if(content!=null)n.textContent=content;return n}
+function mapPublished(p){return Object.assign({},p,{name:p.product_name||p.name,price:p.source_price!=null?p.source_price:p.price,source_shop:p.source_marketplace||p.source_shop,product_url:p.source_url||p.product_url})}
+function categoryMatches(p,cat){if(cat==="all")return true;const values=(productName(p)+" "+productCategory(p)+" "+textValue(p.description)).toLowerCase();return (categoryWords[cat]||[]).some(word=>values.includes(word))}
+function render(){
+ const needle=$("sellerFilter").value.trim().toLowerCase();
+ const stockOnly=$("stockFilter").checked;
+ let items=state.products.filter(p=>{
+  const source=productSource(p).toLowerCase();
+  const sourceOkay=state.source==="all"||(state.source==="partners"?source.includes("partner"):source.includes(state.source));
+  const brandOkay=!needle||(productName(p)+" "+source+" "+textValue(p.brand)).toLowerCase().includes(needle);
+  return sourceOkay&&brandOkay&&(!stockOnly||isInStock(p))&&categoryMatches(p,state.category);
+ });
+ if($("sortFilter").value==="name")items.sort((a,b)=>productName(a).localeCompare(productName(b)));
+ if($("sortFilter").value==="source")items.sort((a,b)=>productSource(a).localeCompare(productSource(b)));
+ $("resultCount").textContent=items.length+" listing"+(items.length===1?"":"s")+" · "+(state.query?"Search: "+state.query:"Connected catalogue");
+ const grid=$("productGrid");grid.replaceChildren();
+ if(!items.length){
+  const empty=makeNode("div","empty");
+  empty.append(makeNode("strong","",state.products.length?"No products match these filters":"No live products returned yet"));
+  const p=makeNode("p","",state.products.length?"Jaribu kufuta baadhi ya filters au tafuta category nyingine.":"Bado hakuna feed iliyorejesha bidhaa kwa sasa. Tafuta bidhaa au fungua maduka ya chanzo hapo chini; hatujaongeza bidhaa za kubuni.");
+  empty.appendChild(p);grid.appendChild(empty);return;
+ }
+ for(const product of items){
+  const card=makeNode("article","product-card");
+  const visual=makeNode("div","product-image");
+  const imageUrl=safeUrl(product.image_url);
+  if(imageUrl){const image=makeNode("img");image.src=imageUrl;image.alt=productName(product);image.loading="lazy";image.referrerPolicy="no-referrer";visual.appendChild(image)}
+  else visual.appendChild(makeNode("span","product-placeholder","343"));
+  const discountPrice=Number(product.price!=null?product.price:product.source_price);
+  const original=Number(product.original_price||product.compare_at_price||product.list_price);
+  if(Number.isFinite(discountPrice)&&Number.isFinite(original)&&original>discountPrice){
+   const pct=Math.round((original-discountPrice)/original*100);visual.appendChild(makeNode("span","product-badge",pct+"% OFF · SOURCE DATA"));
+  }else visual.appendChild(makeNode("span","product-badge","SELLER LISTING"));
+  const copy=makeNode("div","product-copy");
+  copy.appendChild(makeNode("div","product-source",productSource(product)));
+  copy.appendChild(makeNode("h3","",productName(product)));
+  const description=makeNode("p","",textValue(product.description||"Taarifa za ziada zithibitishwe moja kwa moja kwa muuzaji."));
+  copy.appendChild(description);
+  const row=makeNode("div","price-row");
+  row.appendChild(makeNode("strong","price",productPrice(product)||"Price on request"));
+  row.appendChild(makeNode("span",isInStock(product)?"stock good":"stock",isInStock(product)?"Seller reports stock":"Confirm stock"));
+  copy.appendChild(row);
+  const actions=makeNode("div","product-actions");
+  const productUrl=safeUrl(product.product_url||product.source_url);
+  if(productUrl){const visit=makeNode("a","","VIEW AT SOURCE ↗");visit.href=productUrl;visit.target="_blank";visit.rel="noopener noreferrer";actions.appendChild(visit)}
+  const ask=makeNode("a","ask","ASK 343SHOP ↗");
+  const msg="Habari 343SHOP, naomba msaada wa kutafuta bidhaa hii: "+productName(product)+". Chanzo: "+productSource(product)+". Tafadhali thibitisha bei, stock na delivery kabla ya oda.";
+  ask.href="https://wa.me/255695981035?text="+encodeURIComponent(msg);ask.target="_blank";ask.rel="noopener noreferrer";actions.appendChild(ask);
+  copy.appendChild(actions);card.append(visual,copy);grid.appendChild(card);
+ }
+}
+function setStatus(message){$("status").textContent=message}
+async function searchProducts(query,source){
+ const q=textValue(query);
+ state.query=q;state.source=source||$("sourceFilter").value||"all";
+ $("searchInput").value=q;
+ $("sourceFilter").value=state.source;
+ $("productGrid").replaceChildren();
+ $("productGrid").appendChild(makeNode("div","empty","Searching connected marketplace sources..."));
+ setStatus("Tunatafuta bidhaa kwenye vyanzo vilivyounganishwa...");
+ try{
+  const response=await fetch("/api/marketplaces/search?q="+encodeURIComponent(q)+"&source="+encodeURIComponent(state.source)+"&limit=24",{headers:{"Accept":"application/json"},cache:"no-store"});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.message||data.error||"search_failed");
+  state.products=Array.isArray(data.results)?data.results:[];
+  state.externalLinks=Array.isArray(data.external_marketplace_search_links)?data.external_marketplace_search_links:[];
+  const sourceNames=Object.keys(data.sources||{}).filter(key=>data.sources[key]&&data.sources[key].status==="available");
+  setStatus((data.result_count||state.products.length)+" live result(s). "+(sourceNames.length?"Responding sources: "+sourceNames.join(", ")+". ":"No connected API source returned products. ")+"Muuzaji athibitishe bei, stock na delivery.");
+  render();renderSourceLinks();
+ }catch(error){
+  state.products=[];render();setStatus("Search haikufanikiwa kwa sasa. Tumia links za maduka ya chanzo au jaribu tena.");
+ }
+}
+function renderSourceLinks(){
+ const root=$("sourceLinks");
+ if(!state.externalLinks.length)return;
+ root.replaceChildren();
+ for(const item of state.externalLinks){
+  const href=safeUrl(item.search_url);if(!href)continue;
+  const a=makeNode("a","",textValue(item.name||"Marketplace")+" ↗");a.href=href;a.target="_blank";a.rel="noopener noreferrer";root.appendChild(a);
+ }
+}
+async function loadPublished(){
+ try{
+  const response=await fetch("/api/store/products",{headers:{"Accept":"application/json"},cache:"no-store"});
+  if(!response.ok)return;
+  const data=await response.json();
+  const items=Array.isArray(data.products)?data.products:[];
+  if(items.length){state.products=items.map(mapPublished);setStatus("Published seller listings from the 343SHOP catalogue. Confirm all final details with each seller.");render()}
+ }catch(error){/* The live search remains available if the published catalogue is offline. */}
+}
+$("searchForm").addEventListener("submit",event=>{event.preventDefault();const q=$("searchInput").value.trim();if(q.length>=2){state.category="all";document.querySelector('input[name="department"][value="all"]').checked=true;document.querySelectorAll(".deal-chip").forEach((b,i)=>b.classList.toggle("active",i===0));searchProducts(q,$("sourceFilter").value)}});
+document.querySelectorAll(".deal-chip").forEach(button=>button.addEventListener("click",()=>{
+ document.querySelectorAll(".deal-chip").forEach(b=>b.classList.toggle("active",b===button));
+ const q=button.dataset.query||"";
+ if(!q){state.category="all";state.query="";loadPublished();return}
+ state.category="all";document.querySelector('input[name="department"][value="all"]').checked=true;
+ searchProducts(q,$("sourceFilter").value);
+}));
+document.querySelectorAll('input[name="department"]').forEach(input=>input.addEventListener("change",()=>{
+ const value=input.value;state.category=value;
+ const terms={phone:"smartphones mobile phones accessories",electronics:"electronics gadgets headphones speakers",computer:"laptops computers accessories",fashion:"fashion clothing footwear shoes",home:"home kitchen appliances",beauty:"beauty personal care",sports:"sports outdoor fitness"};
+ if(value==="all"){state.query="";loadPublished()}else searchProducts(terms[value]||value,$("sourceFilter").value);
+}));
+$("sourceFilter").addEventListener("change",()=>{if(state.query)searchProducts(state.query,$("sourceFilter").value);else{state.source=$("sourceFilter").value;render()}});
+$("sellerFilter").addEventListener("input",render);
+$("stockFilter").addEventListener("change",render);
+$("sortFilter").addEventListener("change",render);
+$("clearFilters").addEventListener("click",()=>{
+ $("sellerFilter").value="";$("stockFilter").checked=false;$("sourceFilter").value="all";$("sortFilter").value="relevance";
+ document.querySelector('input[name="department"][value="all"]').checked=true;
+ document.querySelectorAll(".deal-chip").forEach((b,i)=>b.classList.toggle("active",i===0));
+ state.category="all";state.source="all";state.query="";loadPublished();
+});
+loadPublished();
+})();
+</script>
+</body>
+</html>
