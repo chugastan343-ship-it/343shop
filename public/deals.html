@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="sw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#03050B">
+<meta name="description" content="343SHOP New Arrivals — browse and search live products from connected marketplaces.">
+<title>New Arrivals — 343SHOP</title>
+<style>
+:root{--page:#f5f3ec;--surface:#fffefa;--ink:#202923;--muted:#737d73;--line:#e4e4da;--black:#080a0f;--blue:#20baf4;--pink:#f52b91;--yellow:#f6ca32;--radius:15px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.announcement{background:var(--black);color:#dbe3ed;text-align:center;padding:9px 14px;font-size:9px;font-weight:800;letter-spacing:.16em}
+.announcement b{color:var(--yellow)}
+.wrap{width:min(1320px,calc(100% - 40px));margin:auto}
+.header{position:sticky;top:0;z-index:20;background:rgba(245,243,236,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.header-main{min-height:76px;display:grid;grid-template-columns:170px minmax(220px,1fr) auto;gap:22px;align-items:center}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{display:grid;place-items:center;width:47px;height:47px;flex:0 0 47px;overflow:hidden;border-radius:13px;background:#03050b;box-shadow:0 5px 14px #0a12231a}
+.brand-mark img{width:100%;height:100%;object-fit:cover}
+.brand-copy{font-size:16px;font-weight:950;letter-spacing:-.07em;color:var(--black)}
+.brand-copy span{color:#66717d;font-size:8px;display:block;letter-spacing:.12em;margin-top:2px}
+.search{display:flex;min-width:0;background:var(--surface);border:1px solid #d9dbd2;border-radius:11px;overflow:hidden;box-shadow:0 4px 14px #1b28110a}
+.search input{width:100%;min-width:0;border:0;outline:0;background:transparent;padding:13px 15px;font-size:12px;color:var(--ink)}
+.search button{border:0;border-radius:0;background:var(--black);color:#fff;padding:0 22px;font-weight:850;font-size:11px}
+.search button:hover,.primary:hover{background:#222833}
+.header-actions{display:flex;align-items:center;gap:10px}
+.header-actions a{font-size:10px;font-weight:850;color:#505b53;white-space:nowrap}
+.home-button{padding:11px 15px;border:1px solid #ccd0c7;border-radius:30px}
+.subnav{display:flex;gap:22px;align-items:center;min-height:43px;overflow:auto;white-space:nowrap;scrollbar-width:none;border-top:1px solid #e9e8df}
+.subnav::-webkit-scrollbar{display:none}
+.subnav a{font-size:10px;font-weight:800;color:#59645b;padding:12px 0}
+.subnav a.active,.subnav a:hover{color:var(--black);box-shadow:inset 0 -2px var(--pink)}
+.breadcrumb{padding:19px 0 13px;color:#8a9188;font-size:10px}
+.breadcrumb a:hover{color:var(--black)}
+.page-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;padding:8px 0 22px}
+.kicker{font-size:9px;font-weight:950;letter-spacing:.2em;color:#8a7449;text-transform:uppercase}
+h1{font-size:clamp(31px,4vw,43px);line-height:1.03;letter-spacing:-.055em;margin:8px 0 7px;color:var(--black)}
+.page-heading p{margin:0;max-width:680px;color:var(--muted);font-size:11px;line-height:1.7}
+.live-status{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:30px;background:var(--surface);color:#606c61;font-size:9px;font-weight:850;white-space:nowrap}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#a1a99d}
+.deals-layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:19px;align-items:start;padding-bottom:62px}
+.sidebar{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:19px 17px;position:sticky;top:141px}
+.filter-heading{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid #ecece5}
+.filter-heading strong{font-size:13px;color:var(--black)}
+.filter-heading button{border:0;background:transparent;color:#777f75;font-size:9px;font-weight:850;text-decoration:underline}
+.filter-block{padding:15px 0;border-bottom:1px solid #eeeee8}
+.filter-block:last-of-type{border:0}
+.filter-block h2{font-size:10px;margin:0 0 11px;color:#333d35}
+.department-list{display:grid;gap:3px}
+.department-list button{width:100%;border:0;border-radius:8px;background:transparent;text-align:left;padding:8px 9px;color:#677168;font-size:10px;font-weight:650}
+.department-list button:hover,.department-list button.selected{background:#eeeee8;color:var(--black);font-weight:900}
+.filter-select{width:100%;border:1px solid #e1e2d9;border-radius:9px;background:#fff;padding:10px 9px;color:#465147;font-size:10px;outline:0}
+.filter-hint{font-size:9px;line-height:1.6;color:#93998f;margin:8px 0 0}
+.results-panel{min-width:0}
+.quick-categories{display:flex;gap:8px;overflow:auto;padding:0 0 14px;scrollbar-width:none}
+.quick-categories::-webkit-scrollbar{display:none}
+.quick-categories button{flex:none;border:1px solid #daddd3;background:transparent;border-radius:30px;padding:9px 13px;color:#5c675e;font-size:9px;font-weight:850}
+.quick-categories button:hover,.quick-categories button.selected{background:var(--black);color:#fff;border-color:var(--black)}
+.results-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px 12px 0 0;padding:13px 15px}
+.results-toolbar strong{font-size:11px;color:var(--black)}
+.results-toolbar span{font-size:9px;color:#838b80}
+.results-toolbar select{border:1px solid #dedfd7;border-radius:8px;background:#fff;padding:8px 9px;color:#4b554c;font-size:9px}
+.results-message{margin:0;padding:13px 15px;background:#f0f0e9;border-left:1px solid var(--line);border-right:1px solid var(--line);color:#717a70;font-size:9px;line-height:1.6}
+.results-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding-top:12px}
+.product-card{min-width:0;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #18251913}
+.product-image{height:178px;background:#eeeee8;display:grid;place-items:center;overflow:hidden;position:relative}
+.product-image img{width:100%;height:100%;object-fit:contain;padding:10px}
+.product-image .placeholder{font:700 29px Georgia,serif;color:#c1c5bb}
+.product-source{position:absolute;left:9px;top:9px;border-radius:5px;background:#080a0f;color:#fff;padding:6px 8px;font-size:7px;font-weight:900;letter-spacing:.08em;max-width:calc(100% - 18px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.product-info{display:flex;flex-direction:column;flex:1;padding:12px}
+.product-category{font-size:7px;letter-spacing:.13em;text-transform:uppercase;color:#8c774d;font-weight:900}
+.product-info h3{font-size:11px;line-height:1.45;color:#283129;margin:7px 0 9px;overflow-wrap:anywhere;font-weight:750;min-height:48px}
+.product-price{font-size:14px;line-height:1.2;color:var(--black);font-weight:950;margin-top:auto}
+.product-note{font-size:8px;line-height:1.55;color:#858d82;margin:8px 0 11px}
+.product-link{display:flex;align-items:center;justify-content:center;min-height:34px;border-radius:7px;background:var(--black);color:#fff;font-size:8px;font-weight:900;letter-spacing:.04em}
+.product-link:hover{background:#29303a}
+.empty-state{grid-column:1/-1;min-height:230px;display:grid;place-items:center;text-align:center;background:var(--surface);border:1px dashed #d5d8ce;border-radius:12px;padding:28px}
+.empty-state strong{display:block;font-size:14px;color:var(--black);margin-bottom:7px}
+.empty-state p{max-width:470px;margin:0;color:#7e877c;font-size:10px;line-height:1.8}
+.footer{background:#172c24;color:#d9e0d8;padding:28px 0}
+.footer-inner{display:flex;justify-content:space-between;gap:18px;align-items:center}
+.footer p{font-size:9px;line-height:1.7;color:#a8b2a7;margin:0}
+.footer a{font-size:10px;color:#f3d894;font-weight:850}
+.primary{border:0;border-radius:8px;background:var(--black);color:#fff;padding:11px 16px;font-size:10px;font-weight:900}
+@media(max-width:1080px){.results-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.header-main{grid-template-columns:145px minmax(180px,1fr) auto;gap:13px}.brand-copy{font-size:14px}}
+@media(max-width:760px){.wrap{width:min(100% - 26px,600px)}.header-main{grid-template-columns:1fr auto;gap:11px;padding:10px 0}.brand{grid-column:1}.header-actions{grid-column:2;grid-row:1}.search{grid-column:1/-1;grid-row:2}.search input{padding:12px}.header-actions .home-button{padding:9px 11px}.header-actions a:not(.home-button){display:none}.subnav{gap:18px}.page-heading{align-items:start;flex-direction:column}.deals-layout{grid-template-columns:1fr;gap:12px}.sidebar{position:static;padding:13px}.filter-heading{padding-bottom:9px}.filter-block{padding:10px 0}.department-list{display:flex;gap:6px;overflow:auto;scrollbar-width:none}.department-list button{width:auto;white-space:nowrap;border:1px solid #e5e6de;border-radius:30px;padding:8px 11px}.filter-block:nth-of-type(2){display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}.filter-block:nth-of-type(2) h2{grid-column:1/-1;margin:0}.filter-hint{grid-column:1/-1}.results-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product-image{height:150px}.results-toolbar{align-items:start;flex-direction:column}.results-toolbar select{width:100%}.footer-inner{align-items:start;flex-direction:column}}
+@media(max-width:390px){.product-image{height:128px}.product-info{padding:9px}.product-info h3{font-size:10px}.product-price{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="announcement"><b>343SHOP</b> &nbsp; · &nbsp; NEW ARRIVALS &nbsp; · &nbsp; GLOBAL MARKETPLACE</div>
+<header class="header">
+ <div class="wrap">
+  <div class="header-main">
+   <a class="brand" href="index.html" aria-label="343SHOP home"><span class="brand-mark"><img src="/images/343shop-icon.svg" alt=""></span><span class="brand-copy">343SHOP<span>GLOBAL SHOPPING</span></span></a>
+   <form class="search" id="dealsSearchForm" role="search"><input id="dealsSearch" type="search" minlength="2" maxlength="100" placeholder="Tafuta simu, viatu, laptop, vifaa vya nyumbani..." aria-label="Tafuta bidhaa"><button type="submit">TAFUTA ↗</button></form>
+   <div class="header-actions"><a class="home-button" href="index.html">← Duka kuu</a><a href="index.html#shop">Vitabu vyetu</a></div>
+  </div>
+  <nav class="subnav" aria-label="Deals navigation">
+   <a class="active" href="#results">New Arrivals</a>
+   <a href="#departments">Departments</a>
+   <a href="index.html#marketplaces">Global Market</a>
+   <a href="index.html#print-studio">Print Studio</a>
+   <a href="index.html#shop">343SHOP Books</a>
+  </nav>
+ </div>
+</header>
+<main class="wrap">
+ <div class="breadcrumb"><a href="index.html">Home</a> &nbsp;›&nbsp; <span>Global Market</span> &nbsp;›&nbsp; <strong>New Arrivals</strong></div>
+ <section class="page-heading">
+  <div><span class="kicker">DISCOVER THE WORLD · 343SHOP</span><h1>New Arrivals</h1><p data-sw="Tafuta bidhaa mpya kutoka kwenye masoko yaliyounganishwa. Matokeo yanaonekana tu pale chanzo halisi kimerudisha listing; bei, stock na delivery huthibitishwa kwa muuzaji." data-en="Discover products from connected marketplaces. Results appear only when a real source returns a listing; price, stock and delivery are confirmed by the seller.">Tafuta bidhaa kutoka kwenye masoko yaliyounganishwa. Matokeo yanaonekana tu pale chanzo halisi kimerudisha listing; bei, stock na delivery huthibitishwa kwa muuzaji.</p></div>
+  <div class="live-status"><span class="live-dot" id="liveDot"></span><span id="liveLabel">Subiri utafute bidhaa</span></div>
+ </section>
+ <section class="deals-layout" id="results">
+  <aside class="sidebar" id="departments">
+   <div class="filter-heading"><strong>Filters</strong><button id="clearFilters" type="button">Clear all</button></div>
+   <div class="filter-block"><h2>Department</h2>
+    <div class="department-list" id="departmentList">
+     <button type="button" data-query="smartphones android phones">Cell Phones & Accessories</button>
+     <button type="button" data-query="electronics gadgets">Electronics</button>
+     <button type="button" data-query="clothing shoes bags fashion">Fashion</button>
+     <button type="button" data-query="home kitchen appliances">Home & Kitchen</button>
+     <button type="button" data-query="beauty personal care">Beauty & Personal Care</button>
+     <button type="button" data-query="laptops computers accessories">Computers & Accessories</button>
+     <button type="button" data-query="sports outdoors fitness">Sports & Outdoors</button>
+     <button type="button" data-query="books ebooks">Books</button>
+     <button type="button" data-query="toys games">Toys & Games</button>
+    </div>
+   </div>
+   <div class="filter-block"><h2>Marketplace source</h2>
+    <select class="filter-select" id="dealsSource" aria-label="Marketplace source">
+     <option value="all">All live sources</option><option value="amazon">Amazon</option><option value="ebay">eBay</option><option value="alibaba">Alibaba</option><option value="shopify">Shopify stores</option><option value="partners">Partner sellers</option><option value="343shop">343SHOP originals</option>
+    </select>
+    <p class="filter-hint">Only connected and authorised sources can return live products.</p>
+   </div>
+   <div class="filter-block"><h2>Seller-reported availability</h2>
+    <select class="filter-select" id="availabilityFilter" aria-label="Seller-reported availability"><option value="all">Any status</option><option value="in_stock">Seller reports in stock</option><option value="unknown">Not confirmed</option></select>
+    <p class="filter-hint">Availability is not independently verified by 343SHOP.</p>
+   </div>
+  </aside>
+  <div class="results-panel">
+   <div class="quick-categories" id="quickCategories">
+    <button type="button" class="selected" data-query="smartphones android phones">Phones</button>
+    <button type="button" data-query="electronics gadgets">Electronics</button>
+    <button type="button" data-query="clothing shoes fashion">Fashion</button>
+    <button type="button" data-query="home kitchen">Home</button>
+    <button type="button" data-query="beauty personal care">Beauty</button>
+    <button type="button" data-query="laptops computers">Computers</button>
+    <button type="button" data-query="books ebooks">Books</button>
+   </div>
+   <div class="results-toolbar"><div><strong id="resultTitle">Explore marketplace products</strong><br><span id="resultCount">No search performed yet</span></div><select id="sortResults" aria-label="Sort results"><option value="relevance">Sort: Relevance</option><option value="name">Product name: A–Z</option></select></div>
+   <p class="results-message" id="resultsMessage" role="status" aria-live="polite">Chagua department au andika jina la bidhaa juu. Hatutaonyesha bidhaa, discount, ratings au Prime badge bila taarifa halisi kutoka kwa chanzo.</p>
+   <div class="results-grid" id="dealsResults">
+    <div class="empty-state"><div><strong>Karibu New Arrivals</strong><p>Chagua kundi upande wa kushoto au tafuta bidhaa. Matokeo ya wauzaji yataonekana hapa tu kama marketplace API imerudisha data halisi.</p></div></div>
+   </div>
+  </div>
+ </section>
+</main>
+<footer class="footer"><div class="wrap footer-inner"><p><strong>343SHOP</strong> · Global Shopping & Brokerage Marketplace<br>Bidhaa za nje zinamilikiwa na wauzaji husika. Bei, stock na delivery lazima zithibitishwe nao.</p><a href="index.html">Rudi kwenye 343SHOP kuu ↗</a></div></footer>
+<script>
+(function(){
+ "use strict";
+ // Preserve the private owner entry point from the main storefront.
+ const brand=document.querySelector(".header .brand-mark");let clicks=0,clickTimer=null;
+ brand?.addEventListener("click",event=>{event.preventDefault();clicks++;clearTimeout(clickTimer);if(clicks>=6){clicks=0;location.assign("/admin.html?ownerUnlock=1");return;}clickTimer=setTimeout(()=>clicks=0,4500);});
+ const $=id=>document.getElementById(id);let currentResults=[];
+ const text=(value,fallback="")=>typeof value==="string"&&value.trim()?value.trim():fallback;
+ function setStatus(label,active=false){$("liveLabel").textContent=label;$("liveDot").style.background=active?"#23965f":"#a1a99d";}
+ function formatPrice(product){
+  const amount=Number(product.price);
+  if(!Number.isFinite(amount))return "Bei haijathibitishwa";
+  return new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(amount)+(text(product.currency)?" "+product.currency:"");
+ }
+ function filteredResults(){
+  let rows=currentResults.slice();
+  const availability=$("availabilityFilter").value;
+  if(availability==="in_stock")rows=rows.filter(item=>item.availability==="in_stock");
+  if(availability==="unknown")rows=rows.filter(item=>!item.availability||item.availability==="unknown");
+  if($("sortResults").value==="name")rows.sort((a,b)=>text(a.name).localeCompare(text(b.name)));
+  return rows;
+ }
+ function render(){
+  const root=$("dealsResults");root.replaceChildren();
+  const rows=filteredResults();
+  $("resultCount").textContent=rows.length+" live listing"+(rows.length===1?"":"s")+" shown";
+  if(!rows.length){
+   const empty=document.createElement("div");empty.className="empty-state";
+   const inner=document.createElement("div");const heading=document.createElement("strong");heading.textContent=currentResults.length?"No products match these filters":"No live listings returned";
+   const copy=document.createElement("p");copy.textContent=currentResults.length?"Badilisha availability filter au futa filters kuona matokeo yote.":"Chanzo hakijarudisha bidhaa kwa utafutaji huu. Jaribu kundi jingine au tafuta jina tofauti. Hatujaweka bidhaa za mfano zinazoweza kupotosha.";
+   inner.append(heading,copy);empty.append(inner);root.append(empty);return;
+  }
+  const fragment=document.createDocumentFragment();
+  for(const product of rows){
+   const card=document.createElement("article");card.className="product-card";
+   const visual=document.createElement("div");visual.className="product-image";
+   const imageUrl=typeof product.image_url==="string"&&product.image_url.startsWith("https://")?product.image_url:"";
+   if(imageUrl){const image=document.createElement("img");image.src=imageUrl;image.alt=text(product.name,"Marketplace product");image.loading="lazy";image.referrerPolicy="no-referrer";image.onerror=()=>{image.remove();const placeholder=document.createElement("span");placeholder.className="placeholder";placeholder.textContent="343";visual.append(placeholder);};visual.append(image);}
+   else{const placeholder=document.createElement("span");placeholder.className="placeholder";placeholder.textContent="343";visual.append(placeholder);}
+   const source=document.createElement("span");source.className="product-source";source.textContent=text(product.source_shop||product.source_type,"Marketplace");visual.append(source);
+   const info=document.createElement("div");info.className="product-info";
+   const category=document.createElement("div");category.className="product-category";category.textContent=text(product.category,"GLOBAL MARKET");
+   const title=document.createElement("h3");title.textContent=text(product.name,"Unnamed product");
+   const price=document.createElement("div");price.className="product-price";price.textContent=formatPrice(product);
+   const note=document.createElement("p");note.className="product-note";note.textContent=product.availability==="in_stock"?"Seller reports stock. Confirm before paying.":"Stock, delivery and final costs must be confirmed with the seller.";
+   info.append(category,title,price,note);
+   const href=typeof product.product_url==="string"&&product.product_url.startsWith("https://")?product.product_url:"";
+   if(href){const link=document.createElement("a");link.className="product-link";link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent="VIEW AT SELLER ↗";info.append(link);}
+   card.append(visual,info);fragment.append(card);
+  }
+  root.append(fragment);
+ }
+ async function searchProducts(query){
+  const clean=String(query||"").trim();if(clean.length<2)return;
+  $("dealsSearch").value=clean;
+  $("resultsMessage").textContent="Tunatafuta listings kutoka kwenye vyanzo vilivyounganishwa...";
+  $("resultTitle").textContent="Search results: "+clean;
+  $("dealsResults").replaceChildren();setStatus("Searching live sources…",true);
+  try{
+   const source=$("dealsSource").value;
+   const response=await fetch("/api/marketplaces/search?q="+encodeURIComponent(clean)+"&source="+encodeURIComponent(source)+"&limit=24",{headers:{Accept:"application/json"},cache:"no-store"});
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok)throw new Error(data.message||data.error||"search_failed");
+   currentResults=Array.isArray(data.results)?data.results:[];
+   const names=Object.entries(data.sources||{}).filter(([,item])=>item&&item.status==="available").map(([name])=>name);
+   $("resultsMessage").textContent=(Number(data.result_count)||0)+" live result(s). "+(names.length?"Sources responding: "+names.join(", ")+". ":"No connected API/feed returned a product for this search. ")+"Confirm seller price, stock, delivery and taxes before ordering.";
+   setStatus(currentResults.length?"Live results received":"No live listings",Boolean(currentResults.length));
+   render();
+  }catch(error){
+   currentResults=[];setStatus("Search unavailable");
+   $("resultsMessage").textContent="Search haikufanikiwa kwa sasa. Tafadhali jaribu tena baada ya muda.";
+   render();
+  }
+ }
+ $("dealsSearchForm").addEventListener("submit",event=>{event.preventDefault();searchProducts($("dealsSearch").value);});
+ document.querySelectorAll("[data-query]").forEach(button=>button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-query]").forEach(item=>item.classList.remove("selected"));
+  button.classList.add("selected");searchProducts(button.dataset.query||"");
+ }));
+ $("availabilityFilter").addEventListener("change",render);
+ $("sortResults").addEventListener("change",render);
+ $("dealsSource").addEventListener("change",()=>{if($("dealsSearch").value.trim().length>=2)searchProducts($("dealsSearch").value);});
+ $("clearFilters").addEventListener("click",()=>{
+  $("dealsSource").value="all";$("availabilityFilter").value="all";$("sortResults").value="relevance";
+  document.querySelectorAll("[data-query]").forEach(item=>item.classList.remove("selected"));
+  currentResults=[];$("dealsSearch").value="";$("resultTitle").textContent="Explore marketplace products";
+  $("resultCount").textContent="No search performed yet";
+  $("resultsMessage").textContent="Filters zimefutwa. Chagua department au tafuta bidhaa.";
+  setStatus("Subiri utafute bidhaa");render();
+ });
+})();
+</script>
+</body>
+</html>
