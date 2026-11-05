@@ -779,20 +779,29 @@ test("Gemini API status and chat use server-side secret with the official Genera
   }
 });
 
-test("private owner APIs reject missing or invalid owner credentials and public first-party shelf waits for D1", async () => {
+test("private owner APIs require an owner password session and the public first-party shelf waits for D1", async () => {
   const missing = await get("/api/admin/status");
   assert.equal(missing.status, 503);
-  assert.equal((await missing.json()).error, "owner_secret_not_configured");
+  assert.equal((await missing.json()).error, "owner_password_not_configured");
 
+  const ownerPassword = "Owner-Password-For-343SHOP-Tests-2026!";
+  const env = { OWNER_PASSWORD: ownerPassword };
   const invalid = await worker.fetch(new Request(origin + "/api/admin/status", {
     headers: { authorization: "Bearer wrong-token" }
-  }), { MCP_WRITE_TOKEN: "real-owner-token" });
+  }), env);
   assert.equal(invalid.status, 401);
   assert.equal((await invalid.json()).error, "unauthorized");
 
+  const login = await worker.fetch(new Request(origin + "/api/admin/login", {
+    method: "POST",
+    headers: { Origin: origin, "Content-Type": "application/json", "CF-Connecting-IP": "198.51.100.77" },
+    body: JSON.stringify({ password: ownerPassword })
+  }), env);
+  assert.equal(login.status, 200);
+  const cookie = (login.headers.get("set-cookie") || "").split(";")[0];
   const missingDb = await worker.fetch(new Request(origin + "/api/admin/status", {
-    headers: { authorization: "Bearer real-owner-token" }
-  }), { MCP_WRITE_TOKEN: "real-owner-token" });
+    headers: { Cookie: cookie }
+  }), env);
   assert.equal(missingDb.status, 503);
   assert.equal((await missingDb.json()).error, "product_database_not_configured");
 
