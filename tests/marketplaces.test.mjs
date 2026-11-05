@@ -831,7 +831,10 @@ test("owner dashboard and dedicated Gift Cards page scripts parse and stay separ
   assert.match(gift, /data-filter="entertainment"/);
   assert.match(gift, /Amazon\.com Gift Card is for eligible purchases on Amazon\.com only/);
   assert.match(homepage, /href="gift-cards\.html"/);
-  assert.match(homepage, /href="\/admin\.html"/);
+  assert.match(homepage, /clicks>=6/);
+  assert.match(homepage, /ownerUnlock=1/);
+  assert.doesNotMatch(homepage, /href="\/admin\.html"/);
+  assert.match(admin, /params\.get\("ownerUnlock"\)==="1"/);
   assert.doesNotMatch(homepage, /id="giftcards"/);
 });
 

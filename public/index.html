@@ -1174,7 +1174,7 @@ body{background:#f2f4f1;color:var(--shop-ink)}
   </div>
 </section>
 
-<footer class="footer" id="contact"><div class="wrap"><div class="footer-top"><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true"><svg class="brand-symbol" viewBox="0 0 48 48" focusable="false"><path d="M9 17h30l-2.4 25H11.4L9 17Z" fill="#143628" stroke="#e4c17d" stroke-width="2.3" stroke-linejoin="round"/><path d="M16 17v-4a8 8 0 0 1 16 0v4" fill="none" stroke="#f0d79b" stroke-width="2.3" stroke-linecap="round"/><path d="M15 25h18" stroke="#e4c17d" stroke-width="1.5"/><text x="24" y="36" text-anchor="middle" fill="#fff0c7" font-family="Georgia,serif" font-size="10" font-weight="700">343</text></svg></span><span>343<span>SHOP</span></span></a><p data-sw="Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP." data-en="A brokerage marketplace for independent sellers, alongside original 343SHOP books and scripts.">Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP.</p></div><div><span class="section-kicker" style="color:#d8bd88">LET'S TALK</span><p data-sw="Una wazo au swali? Tuandikie WhatsApp." data-en="Have an idea or a question? Message us on WhatsApp.">Una wazo au swali? Tuandikie WhatsApp.</p><a class="footer-contact" id="footerWhatsApp" href="https://wa.me/255695981035" target="_blank" rel="noopener">+255 695 981 035 ↗</a></div></div><div class="footer-bottom"><span>© 2026 343SHOP. All rights reserved.</span><span><a href="/privacy.html">Privacy &amp; Cookies</a> &nbsp; · &nbsp; <a href="/admin.html" rel="nofollow">Owner Portal</a> &nbsp; · &nbsp; Make it personal. Make it memorable.</span></div></div></footer>
+<footer class="footer" id="contact"><div class="wrap"><div class="footer-top"><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true"><svg class="brand-symbol" viewBox="0 0 48 48" focusable="false"><path d="M9 17h30l-2.4 25H11.4L9 17Z" fill="#143628" stroke="#e4c17d" stroke-width="2.3" stroke-linejoin="round"/><path d="M16 17v-4a8 8 0 0 1 16 0v4" fill="none" stroke="#f0d79b" stroke-width="2.3" stroke-linecap="round"/><path d="M15 25h18" stroke="#e4c17d" stroke-width="1.5"/><text x="24" y="36" text-anchor="middle" fill="#fff0c7" font-family="Georgia,serif" font-size="10" font-weight="700">343</text></svg></span><span>343<span>SHOP</span></span></a><p data-sw="Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP." data-en="A brokerage marketplace for independent sellers, alongside original 343SHOP books and scripts.">Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP.</p></div><div><span class="section-kicker" style="color:#d8bd88">LET'S TALK</span><p data-sw="Una wazo au swali? Tuandikie WhatsApp." data-en="Have an idea or a question? Message us on WhatsApp.">Una wazo au swali? Tuandikie WhatsApp.</p><a class="footer-contact" id="footerWhatsApp" href="https://wa.me/255695981035" target="_blank" rel="noopener">+255 695 981 035 ↗</a></div></div><div class="footer-bottom"><span>© 2026 343SHOP. All rights reserved.</span><span><a href="/privacy.html">Privacy &amp; Cookies</a> &nbsp; · &nbsp; Make it personal. Make it memorable.</span></div></div></footer>
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart"><div class="drawer-head"><h2 data-sw="Kikapu chako" data-en="Your bag">Kikapu chako</h2><button class="close" id="closeCart" type="button">×</button></div><div class="cart-lines" id="cartLines"></div><div class="cart-total" id="cartTotal"></div></aside>
 
@@ -1207,6 +1207,24 @@ body{background:#f2f4f1;color:var(--shop-ink)}
 <div class="toast" id="toast" role="status"></div>
 <script>
 (function(){
+"use strict";
+// Hidden owner entry: six quick clicks (three double-clicks) on the 343 brand mark.
+document.querySelectorAll(".premium-header .brand-mark, .footer .brand-mark").forEach(mark=>{
+ let clicks=0, resetTimer=null;
+ mark.style.cursor="pointer";
+ mark.addEventListener("click",event=>{
+  event.preventDefault();
+  event.stopPropagation();
+  clicks++;
+  window.clearTimeout(resetTimer);
+  if(clicks>=6){
+   clicks=0;
+   window.location.assign("/admin.html?ownerUnlock=1");
+   return;
+  }
+  resetTimer=window.setTimeout(()=>{clicks=0},4500);
+ });
+});
 const WHATSAPP_NUMBER="255695981035";
 const CURRENCY="USD", MAX_QTY=10;
 const PRODUCTS=[
