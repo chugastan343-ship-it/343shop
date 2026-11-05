@@ -80,7 +80,7 @@
 .partner-form .form-grid{margin-top:0}
 .partner-form .field input{min-height:42px}
 .partner-form .btn{width:100%;margin-top:16px}
-.partner-note{font-size:9px;line-height:1.65;color:#858e84;text-align:center;margin:10px 0 0}
+.partner-note{font-size:9px;line-height:1.65;color:#858e84;text-align:center;margin:10px 0 0}.partner-honeypot{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
 .partner-form .field.full{grid-column:1/-1}
 @media(max-width:760px){.partner-join{padding:48px 0}.partner-shell{grid-template-columns:1fr;gap:24px}.partner-form{padding:18px}}
 
@@ -1156,8 +1156,9 @@ body{background:#f2f4f1;color:var(--shop-ink)}
     <form class="partner-form" id="partnerJoinForm">
       <div class="partner-form-head">
         <strong data-sw="Omba kujiunga kama duka mshirika" data-en="Apply to become a partner shop">Omba kujiunga kama duka mshirika</strong>
-        <small data-sw="Jaza taarifa za msingi. WhatsApp itafunguka na ujumbe wa maombi yako; bonyeza Send ili ututumie." data-en="Share your basic details. WhatsApp will open with your application; press Send to submit it.">Jaza taarifa za msingi. WhatsApp itafunguka na ujumbe wa maombi yako; bonyeza Send ili ututumie.</small>
+        <small data-sw="Taarifa zako zitahifadhiwa kwa siri ili mmiliki akague ombi. Baada ya hapo WhatsApp itafunguka kwa mawasiliano ya haraka." data-en="Your details will be stored privately for owner review. WhatsApp then opens for a direct follow-up.">Taarifa zako zitahifadhiwa kwa siri ili mmiliki akague ombi. Baada ya hapo WhatsApp itafunguka kwa mawasiliano ya haraka.</small>
       </div>
+      <div class="partner-honeypot" aria-hidden="true"><label>Leave this field empty<input name="website" tabindex="-1" autocomplete="off"></label></div>
       <div class="form-grid">
         <label class="field"><span data-sw="Jina la duka / biashara *" data-en="Shop / business name *">Jina la duka / biashara *</span><input name="shop_name" required minlength="2" maxlength="100" autocomplete="organization"></label>
         <label class="field"><span data-sw="Eneo / mji *" data-en="Location / city *">Eneo / mji *</span><input name="shop_location" required minlength="2" maxlength="100" autocomplete="address-level2"></label>
@@ -1166,8 +1167,9 @@ body{background:#f2f4f1;color:var(--shop-ink)}
         <label class="field full"><span data-sw="Aina za bidhaa / huduma mnazouza *" data-en="Products / services you offer *">Aina za bidhaa / huduma mnazouza *</span><input name="categories" required minlength="2" maxlength="220" placeholder="Mf. Simu, vifaa vya nyumbani, nguo, viatu..."></label>
         <label class="field full"><span data-sw="Link ya catalogue au website (hiari)" data-en="Catalogue or website link (optional)">Link ya catalogue au website (hiari)</span><input name="catalogue_url" type="url" maxlength="300" placeholder="https://..."></label>
       </div>
-      <button class="btn" type="submit"><span data-sw="Tuma maombi kwa WhatsApp" data-en="Send partner application on WhatsApp">Tuma maombi kwa WhatsApp</span> ↗</button>
-      <p class="partner-note" data-sw="Hii ni maombi tu, si uthibitisho wa kuunganishwa. Tutathibitisha taarifa, catalogue, stock na makubaliano kabla ya duka kuonekana kwenye marketplace." data-en="This is an application, not automatic approval. We verify the business, catalogue, stock and terms before a shop appears in the marketplace.">Hii ni maombi tu, si uthibitisho wa kuunganishwa. Tutathibitisha taarifa, catalogue, stock na makubaliano kabla ya duka kuonekana kwenye marketplace.</p>
+      <button class="btn" id="partnerSubmitBtn" type="submit"><span data-sw="Tuma maombi kwa 343SHOP" data-en="Submit application to 343SHOP">Tuma maombi kwa 343SHOP</span> ↗</button>
+      <p class="partner-note" id="partnerJoinStatus" role="status" aria-live="polite"></p>
+      <p class="partner-note" data-sw="Maombi si idhini ya moja kwa moja. Tutahakiki biashara, catalogue, stock na masharti kabla ya kuidhinisha duka. Taarifa zako hazitaonekana hadharani." data-en="Applications are not automatic approval. We verify the business, catalogue, stock and terms before approving a shop. Your details are not public.">Maombi si idhini ya moja kwa moja. Tutahakiki biashara, catalogue, stock na masharti kabla ya kuidhinisha duka. Taarifa zako hazitaonekana hadharani.</p>
     </form>
   </div>
 </section>
@@ -1349,27 +1351,51 @@ function renderCart(){
 }
 function applyLang(){$("langBtn").textContent=lang==="sw"?"EN":"SW";document.documentElement.lang=lang;document.querySelectorAll("[data-sw][data-en]").forEach(el=>{el.textContent=lang==="sw"?el.dataset.sw:el.dataset.en});document.querySelectorAll("[data-html-sw][data-html-en]").forEach(el=>{el.innerHTML=lang==="sw"?el.dataset.htmlSw:el.dataset.htmlEn});$("search").placeholder=tr("Tafuta bidhaa...","Search products...");$("heroSearchInput").placeholder=tr("Tafuta simu, laptop, viatu, perfume...","Search phones, laptops, shoes, perfume...");$("globalHeaderSearchInput").placeholder=tr("Tafuta bidhaa, viatu, simu, zawadi...","Search products, shoes, phones, gifts...");renderCats();renderProducts();if($("drawer").classList.contains("show"))renderCart()}
 
-$("partnerJoinForm").addEventListener("submit",e=>{
+$("partnerJoinForm").addEventListener("submit",async e=>{
   e.preventDefault();
   const form=e.currentTarget;
   if(!form.reportValidity())return;
   const data=Object.fromEntries(new FormData(form).entries());
   const catalogue=(data.catalogue_url||"").trim();
   if(catalogue){
-    try{const parsed=new URL(catalogue);if(parsed.protocol!=="https:"){toast(tr("Link ya catalogue lazima ianze na https://","Catalogue link must use https://"));return}}
+    try{const parsed=new URL(catalogue);if(parsed.protocol!=="https:"||parsed.username||parsed.password){toast(tr("Link ya catalogue lazima iwe HTTPS sahihi.","Catalogue link must be a valid HTTPS URL."));return}}
     catch{toast(tr("Weka link sahihi ya catalogue.","Enter a valid catalogue link."));return}
   }
-  const message=[
-    "Habari 343SHOP, naomba kujiunga kama duka mshirika kwenye marketplace ya udalali.",
-    "Jina la duka: "+data.shop_name.trim(),
-    "Eneo: "+data.shop_location.trim(),
-    "Mtu wa mawasiliano: "+data.contact_name.trim(),
-    "Simu: "+data.contact_phone.trim(),
-    "Bidhaa/huduma: "+data.categories.trim(),
-    catalogue?"Catalogue/website: "+catalogue:"",
-    "Naomba maelezo ya hatua za verification na makubaliano ya commission/udalali."
-  ].filter(Boolean).join("\n");
-  window.location.href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);
+  const button=$("partnerSubmitBtn"),status=$("partnerJoinStatus");
+  button.disabled=true;status.textContent=tr("Tunahifadhi ombi lako kwa usalama...","Securely saving your application...");
+  try{
+    const response=await fetch("/api/partner/applications",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Accept":"application/json"},
+      body:JSON.stringify({
+        shop_name:data.shop_name.trim(),location:data.shop_location.trim(),
+        contact_name:data.contact_name.trim(),phone:data.contact_phone.trim(),
+        categories:data.categories.trim(),catalogue_url:catalogue,website:data.website||""
+      })
+    });
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||"application_failed");
+    const reference=result.application_id?result.application_id.slice(0,8).toUpperCase():"RECEIVED";
+    const message=[
+      "Habari 343SHOP, nimewasilisha ombi la duka mshirika.",
+      "Application ref: "+reference,
+      "Jina la duka: "+data.shop_name.trim(),
+      "Eneo: "+data.shop_location.trim(),
+      "Mtu wa mawasiliano: "+data.contact_name.trim(),
+      "Simu: "+data.contact_phone.trim(),
+      "Bidhaa/huduma: "+data.categories.trim(),
+      catalogue?"Catalogue/website: "+catalogue:"",
+      "Naomba hatua za verification na masharti ya commission/udalali."
+    ].filter(Boolean).join("\n");
+    status.textContent=result.duplicate
+      ?tr("Ombi hili tayari lipo kwenye mfumo. WhatsApp inafunguka kwa follow-up.","This application is already on file. WhatsApp is opening for follow-up.")
+      :tr("Ombi limehifadhiwa kama PENDING. WhatsApp inafunguka kwa mawasiliano ya moja kwa moja.","Application saved as PENDING. WhatsApp is opening for direct follow-up.");
+    window.location.href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);
+    form.reset();
+  }catch(error){
+    status.textContent=tr("Ombi halijahifadhiwa. Hakikisha intaneti ipo kisha jaribu tena, au wasiliana nasi WhatsApp.","Application was not saved. Check your connection and try again, or contact us on WhatsApp.");
+    toast(error.message==="rate_limited"?tr("Jaribu tena baada ya dakika chache.","Please try again in a few minutes."):tr("Imeshindikana kuhifadhi ombi. Jaribu tena.","Could not save the application. Please try again."));
+  }finally{button.disabled=false}
 });
 
 
