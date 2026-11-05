@@ -104,6 +104,14 @@ The endpoint must return `application/json` with a `products` array. Each produc
 Do not place private access tokens, passwords or customer information in `PARTNER_SHOPS_JSON`. The first version supports public read-only catalogues only; partner inventory and prices cannot be changed by 343SHOP. Partner endpoints are fetched on demand and briefly cached.
 
 
+### Seller applications and owner review
+
+The public **For shops / Kwa maduka** form now submits partner applications to `POST /api/partner/applications`. The Worker validates the shop details, accepts HTTPS catalogue links only, rejects duplicate active applications for the same shop and phone number, and stores each application privately in Cloudflare D1 with status `pending`. A basic per-IP request limit and a hidden honeypot reduce low-effort abuse; configure Cloudflare WAF/Rate Limiting and Turnstile for stronger production protection.
+
+The owner can review applications at `/admin.html` after authenticating with the existing `MCP_WRITE_TOKEN`. The **Maombi ya wauzaji / Seller Network** section supports `pending`, `contacted`, `approved` and `rejected` review statuses. Applicant contact details are not exposed through a public listing endpoint.
+
+**Approval does not automatically make a shop live.** Verify the business, permission to share its catalogue, stock/price update process, fulfilment and commission terms. Then test its authorised public HTTPS catalogue and add it to `PARTNER_SHOPS_JSON`. The current release adds application intake and owner review; independent seller logins, seller self-service product uploads and seller payouts are not enabled yet.
+
 ### Inviting new partner shops
 
 The public storefront now has a **For shops / Kwa maduka** section with a short partner application form. A shop shares its name, location, contact person, phone, product categories and (optionally) its public catalogue URL. The form opens a pre-filled WhatsApp message to 343SHOP. The shop representative must press Send; the application is not submitted automatically.
