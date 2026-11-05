@@ -66,7 +66,7 @@ The Cloudflare Worker needs a D1 database binding named exactly `DB`, a separate
 
 1. Create a D1 database named `343shop-products` only if it does not already exist.
 2. Bind it to **Workers & Pages → 343shop → Settings → Bindings** using the variable name `DB`.
-3. Add `OWNER_PASSWORD` under **Settings → Variables and Secrets** as a Secret. Use a unique password/passphrase of at least 16 characters. This is only for the Owner Dashboard login; the Worker issues an HttpOnly, Secure, SameSite=Strict session cookie that expires after 8 hours. The password is not stored in browser local storage.
+3. Add `OWNER_PASSWORD` under **Settings → Variables and Secrets** as a Secret. Use a unique password/passphrase of at least 8 characters. This is only for the Owner Dashboard login; the Worker issues an HttpOnly, Secure, SameSite=Strict session cookie that expires after 8 hours. The password is not stored in browser local storage.
 4. Add `MCP_WRITE_TOKEN` as a different Secret. Generate a long random token for AI/MCP write tools. Never reuse `OWNER_PASSWORD`, commit the token to GitHub, put it in website JavaScript, or paste it into a chat.
 5. Connect `https://343shop.chugastan343.workers.dev/mcp` in an MCP client that supports a fixed bearer Authorization header, then configure `Authorization: Bearer YOUR_MCP_WRITE_TOKEN` in that client's private connection settings. If `MCP_ACCESS_TOKEN` is also configured, it remains the general MCP access token; `MCP_WRITE_TOKEN` authorizes owner write tools.
 

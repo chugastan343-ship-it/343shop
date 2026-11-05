@@ -1516,7 +1516,7 @@ async function handleOwnerLogin(request, env, url) {
   if (typeof ownerPassword !== "string" || !ownerPassword) {
     return json({ error: "owner_password_not_configured" }, 503);
   }
-  if (ownerPassword.length < 16) return json({ error: "owner_password_too_short" }, 503);
+  if (ownerPassword.length < 8) return json({ error: "owner_password_too_short" }, 503);
   if (typeof body?.password !== "string" || body.password.length > 256 || !safeEqual(body.password, ownerPassword)) {
     return json({ error: "invalid_owner_password" }, 401);
   }
@@ -1540,7 +1540,7 @@ async function ownerDashboardAuthorized(request, env, url) {
   const origin = request.headers.get("Origin");
   if (origin && origin !== url.origin) return "origin_not_allowed";
   if (typeof env?.OWNER_PASSWORD !== "string" || !env.OWNER_PASSWORD) return "owner_password_not_configured";
-  if (env.OWNER_PASSWORD.length < 16) return "owner_password_too_short";
+  if (env.OWNER_PASSWORD.length < 8) return "owner_password_too_short";
   return await ownerSessionValid(request, env.OWNER_PASSWORD) ? null : "unauthorized";
 }
 
