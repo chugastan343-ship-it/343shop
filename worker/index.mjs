@@ -1539,13 +1539,9 @@ function handleOwnerLogout(request, url) {
 async function ownerDashboardAuthorized(request, env, url) {
   const origin = request.headers.get("Origin");
   if (origin && origin !== url.origin) return "origin_not_allowed";
-  const authorization = request.headers.get("Authorization") || "";
-  if (typeof env?.MCP_WRITE_TOKEN === "string" && env.MCP_WRITE_TOKEN.trim() &&
-      safeEqual(authorization, "Bearer " + env.MCP_WRITE_TOKEN)) return null;
-  if (typeof env?.OWNER_PASSWORD === "string" && env.OWNER_PASSWORD.length >= 16 &&
-      await ownerSessionValid(request, env.OWNER_PASSWORD)) return null;
-  if (!env?.OWNER_PASSWORD && !env?.MCP_WRITE_TOKEN) return "owner_secret_not_configured";
-  return "unauthorized";
+  if (typeof env?.OWNER_PASSWORD !== "string" || !env.OWNER_PASSWORD) return "owner_password_not_configured";
+  if (env.OWNER_PASSWORD.length < 16) return "owner_password_too_short";
+  return await ownerSessionValid(request, env.OWNER_PASSWORD) ? null : "unauthorized";
 }
 
 async function ensureOwnerDashboardSchema(db) {
@@ -1714,7 +1710,7 @@ async function handleOwnerDashboard(request, env, url) {
   if (path === "/api/admin/login") return handleOwnerLogin(request, env, url);
   if (path === "/api/admin/logout") return handleOwnerLogout(request, url);
   const authError = await ownerDashboardAuthorized(request, env, url);
-  if (authError) return json({ error: authError }, authError === "origin_not_allowed" ? 403 : authError === "owner_secret_not_configured" ? 503 : 401);
+  if (authError) return json({ error: authError }, authError === "origin_not_allowed" ? 403 : authError.startsWith("owner_password_") ? 503 : 401);
   if (!env?.DB || typeof env.DB.prepare !== "function") return json({ error: "product_database_not_configured" }, 503);
   const db = env.DB;
   try {
