@@ -47,13 +47,14 @@ function buildStoreSystemPrompt(env) {
   ].join("\n");
 }
 
-function json(data, status = 200) {
+function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
-      ...SECURITY_HEADERS
+      ...SECURITY_HEADERS,
+      ...extraHeaders
     }
   });
 }
@@ -1408,13 +1409,143 @@ async function publishStoreProduct(args, env) {
    The wallet records verified receipts; it is not a bank account or stored-value wallet. */
 const OWNER_DASHBOARD_SCHEMA_READY = new WeakMap();
 
-function ownerDashboardAuthorized(request, env, url) {
+const OWNER_SESSION_COOKIE = "343shop_owner_session";
+const OWNER_SESSION_TTL_SECONDS = 8 * 60 * 60;
+const OWNER_LOGIN_RATE_LIMIT = new Map();
+
+function ownerLoginRateLimited(ip) {
+  const now = Date.now();
+  const current = OWNER_LOGIN_RATE_LIMIT.get(ip);
+  if (current && current.resetAt > now) {
+    if (current.count >= 5) return true;
+    current.count += 1;
+  } else {
+    OWNER_LOGIN_RATE_LIMIT.set(ip, { count: 1, resetAt: now + 15 * 60_000 });
+  }
+  if (OWNER_LOGIN_RATE_LIMIT.size > 2000) {
+    for (const [key, value] of OWNER_LOGIN_RATE_LIMIT) {
+      if (value.resetAt <= now) OWNER_LOGIN_RATE_LIMIT.delete(key);
+    }
+  }
+  return false;
+}
+
+function encodeBase64Url(bytes) {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/=/g, "").replace(/\\+/g, "-").replace(/\\//g, "_");
+}
+
+function decodeBase64Url(value) {
+  if (typeof value !== "string" || !/^[A-Za-z0-9_-]+$/.test(value)) return null;
+  const base64 = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = base64 + "=".repeat((4 - base64.length % 4) % 4);
+  try {
+    const binary = atob(padded);
+    return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+  } catch {
+    return null;
+  }
+}
+
+function readCookie(request, name) {
+  const cookieHeader = request.headers.get("Cookie") || "";
+  for (const item of cookieHeader.split(";")) {
+    const separator = item.indexOf("=");
+    if (separator < 0) continue;
+    if (item.slice(0, separator).trim() === name) return item.slice(separator + 1).trim();
+  }
+  return "";
+}
+
+async function ownerSessionKey(ownerPassword) {
+  return crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(ownerPassword),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign", "verify"]
+  );
+}
+
+async function createOwnerSession(ownerPassword) {
+  const issuedAt = Math.floor(Date.now() / 1000);
+  const expiresAt = issuedAt + OWNER_SESSION_TTL_SECONDS;
+  const payload = encodeBase64Url(new TextEncoder().encode(issuedAt + "." + expiresAt + "." + crypto.randomUUID()));
+  const signature = await crypto.subtle.sign("HMAC", await ownerSessionKey(ownerPassword), new TextEncoder().encode(payload));
+  return payload + "." + encodeBase64Url(new Uint8Array(signature));
+}
+
+async function ownerSessionValid(request, ownerPassword) {
+  const token = readCookie(request, OWNER_SESSION_COOKIE);
+  const parts = token.split(".");
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return false;
+  const payloadBytes = decodeBase64Url(parts[0]);
+  const signatureBytes = decodeBase64Url(parts[1]);
+  if (!payloadBytes || !signatureBytes) return false;
+  try {
+    const key = await ownerSessionKey(ownerPassword);
+    const validSignature = await crypto.subtle.verify("HMAC", key, signatureBytes, new TextEncoder().encode(parts[0]));
+    if (!validSignature) return false;
+    const payload = new TextDecoder().decode(payloadBytes).split(".");
+    if (payload.length !== 3 || !payload[2]) return false;
+    const issuedAt = Number(payload[0]), expiresAt = Number(payload[1]);
+    const now = Math.floor(Date.now() / 1000);
+    return Number.isSafeInteger(issuedAt) && Number.isSafeInteger(expiresAt) &&
+      issuedAt <= now + 60 && expiresAt > now &&
+      expiresAt - issuedAt === OWNER_SESSION_TTL_SECONDS;
+  } catch {
+    return false;
+  }
+}
+
+async function handleOwnerLogin(request, env, url) {
+  if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+  if (request.headers.get("Origin") !== url.origin) return json({ error: "origin_not_allowed" }, 403);
+  if (!(request.headers.get("Content-Type") || "").toLowerCase().includes("application/json")) {
+    return json({ error: "json_required" }, 415);
+  }
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  if (ownerLoginRateLimited(ip)) return json({ error: "rate_limited" }, 429);
+  let raw;
+  try { raw = await request.text(); } catch { return json({ error: "invalid_request" }, 400); }
+  if (raw.length > 2048) return json({ error: "request_too_large" }, 413);
+  let body;
+  try { body = JSON.parse(raw); } catch { return json({ error: "invalid_json" }, 400); }
+  const ownerPassword = env?.OWNER_PASSWORD;
+  if (typeof ownerPassword !== "string" || !ownerPassword) {
+    return json({ error: "owner_password_not_configured" }, 503);
+  }
+  if (ownerPassword.length < 16) return json({ error: "owner_password_too_short" }, 503);
+  if (typeof body?.password !== "string" || body.password.length > 256 || !safeEqual(body.password, ownerPassword)) {
+    return json({ error: "invalid_owner_password" }, 401);
+  }
+  OWNER_LOGIN_RATE_LIMIT.delete(ip);
+  const session = await createOwnerSession(ownerPassword);
+  return json({ ok: true, expires_in: OWNER_SESSION_TTL_SECONDS }, 200, {
+    "Set-Cookie": OWNER_SESSION_COOKIE + "=" + session + "; Path=/api/admin; Max-Age=" +
+      OWNER_SESSION_TTL_SECONDS + "; HttpOnly; Secure; SameSite=Strict"
+  });
+}
+
+function handleOwnerLogout(request, url) {
+  if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+  if (request.headers.get("Origin") !== url.origin) return json({ error: "origin_not_allowed" }, 403);
+  return json({ ok: true }, 200, {
+    "Set-Cookie": OWNER_SESSION_COOKIE + "=; Path=/api/admin; Max-Age=0; HttpOnly; Secure; SameSite=Strict"
+  });
+}
+
+async function ownerDashboardAuthorized(request, env, url) {
   const origin = request.headers.get("Origin");
   if (origin && origin !== url.origin) return "origin_not_allowed";
-  const token = env?.MCP_WRITE_TOKEN;
-  if (typeof token !== "string" || !token.trim()) return "owner_secret_not_configured";
   const authorization = request.headers.get("Authorization") || "";
-  return safeEqual(authorization, "Bearer " + token) ? null : "unauthorized";
+  if (typeof env?.MCP_WRITE_TOKEN === "string" && env.MCP_WRITE_TOKEN.trim() &&
+      safeEqual(authorization, "Bearer " + env.MCP_WRITE_TOKEN)) return null;
+  if (typeof env?.OWNER_PASSWORD === "string" && env.OWNER_PASSWORD.length >= 16 &&
+      await ownerSessionValid(request, env.OWNER_PASSWORD)) return null;
+  if (!env?.OWNER_PASSWORD && !env?.MCP_WRITE_TOKEN) return "owner_secret_not_configured";
+  return "unauthorized";
 }
 
 async function ensureOwnerDashboardSchema(db) {
@@ -1579,7 +1710,10 @@ function validateOwnerProduct(body) {
 }
 
 async function handleOwnerDashboard(request, env, url) {
-  const authError = ownerDashboardAuthorized(request, env, url);
+  const path = url.pathname;
+  if (path === "/api/admin/login") return handleOwnerLogin(request, env, url);
+  if (path === "/api/admin/logout") return handleOwnerLogout(request, url);
+  const authError = await ownerDashboardAuthorized(request, env, url);
   if (authError) return json({ error: authError }, authError === "origin_not_allowed" ? 403 : authError === "owner_secret_not_configured" ? 503 : 401);
   if (!env?.DB || typeof env.DB.prepare !== "function") return json({ error: "product_database_not_configured" }, 503);
   const db = env.DB;
@@ -1587,7 +1721,6 @@ async function handleOwnerDashboard(request, env, url) {
     await ensureProductSchema(db);
     await ensureOwnerDashboardSchema(db);
     await ensurePartnerApplicationsSchema(db);
-    const path = url.pathname;
     if (path === "/api/admin/status") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
       return json({
