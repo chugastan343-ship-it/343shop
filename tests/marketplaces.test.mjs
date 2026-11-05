@@ -287,6 +287,24 @@ test("mobile navigation exposes all main sections and supports accessible open/c
   assert.match(html, /\.mobile-menu\.is-open\{display:grid/);
 });
 
+test("New Arrivals page follows the marketplace filter layout and uses live products only", async () => {
+  const html = await readFile(new URL("../public/deals.html", import.meta.url), "utf8");
+  const start = html.lastIndexOf("<script>");
+  const bodyStart = html.indexOf(">", start) + 1;
+  const end = html.indexOf("</script>", bodyStart);
+  assert.ok(start >= 0 && end > bodyStart, "New Arrivals inline script should exist");
+  assert.doesNotThrow(() => new Script(html.slice(bodyStart, end), { filename: "public/deals.html.inline.js" }));
+  for (const id of ["dealsSearchForm", "departmentList", "dealsSource", "availabilityFilter", "sortResults", "dealsResults"]) {
+    assert.match(html, new RegExp('id="' + id + '"'));
+  }
+  assert.match(html, /fetch\("\/api\/marketplaces\/search/);
+  assert.match(html, /Only connected and authorised sources can return live products/);
+  assert.match(html, /Hatujaweka bidhaa za mfano/);
+  assert.doesNotMatch(html, /Prime Exclusive|Limited time deal|Customer review stars/);
+  const home = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  assert.equal((home.match(/href="deals\.html"/g) || []).length, 2);
+});
+
 test("343SHOP-owned storefront catalogue contains only its books and never invents delivery charges", async () => {
   const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const start = html.indexOf("const PRODUCTS=[");
