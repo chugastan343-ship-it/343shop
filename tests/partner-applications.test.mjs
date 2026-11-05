@@ -14,7 +14,7 @@ class FakeD1 {
       bind(...args) { values = args; return this; },
       async run() {
         if (sql.startsWith("INSERT INTO partner_applications")) {
-          const [id, shop_name, location, contact_name, phone, phone_normalized, categories, catalogue_url, , owner_note, created_at, updated_at] = values;
+          const [id, shop_name, location, contact_name, phone, phone_normalized, categories, catalogue_url, created_at, updated_at] = values;
           db.applications.push({
             id, shop_name, location, contact_name, phone, phone_normalized, categories, catalogue_url,
             status: "pending", owner_note: owner_note || "", created_at, updated_at, reviewed_at: null
