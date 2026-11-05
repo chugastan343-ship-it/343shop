@@ -160,6 +160,20 @@ async function login(){
  finally{$("loginBtn").disabled=false}
 }
 async function restoreSession(){
+ const params=new URLSearchParams(window.location.search);
+ if(params.get("ownerUnlock")==="1"){
+  try{
+   await fetch("/api/admin/logout",{method:"POST",credentials:"same-origin",headers:{"Accept":"application/json"}});
+  }catch{
+   $("loginError").textContent="Ingia tena kwa password yako binafsi.";
+  }finally{
+   window.history.replaceState({},document.title,window.location.pathname+window.location.hash);
+   status={};
+   $("loginCover").classList.remove("hidden");
+   $("ownerPassword").focus({preventScroll:true});
+  }
+  return;
+ }
  try{
   status=await api("/api/admin/status");
   $("loginCover").classList.add("hidden");
