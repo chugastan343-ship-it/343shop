@@ -746,6 +746,52 @@ body{background:#f2f4f1;color:var(--shop-ink)}
 @media(max-width:560px){.style-samples-head{align-items:flex-start;flex-direction:column}.style-samples-grid{gap:9px}.style-sample-copy{left:10px;bottom:11px;right:9px}.style-sample-copy strong{font-size:15px}.style-sample-copy em{font-size:7px}}
 
 .style-samples-credits{margin-top:11px;color:#8b948a;font-size:8px;line-height:1.8}.style-samples-credits a{color:#45624d;text-decoration:underline;text-underline-offset:2px}
+
+/* Full product detail experience — browse first, choose, then continue. */
+.visual{width:calc(100% - 18px);padding:0;border:0;cursor:pointer;color:inherit;text-align:left}
+.product-detail-trigger,.featured-detail-button,.market-detail-button,.ai-detail-button{display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;color:#8b7046;padding:0;font-size:9px;font-weight:900;cursor:pointer;text-align:left}
+.product-detail-trigger{margin-top:8px;padding:8px 0;border-bottom:1px solid #d9c8a7}
+.product-detail-trigger:hover,.featured-detail-button:hover,.market-detail-button:hover,.ai-detail-button:hover{color:#174b38}
+.featured-detail-button{margin-top:10px}
+.market-detail-button,.ai-detail-button{margin:12px 12px 0 0;padding:10px 12px;border:1px solid #dfe6dc;border-radius:9px;background:#f8faf6}
+.product-detail-modal{position:fixed;inset:0;z-index:85;display:none;overflow-y:auto;padding:clamp(10px,3vw,34px);background:rgba(9,24,17,.68);backdrop-filter:blur(8px)}
+.product-detail-modal.open{display:block}
+.product-detail-card{width:min(1120px,100%);min-height:min(650px,calc(100dvh - 20px));margin:0 auto;border:1px solid rgba(255,255,255,.75);border-radius:24px;background:var(--paper);box-shadow:0 35px 100px rgba(0,0,0,.25);overflow:hidden}
+.product-detail-header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 22px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.78)}
+.product-detail-grid{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:clamp(22px,4vw,48px);padding:clamp(18px,3vw,34px)}
+.product-detail-gallery{min-width:0}
+.product-detail-image{height:clamp(290px,43vw,490px);display:grid;place-items:center;overflow:hidden;border:1px solid #e8ece4;border-radius:18px;background:radial-gradient(circle at 50% 20%,#fff 0%,#f1f4ed 72%,#e4eae1 100%)}
+.product-detail-image img{width:100%;height:100%;object-fit:contain;padding:clamp(12px,3vw,32px)}
+.product-detail-placeholder{font:700 clamp(64px,10vw,120px) Georgia,serif;letter-spacing:-.1em;color:#a4b2a5}
+.product-detail-thumbs{display:flex;gap:9px;overflow:auto;padding:12px 0 2px}
+.product-detail-thumb{flex:0 0 64px;height:64px;padding:4px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
+.product-detail-thumb.active{border:2px solid var(--gold)}
+.product-detail-thumb img{width:100%;height:100%;object-fit:contain}
+.product-detail-info{min-width:0;padding:3px 0}
+.product-detail-source{font-size:9px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:#9a8058}
+.product-detail-info h2{font:500 clamp(28px,4vw,43px)/1.08 Georgia,serif;letter-spacing:-.045em;color:var(--forest);margin:12px 0}
+.product-detail-price{font:700 clamp(22px,3vw,30px) Georgia,serif;color:#174b38;margin:13px 0}
+.product-detail-description{font-size:12px;line-height:1.85;color:#69756c;margin:12px 0 18px}
+.product-detail-status{padding:11px 13px;border:1px solid #e2e9df;border-radius:11px;background:#f4f7f1;color:#5c705f;font-size:10px;line-height:1.6}
+.product-detail-meta{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0}
+.product-detail-meta span{padding:7px 9px;border:1px solid #e6e9e0;border-radius:30px;background:#fff;color:#6d796f;font-size:9px}
+.product-detail-options{margin:19px 0 15px;padding:15px;border:1px solid #e5e9e1;border-radius:13px;background:#fbfcf8}
+.product-detail-options strong{display:block;color:var(--forest);font-size:10px;margin-bottom:7px}
+.product-detail-options p{font-size:10px;line-height:1.65;color:#79847a;margin:0}
+.product-detail-options label{display:flex;flex-direction:column;gap:6px;margin-top:10px;color:#5d6a60;font-size:9px;font-weight:800}
+.product-detail-options select,.product-detail-options input{width:100%;padding:11px;border:1px solid #dfe5dc;border-radius:9px;background:white;color:#26372d;font-size:11px}
+.product-detail-quantity{display:flex;align-items:center;gap:14px;margin:18px 0}
+.product-detail-quantity>span{font-size:10px;font-weight:800;color:#69756c}
+.product-detail-quantity button{width:34px;height:34px;border:1px solid #dfe5dc;border-radius:50%;background:#fff;color:var(--forest);font-size:18px;cursor:pointer}
+.product-detail-quantity button:disabled{opacity:.4;cursor:not-allowed}
+.product-detail-quantity output{min-width:22px;text-align:center;font-size:13px;font-weight:900;color:var(--forest)}
+.product-detail-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.product-detail-actions .btn{min-height:46px}
+.product-detail-actions .btn-secondary{background:#eee9dd;color:#435648}
+.product-detail-note{font-size:9px;line-height:1.7;color:#8a9389;margin-top:15px}
+@media(max-width:760px){.product-detail-modal{padding:8px}.product-detail-card{border-radius:17px;min-height:calc(100dvh - 16px)}.product-detail-grid{grid-template-columns:1fr;gap:18px;padding:14px}.product-detail-image{height:min(68vw,340px)}.product-detail-info h2{font-size:30px}.product-detail-header{padding:14px 16px}}
+@media(prefers-reduced-motion:reduce){.product-detail-modal *{scroll-behavior:auto!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -986,16 +1032,16 @@ body{background:#f2f4f1;color:var(--shop-ink)}
       </div>
       <div class="featured-local-grid">
         <article class="featured-local-product">
-          <a class="featured-local-visual" href="https://empire.co.tz/products/jbl-go-4-portable-waterproof-speaker" target="_blank" rel="noopener noreferrer" aria-label="Open JBL GO 4 listing at Empire Online Shopping"><img src="https://empire.co.tz/cdn/shop/files/jblgo4.jpg?v=1726294565&amp;width=900" alt="JBL GO 4 portable speaker product photo" loading="lazy" referrerpolicy="no-referrer"><span class="featured-product-tag">AUDIO · JBL</span></a>
-          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>JBL GO 4 Portable Waterproof Speaker</h4><p data-sw="Speaker ndogo ya Bluetooth, IP67 water na dust resistant." data-en="Compact Bluetooth speaker with IP67 water and dust resistance.">Speaker ndogo ya Bluetooth, IP67 water na dust resistant.</p><div class="featured-price">TZS 164,000</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><a class="featured-buy" href="https://empire.co.tz/products/jbl-go-4-portable-waterproof-speaker" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
+          <a class="featured-local-visual" href="https://empire.co.tz/products/jbl-go-4-portable-waterproof-speaker" target="_blank" rel="noopener noreferrer" aria-label="Open JBL GO 4 listing at Empire Online Shopping" data-featured-detail="jbl-go-4"><img src="https://empire.co.tz/cdn/shop/files/jblgo4.jpg?v=1726294565&amp;width=900" alt="JBL GO 4 portable speaker product photo" loading="lazy" referrerpolicy="no-referrer"><span class="featured-product-tag">AUDIO · JBL</span></a>
+          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>JBL GO 4 Portable Waterproof Speaker</h4><p data-sw="Speaker ndogo ya Bluetooth, IP67 water na dust resistant." data-en="Compact Bluetooth speaker with IP67 water and dust resistance.">Speaker ndogo ya Bluetooth, IP67 water na dust resistant.</p><div class="featured-price">TZS 164,000</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><button type="button" class="featured-detail-button" data-featured-detail="jbl-go-4">Taarifa za bidhaa ↗</button><a class="featured-buy" href="https://empire.co.tz/products/jbl-go-4-portable-waterproof-speaker" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
         </article>
         <article class="featured-local-product">
-          <a class="featured-local-visual featured-local-placeholder" href="https://empire.co.tz/products/jbl-tune-310c-wired-usb-c-in-ear-headphones" target="_blank" rel="noopener noreferrer" aria-label="Open JBL Tune 310C listing at Empire Online Shopping"><span class="featured-placeholder-brand">JBL</span><span class="featured-placeholder-model">TUNE 310C · USB-C</span><span class="featured-product-tag">AUDIO · WIRED</span></a>
-          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>JBL TUNE 310C USB-C Headphones</h4><p data-sw="Earphones za USB-C zenye mic, remote na Hi-Res Audio." data-en="USB-C earphones with microphone, remote and Hi-Res Audio.">Earphones za USB-C zenye mic, remote na Hi-Res Audio.</p><div class="featured-price">TZS 92,500</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><a class="featured-buy" href="https://empire.co.tz/products/jbl-tune-310c-wired-usb-c-in-ear-headphones" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
+          <a class="featured-local-visual featured-local-placeholder" href="https://empire.co.tz/products/jbl-tune-310c-wired-usb-c-in-ear-headphones" target="_blank" rel="noopener noreferrer" aria-label="Open JBL Tune 310C listing at Empire Online Shopping" data-featured-detail="jbl-tune-310c"><span class="featured-placeholder-brand">JBL</span><span class="featured-placeholder-model">TUNE 310C · USB-C</span><span class="featured-product-tag">AUDIO · WIRED</span></a>
+          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>JBL TUNE 310C USB-C Headphones</h4><p data-sw="Earphones za USB-C zenye mic, remote na Hi-Res Audio." data-en="USB-C earphones with microphone, remote and Hi-Res Audio.">Earphones za USB-C zenye mic, remote na Hi-Res Audio.</p><div class="featured-price">TZS 92,500</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><button type="button" class="featured-detail-button" data-featured-detail="jbl-tune-310c">Taarifa za bidhaa ↗</button><a class="featured-buy" href="https://empire.co.tz/products/jbl-tune-310c-wired-usb-c-in-ear-headphones" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
         </article>
         <article class="featured-local-product">
-          <a class="featured-local-visual" href="https://empire.co.tz/products/sandisk-128gb-ultra-micro-uhs-i-sdxc-card" target="_blank" rel="noopener noreferrer" aria-label="Open SanDisk 128GB listing at Empire Online Shopping"><img src="https://empire.co.tz/cdn/shop/products/sandiskultramicrosd128gb.png?v=1687943246&amp;width=900" alt="SanDisk 128GB Ultra microSD card product photo" loading="lazy" referrerpolicy="no-referrer"><span class="featured-product-tag">STORAGE · 128GB</span></a>
-          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>SanDisk 128GB Ultra microSDXC</h4><p data-sw="Memory card kwa smartphones, tablets na camera zinazotumia microSDXC." data-en="microSDXC memory card for compatible phones, tablets and cameras.">Memory card kwa smartphones, tablets na camera zinazotumia microSDXC.</p><div class="featured-price">TZS 109,600</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><a class="featured-buy" href="https://empire.co.tz/products/sandisk-128gb-ultra-micro-uhs-i-sdxc-card" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
+          <a class="featured-local-visual" href="https://empire.co.tz/products/sandisk-128gb-ultra-micro-uhs-i-sdxc-card" target="_blank" rel="noopener noreferrer" aria-label="Open SanDisk 128GB listing at Empire Online Shopping" data-featured-detail="sandisk-128gb"><img src="https://empire.co.tz/cdn/shop/products/sandiskultramicrosd128gb.png?v=1687943246&amp;width=900" alt="SanDisk 128GB Ultra microSD card product photo" loading="lazy" referrerpolicy="no-referrer"><span class="featured-product-tag">STORAGE · 128GB</span></a>
+          <div class="featured-local-info"><span class="featured-source">EMPIRE ONLINE SHOPPING</span><h4>SanDisk 128GB Ultra microSDXC</h4><p data-sw="Memory card kwa smartphones, tablets na camera zinazotumia microSDXC." data-en="microSDXC memory card for compatible phones, tablets and cameras.">Memory card kwa smartphones, tablets na camera zinazotumia microSDXC.</p><div class="featured-price">TZS 109,600</div><small data-sw="Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji." data-en="Seller-listed price · reconfirm availability.">Bei iliyoorodheshwa na muuzaji · thibitisha upatikanaji.</small><button type="button" class="featured-detail-button" data-featured-detail="sandisk-128gb">Taarifa za bidhaa ↗</button><a class="featured-buy" href="https://empire.co.tz/products/sandisk-128gb-ultra-micro-uhs-i-sdxc-card" target="_blank" rel="noopener noreferrer" data-sw="Angalia kwa muuzaji ↗" data-en="View at seller ↗">Angalia kwa muuzaji ↗</a></div>
         </article>
       </div>
       <p class="featured-local-disclaimer" data-sw="Bei zinaweza kubadilika. Thibitisha bei, stock, delivery na warranty kwa muuzaji kabla ya kulipa. Hizi si bidhaa za stock ya 343SHOP." data-en="Prices may change. Confirm price, stock, delivery and warranty with the seller before paying. These are not 343SHOP-owned products.">Bei zinaweza kubadilika. Thibitisha bei, stock, delivery na warranty kwa muuzaji kabla ya kulipa. Hizi si bidhaa za stock ya 343SHOP.</p>
@@ -1127,6 +1173,24 @@ body{background:#f2f4f1;color:var(--shop-ink)}
 <footer class="footer" id="contact"><div class="wrap"><div class="footer-top"><div><a class="brand" href="#"><span class="brand-mark" aria-hidden="true"><svg class="brand-symbol" viewBox="0 0 48 48" focusable="false"><path d="M9 17h30l-2.4 25H11.4L9 17Z" fill="#143628" stroke="#e4c17d" stroke-width="2.3" stroke-linejoin="round"/><path d="M16 17v-4a8 8 0 0 1 16 0v4" fill="none" stroke="#f0d79b" stroke-width="2.3" stroke-linecap="round"/><path d="M15 25h18" stroke="#e4c17d" stroke-width="1.5"/><text x="24" y="36" text-anchor="middle" fill="#fff0c7" font-family="Georgia,serif" font-size="10" font-weight="700">343</text></svg></span><span>343<span>SHOP</span></span></a><p data-sw="Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP." data-en="A brokerage marketplace for independent sellers, alongside original 343SHOP books and scripts.">Marketplace ya udalali wa bidhaa za wauzaji huru, pamoja na vitabu na scripts za asili za 343SHOP.</p></div><div><span class="section-kicker" style="color:#d8bd88">LET'S TALK</span><p data-sw="Una wazo au swali? Tuandikie WhatsApp." data-en="Have an idea or a question? Message us on WhatsApp.">Una wazo au swali? Tuandikie WhatsApp.</p><a class="footer-contact" id="footerWhatsApp" href="https://wa.me/255695981035" target="_blank" rel="noopener">+255 695 981 035 ↗</a></div></div><div class="footer-bottom"><span>© 2026 343SHOP. All rights reserved.</span><span><a href="/privacy.html">Privacy &amp; Cookies</a> &nbsp; · &nbsp; <a href="/admin.html" rel="nofollow">Owner Portal</a> &nbsp; · &nbsp; Make it personal. Make it memorable.</span></div></div></footer>
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer" aria-label="Shopping cart"><div class="drawer-head"><h2 data-sw="Kikapu chako" data-en="Your bag">Kikapu chako</h2><button class="close" id="closeCart" type="button">×</button></div><div class="cart-lines" id="cartLines"></div><div class="cart-total" id="cartTotal"></div></aside>
+
+<div class="product-detail-modal" id="productDetailModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="detailTitle">
+  <article class="product-detail-card">
+    <header class="product-detail-header"><span class="section-kicker">343SHOP · PRODUCT DETAILS</span><button class="close" id="closeProductDetail" type="button" aria-label="Close product details">×</button></header>
+    <div class="product-detail-grid">
+      <div class="product-detail-gallery"><div class="product-detail-image" id="detailImage"><span class="product-detail-placeholder">343</span></div><div class="product-detail-thumbs" id="detailThumbs"></div></div>
+      <div class="product-detail-info">
+        <div class="product-detail-source" id="detailSource">343SHOP</div><h2 id="detailTitle">Product details</h2>
+        <div class="product-detail-price" id="detailPrice"></div><p class="product-detail-description" id="detailDescription"></p>
+        <div class="product-detail-status" id="detailStatus"></div><div class="product-detail-meta" id="detailMeta"></div>
+        <div class="product-detail-options" id="detailOptions"></div>
+        <div class="product-detail-quantity"><span data-sw="Idadi" data-en="Quantity">Idadi</span><button id="detailQtyMinus" type="button" aria-label="Decrease quantity">−</button><output id="detailQty" aria-live="polite">1</output><button id="detailQtyPlus" type="button" aria-label="Increase quantity">+</button></div>
+        <div class="product-detail-actions" id="detailActions"></div><p class="product-detail-note" id="detailNote"></p>
+      </div>
+    </div>
+  </article>
+</div>
+
 <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle"><div class="modal-card"><div class="modal-head"><div><span class="section-kicker">343SHOP · CHECKOUT</span><h2 id="checkoutTitle" data-sw="Taarifa za oda" data-en="Order details">Taarifa za oda</h2><p data-sw="Jaza taarifa zako. Oda itatumwa WhatsApp kwa uthibitisho." data-en="Add your details. Your order will be sent to WhatsApp for confirmation.">Jaza taarifa zako. Oda itatumwa WhatsApp kwa uthibitisho.</p></div><button class="close" id="closeCheckout" type="button">×</button></div><form id="checkoutForm"><div class="form-grid"><label class="field"><span data-sw="Jina kamili *" data-en="Full name *">Jina kamili *</span><input name="name" required minlength="2" autocomplete="name"></label><label class="field"><span data-sw="Namba ya simu *" data-en="Phone number *">Namba ya simu *</span><input name="phone" required type="tel" autocomplete="tel"></label><label class="field"><span>Email (optional)</span><input name="email" type="email" autocomplete="email"></label><label class="field"><span data-sw="Mji / eneo *" data-en="City / area *">Mji / eneo *</span><input name="city" required autocomplete="address-level2"></label><label class="field full"><span data-sw="Anuani / maelekezo ya kufikisha *" data-en="Delivery address / directions *">Anuani / maelekezo ya kufikisha *</span><textarea name="address" required rows="2"></textarea></label><label class="field full"><span data-sw="Maelezo ya ziada (hiari)" data-en="Extra notes (optional)">Maelezo ya ziada (hiari)</span><textarea name="notes" rows="2"></textarea></label></div><div class="form-note" data-sw="Baada ya kubonyeza hapa, WhatsApp itafunguka ikiwa na ujumbe wa oda yako. Bonyeza Send ndani ya WhatsApp ili kutuma oda. Malipo hayafanyiki kwenye tovuti hii; tutakuthibitishia jumla na njia ya malipo kwa mawasiliano." data-en="After clicking below, WhatsApp opens with your order message. Press Send in WhatsApp to submit it. This site does not collect payment; we will confirm the total and payment method with you directly.">Baada ya kubonyeza hapa, WhatsApp itafunguka ikiwa na ujumbe wa oda yako. Bonyeza Send ndani ya WhatsApp ili kutuma oda. Malipo hayafanyiki kwenye tovuti hii; tutakuthibitishia jumla na njia ya malipo kwa mawasiliano.</div><button class="btn submit" type="submit"><span data-sw="Tuma oda kupitia WhatsApp" data-en="Send order on WhatsApp">Tuma oda kupitia WhatsApp</span> ↗</button><p class="fine" data-sw="Oda haijatumwa mpaka ubonyeze Send ndani ya WhatsApp." data-en="Your order is not submitted until you press Send in WhatsApp.">Oda haijatumwa mpaka ubonyeze Send ndani ya WhatsApp.</p></form></div></div>
 <button class="ai-launch" id="aiLaunch" type="button" aria-controls="aiPanel" aria-expanded="false">✦ <span data-sw="Msaidizi wa AI" data-en="Ask 343 AI">Msaidizi wa AI</span></button>
 <section class="ai-panel" id="aiPanel" role="dialog" aria-label="343SHOP AI assistant" aria-hidden="true">
@@ -1162,13 +1226,109 @@ function loadCart(){
 let lang="sw",activeCat="all",query="",cart=loadCart();
 const $=id=>document.getElementById(id),money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:CURRENCY,maximumFractionDigits:2}).format(n);
 const tr=(sw,en)=>lang==="sw"?sw:en;
+
+const FEATURED_DETAILS={
+  "jbl-go-4":{name:"JBL GO 4 Portable Waterproof Speaker",description:"Speaker ndogo ya Bluetooth, IP67 water na dust resistant. Product details and final availability should be confirmed with Empire Online Shopping.",category:"Audio · JBL",price:164000,currency:"TZS",source_shop:"Empire Online Shopping",availability:"unknown",image_url:"https://empire.co.tz/cdn/shop/files/jblgo4.jpg?v=1726294565&width=900",product_url:"https://empire.co.tz/products/jbl-go-4-portable-waterproof-speaker"},
+  "jbl-tune-310c":{name:"JBL TUNE 310C USB-C Headphones",description:"Earphones za USB-C zenye mic, remote na Hi-Res Audio. Product details and final availability should be confirmed with Empire Online Shopping.",category:"Audio · Wired",price:92500,currency:"TZS",source_shop:"Empire Online Shopping",availability:"unknown",product_url:"https://empire.co.tz/products/jbl-tune-310c-wired-usb-c-in-ear-headphones"},
+  "sandisk-128gb":{name:"SanDisk 128GB Ultra microSDXC",description:"Memory card kwa smartphones, tablets na camera zinazotumia microSDXC. Product details and final availability should be confirmed with Empire Online Shopping.",category:"Storage · 128GB",price:109600,currency:"TZS",source_shop:"Empire Online Shopping",availability:"unknown",image_url:"https://empire.co.tz/cdn/shop/products/sandiskultramicrosd128gb.png?v=1687943246&width=900",product_url:"https://empire.co.tz/products/sandisk-128gb-ultra-micro-uhs-i-sdxc-card"}
+};
+let activeDetailProduct=null,activeDetailKind="external",detailQuantity=1,detailSelections={};
+function safeDetailUrl(value,allowLocal=false){
+  if(typeof value!=="string"||!value.trim())return "";
+  try{const parsed=new URL(value,window.location.origin);if(parsed.protocol==="https:")return parsed.href;if(allowLocal&&parsed.origin===window.location.origin&&parsed.pathname.startsWith("/")&&!parsed.pathname.startsWith("//"))return parsed.href}catch{}
+  return "";
+}
+function detailPrice(product){
+  const raw=product.price!==undefined&&product.price!==null?product.price:product.source_price;
+  if(raw===undefined||raw===null||raw==="")return tr("Bei itathibitishwa na chanzo","Price to be confirmed at source");
+  const amount=Number(raw);if(!Number.isFinite(amount)||amount<0)return tr("Bei itathibitishwa na chanzo","Price to be confirmed at source");
+  const currency=String(product.currency||"").toUpperCase();
+  return new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(amount)+(currency?" "+currency:"");
+}
+function appendDetailMeta(label,value){
+  if(!value)return;const chip=document.createElement("span");chip.textContent=label+": "+String(value);$("detailMeta").appendChild(chip);
+}
+function renderDetailImages(product){
+  const root=$("detailImage"),thumbs=$("detailThumbs");root.replaceChildren();thumbs.replaceChildren();
+  const candidates=[product.image_url,product.image].concat(Array.isArray(product.images)?product.images:[]);
+  const images=[...new Set(candidates.map(item=>typeof item==="string"?item:(item&&typeof item.url==="string"?item.url:"")).map(url=>safeDetailUrl(url,true)).filter(Boolean))].slice(0,8);
+  const showImage=(url,alt)=>{
+    root.replaceChildren();const image=document.createElement("img");image.src=url;image.alt=alt;image.loading="eager";image.referrerPolicy="no-referrer";
+    image.onerror=()=>{root.replaceChildren();const mark=document.createElement("span");mark.className="product-detail-placeholder";mark.textContent="343";root.appendChild(mark)};
+    root.appendChild(image);
+  };
+  if(images.length){
+    showImage(images[0],String(product.name||product.product_name||"Product"));
+    images.forEach((url,index)=>{
+      const thumb=document.createElement("button");thumb.type="button";thumb.className="product-detail-thumb"+(index===0?" active":"");thumb.setAttribute("aria-label",tr("Tazama picha ","View image ")+(index+1));
+      const image=document.createElement("img");image.src=url;image.alt="";image.loading="lazy";thumb.appendChild(image);
+      thumb.addEventListener("click",()=>{showImage(url,String(product.name||product.product_name||"Product"));thumbs.querySelectorAll("button").forEach(item=>item.classList.remove("active"));thumb.classList.add("active")});thumbs.appendChild(thumb);
+    });
+  }else{const mark=document.createElement("span");mark.className="product-detail-placeholder";mark.textContent="343";root.appendChild(mark)}
+}
+function renderDetailOptions(product,kind){
+  const root=$("detailOptions");root.replaceChildren();const heading=document.createElement("strong");heading.textContent=tr("Chagua bidhaa yako","Choose your options");root.appendChild(heading);
+  const groups=Array.isArray(product.options)?product.options:(Array.isArray(product.variation_options)?product.variation_options:[]);
+  const usable=groups.filter(group=>group&&typeof group.name==="string"&&Array.isArray(group.values)&&group.values.length);
+  usable.forEach(group=>{
+    const label=document.createElement("label");label.textContent=group.name;const select=document.createElement("select");
+    group.values.forEach(raw=>{const value=typeof raw==="string"?raw:(raw&&typeof raw.value==="string"?raw.value:"");if(!value)return;const option=document.createElement("option");option.value=value;option.textContent=value;select.appendChild(option)});
+    if(select.options.length){detailSelections[group.name]=select.value;select.addEventListener("change",()=>{detailSelections[group.name]=select.value});label.appendChild(select);root.appendChild(label)}
+  });
+  if(kind!=="owned"){
+    const label=document.createElement("label");label.textContent=tr("Mapendeleo ya ziada (rangi, size, model...)","Extra preferences (colour, size, model...)");
+    const input=document.createElement("input");input.id="detailPreference";input.type="text";input.maxLength=160;input.placeholder=tr("Mf. Nyeusi, 256GB, size 42...","E.g. Black, 256GB, size 42...");label.appendChild(input);root.appendChild(label);
+    const note=document.createElement("p");note.textContent=usable.length?tr("Chaguo zilizoonyeshwa zimetolewa na chanzo. Hakiki tena kwa muuzaji.","Options shown were supplied by the source. Reconfirm with the seller."):tr("Chanzo hakijatoa rangi au size zinazopatikana. Chagua variants kwenye ukurasa wa muuzaji; unaweza kuandika mapendeleo yako hapa.","The source has not supplied available colours or sizes. Choose variants on the seller page, or note your preference here.");root.appendChild(note);
+  }else if(!usable.length){const note=document.createElement("p");note.textContent=tr("Bidhaa hii haina size au rangi za kuchagua kwenye catalogue yetu. Unaweza kuongeza idadi unayotaka.","This catalogue item has no size or colour variants. Choose the quantity you need.");root.appendChild(note)}
+}
+function buildDetailQuoteUrl(){
+  const product=activeDetailProduct;if(!product)return "https://wa.me/"+WHATSAPP_NUMBER;
+  const name=String(product.name||product.product_name||"Product"),href=safeDetailUrl(product.product_url||product.source_url);
+  const preference=$("detailPreference")?$("detailPreference").value.trim():"";
+  const lines=["Habari 343SHOP, naomba quotation ya udalali kwa bidhaa hii:","Bidhaa: "+name,"Chanzo/muuzaji: "+String(product.source_shop||product.source_marketplace||"Marketplace"),"Bei iliyoonekana: "+detailPrice(product),"Idadi: "+detailQuantity,
+    Object.keys(detailSelections).length?"Chaguo: "+Object.entries(detailSelections).map(([key,value])=>key+": "+value).join(", "):"",
+    preference?"Mapendeleo: "+preference:"",href?"Link ya bidhaa: "+href:"",
+    "Tafadhali thibitisha stock, bei ya mwisho, delivery, kodi na masharti ya muuzaji. Huu ni ujumbe wa quotation tu, si oda wala malipo."].filter(Boolean);
+  return "https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(lines.join("\n"));
+}
+function openProductDetails(product,kind="external"){
+  if(!product)return;activeDetailProduct=product;activeDetailKind=kind;detailQuantity=1;detailSelections={};
+  const name=String(product.name||product.product_name||"Product");
+  $("detailSource").textContent=kind==="owned"?"343SHOP · ORIGINAL WORK":String(product.source_shop||product.source_marketplace||product.source_type||"Independent seller");
+  $("detailTitle").textContent=name;$("detailPrice").textContent=kind==="owned"?money(Number(product.price)||0):detailPrice(product);
+  $("detailDescription").textContent=String(product.description||product.swDesc||product.enDesc||tr("Maelezo zaidi yanapatikana kwa muuzaji.","More product details are available from the seller."));
+  const availability=String(product.availability||"unknown");
+  $("detailStatus").textContent=kind==="owned"?tr("Bidhaa ya asili ya 343SHOP. Oda itathibitishwa kabla ya malipo.","An original 343SHOP product. The order is confirmed before payment."):availability==="in_stock"?tr("Muuzaji ameripoti ipo. Thibitisha stock na bei kabla ya kulipa.","Seller reports this item in stock. Confirm availability and price before paying."):availability==="out_of_stock"?tr("Muuzaji ameripoti bidhaa haipo kwa sasa.","Seller reports this item is currently out of stock."):tr("Stock haijathibitishwa. Muuzaji ndiye atakayethibitisha upatikanaji.","Stock is unconfirmed. The seller must confirm availability.");
+  $("detailMeta").replaceChildren();appendDetailMeta(tr("Aina","Category"),product.category||product.catSw||product.catEn||product.category_name);appendDetailMeta(tr("Eneo","Location"),product.city);appendDetailMeta(tr("Chanzo","Seller"),product.source_shop||product.source_marketplace);
+  renderDetailImages(product);renderDetailOptions(product,kind);$("detailQty").textContent="1";$("detailQtyMinus").disabled=true;$("detailQtyPlus").disabled=false;
+  const actions=$("detailActions");actions.replaceChildren();
+  if(kind==="owned"){
+    const addButton=document.createElement("button");addButton.type="button";addButton.className="btn";addButton.textContent=tr("Ongeza kwenye kikapu","Add to bag")+" ↗";
+    addButton.addEventListener("click",()=>{const slug=product.slug,existing=cart[slug]||0;if(existing+detailQuantity>MAX_QTY){toast(tr("Kikomo ni bidhaa 10 kwa kila aina.","Limit is 10 per product."));return}cart[slug]=existing+detailQuantity;save();closeProductDetails();toast(tr("Bidhaa imeongezwa kwenye kikapu ✓","Added to your bag ✓"))});
+    actions.appendChild(addButton);$("detailNote").textContent=tr("Bei ni ya bidhaa pekee. Usafirishaji na maelezo ya mwisho yatathibitishwa kwenye ombi la oda.","Price is for the product only. Delivery and final details are confirmed with the order request.");
+  }else{
+    const href=safeDetailUrl(product.product_url||product.source_url);
+    if(href){const seller=document.createElement("a");seller.className="btn btn-secondary";seller.href=href;seller.target="_blank";seller.rel="noopener noreferrer";seller.textContent=tr("Endelea kwa muuzaji ↗","Continue to seller ↗");actions.appendChild(seller)}
+    const quote=document.createElement("a");quote.className="btn";quote.target="_blank";quote.rel="noopener noreferrer";quote.href=buildDetailQuoteUrl();quote.textContent=tr("Omba 343SHOP ikusaidie ↗","Ask 343SHOP for help ↗");quote.addEventListener("click",()=>{quote.href=buildDetailQuoteUrl()});actions.appendChild(quote);
+    $("detailNote").textContent=String(product.price_note||tr("343SHOP ni dalali. Bei, stock, shipping na options za mwisho zitathibitishwa na muuzaji. Malipo ya bidhaa za nje hufanyika kwa muuzaji.","343SHOP is a broker. The seller confirms final price, stock, shipping and options. External purchases are paid to the seller."));
+  }
+  $("productDetailModal").classList.add("open");$("productDetailModal").setAttribute("aria-hidden","false");$("closeProductDetail").focus();
+}
+function closeProductDetails(){
+  const modal=$("productDetailModal");if(!modal)return;modal.classList.remove("open");modal.setAttribute("aria-hidden","true");activeDetailProduct=null;activeDetailKind="external";
+}
+function updateDetailQuantity(next){
+  detailQuantity=Math.max(1,Math.min(MAX_QTY,Number(next)||1));$("detailQty").textContent=String(detailQuantity);$("detailQtyMinus").disabled=detailQuantity<=1;$("detailQtyPlus").disabled=detailQuantity>=MAX_QTY;
+}
+
 function save(){try{localStorage.setItem("343shop-cart",JSON.stringify(cart))}catch{}updateCount()}
 function updateCount(){$("cartCount").textContent=Object.values(cart).reduce((a,n)=>a+n,0)}
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1900)}
 function renderCats(){$("categories").innerHTML=CATS.map(c=>'<button class="chip '+(activeCat===c.id?'active':'')+'" data-cat="'+c.id+'">'+(lang==="sw"?c.sw:c.en)+'</button>').join("");$("categories").querySelectorAll("button").forEach(b=>b.onclick=()=>{activeCat=b.dataset.cat;renderCats();renderProducts()})}
 function renderProducts(){
   const list=PRODUCTS.filter(p=>(activeCat==="all"||p.cat===activeCat)&&[p.en,p.sw,p.enDesc,p.swDesc,p.catEn,p.catSw,p.cat].join(" ").toLowerCase().includes(query));
-  $("products").innerHTML=list.length?list.map(p=>'<article class="product"><div class="visual tone-'+p.tone+'">'+(p.badge?'<span class="tag">'+p.badge+'</span>':'')+'<img class="mockup" src="'+p.image+'" alt="'+(lang==="sw"?p.sw:p.en)+'" loading="lazy"><span class="visual-word">343SHOP · ORIGINAL WORK</span></div><div class="product-info"><span class="owned-label">'+tr("MALI YA 343SHOP","OWNED BY 343SHOP")+'</span><span class="cat-label">'+(lang==="sw"?p.catSw:p.catEn)+'</span><h3>'+(lang==="sw"?p.sw:p.en)+'</h3><p>'+(lang==="sw"?p.swDesc:p.enDesc)+'</p><div class="product-bottom"><span class="price">'+money(p.price)+'</span><button class="add" data-add="'+p.slug+'" aria-label="Add '+p.en+'">+</button></div></div></article>').join(''):'<div class="empty">'+tr("Hakuna kitabu kilichopatikana.","No books found.")+'</div>';
+  $("products").innerHTML=list.length?list.map(p=>'<article class="product"><button type="button" class="visual tone-'+p.tone+'" data-product-detail="'+p.slug+'" aria-label="View details for '+p.en+'">'+(p.badge?'<span class="tag">'+p.badge+'</span>':'')+'<img class="mockup" src="'+p.image+'" alt="'+(lang==="sw"?p.sw:p.en)+'" loading="lazy"><span class="visual-word">343SHOP · ORIGINAL WORK</span></button><div class="product-info"><span class="owned-label">'+tr("MALI YA 343SHOP","OWNED BY 343SHOP")+'</span><span class="cat-label">'+(lang==="sw"?p.catSw:p.catEn)+'</span><h3>'+(lang==="sw"?p.sw:p.en)+'</h3><p>'+(lang==="sw"?p.swDesc:p.enDesc)+'</p><button type="button" class="product-detail-trigger" data-product-detail="'+p.slug+'">'+tr("Tazama maelezo ya bidhaa ↗","View product details ↗")+'</button><div class="product-bottom"><span class="price">'+money(p.price)+'</span><button class="add" data-add="'+p.slug+'" aria-label="Add '+p.en+'">+</button></div></div></article>').join(''):'<div class="empty">'+tr("Hakuna kitabu kilichopatikana.","No books found.")+'</div>';
+  $("products").querySelectorAll("[data-product-detail]").forEach(b=>b.onclick=()=>openProductDetails(PRODUCTS.find(p=>p.slug===b.dataset.productDetail),"owned"));
   $("products").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>add(b.dataset.add));
 }
 function add(slug){if(!PRODUCTS.some(p=>p.slug===slug))return;const current=cart[slug]||0;if(current>=MAX_QTY){toast(tr("Kikomo ni bidhaa 10 kwa kila aina.","Limit is 10 per product."));return}cart[slug]=current+1;save();toast(tr("Imeongezwa kwenye kikapu ✓","Added to your bag ✓"))}
@@ -1287,6 +1447,11 @@ function renderMarketplaceResults(payload){
       request.target="_blank";request.rel="noopener noreferrer";
       request.textContent=tr("OMBA 343SHOP IKUSAIDIE ↗","ASK 343SHOP TO SOURCE ↗");
       info.appendChild(request);
+
+      const detailButton=document.createElement("button");detailButton.type="button";detailButton.className="market-detail-button";
+      detailButton.textContent=tr("TAARIFA ZA BIDHAA ↗","PRODUCT DETAILS ↗");
+      detailButton.addEventListener("click",()=>openProductDetails(product,"external"));
+      info.appendChild(detailButton);
       card.append(visual,info);fragment.appendChild(card);
     }
   }else{
@@ -1351,6 +1516,11 @@ async function loadPublishedStoreProducts(){
       availability.textContent=product.availability==="in_stock"?tr("Muuzaji ameripoti ipo; thibitisha kabla ya kulipa.","Seller reports in stock; reconfirm before paying."):tr("Upatikanaji uthibitishwe na muuzaji.","Availability must be confirmed with the seller.");
       const href=typeof product.source_url==="string"&&product.source_url.startsWith("https://")?product.source_url:"";
       copy.append(source,title,description,price,availability);
+
+      const details=document.createElement("button");details.type="button";details.className="ai-detail-button";
+      details.textContent=tr("TAARIFA ZA BIDHAA ↗","PRODUCT DETAILS ↗");
+      details.addEventListener("click",()=>openProductDetails({name:product.product_name,description:product.description,price:product.source_price,currency:product.currency,category:product.category,source_shop:product.source_marketplace,image_url:product.image_url,product_url:product.source_url,availability:product.availability},"external"));
+      copy.appendChild(details);
       if(href){const link=document.createElement("a");link.className="ai-product-link";link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent=tr("ANGALIA KWA MUUZAJI ↗","VIEW AT SOURCE ↗");copy.appendChild(link)}
       card.append(visual,copy);fragment.appendChild(card);
     }
@@ -1423,6 +1593,20 @@ document.addEventListener("click",event=>{if(mobileMenu.classList.contains("is-o
 $("langBtn").onclick=()=>{lang=lang==="sw"?"en":"sw";applyLang();if(mobileMenuBtn)mobileMenuBtn.setAttribute("aria-label",mobileMenu.classList.contains("is-open")?(lang==="sw"?"Funga menyu":"Close menu"):(lang==="sw"?"Fungua menyu":"Open menu"))};
 
 // Gallery tiles direct independent-seller discovery to Global Market.
+
+
+$("closeProductDetail").onclick=closeProductDetails;
+$("productDetailModal").addEventListener("click",event=>{if(event.target===$("productDetailModal"))closeProductDetails()});
+$("detailQtyMinus").onclick=()=>updateDetailQuantity(detailQuantity-1);
+$("detailQtyPlus").onclick=()=>updateDetailQuantity(detailQuantity+1);
+document.addEventListener("keydown",event=>{if(event.key==="Escape"&&$("productDetailModal").classList.contains("open"))closeProductDetails()});
+document.querySelectorAll("[data-featured-detail]").forEach(element=>{
+  element.addEventListener("click",event=>{
+    const product=FEATURED_DETAILS[element.dataset.featuredDetail];if(!product)return;
+    if(element.tagName==="A")event.preventDefault();
+    openProductDetails(product,"external");
+  });
+});
 
 $("cartBtn").onclick=openCart;$("closeCart").onclick=closeCart;$("overlay").onclick=closeCart;$("closeCheckout").onclick=()=>$("checkoutModal").classList.remove("show");
 $("search").addEventListener("input",e=>{query=e.target.value.toLowerCase().trim();renderProducts()});
