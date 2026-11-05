@@ -8,6 +8,7 @@ const SECURITY_HEADERS = {
 const AI_RATE_LIMIT = new Map();
 const AI_RATE_WINDOW_MS = 60_000;
 const AI_RATE_MAX = 8;
+const PARTNER_APPLICATION_RATE_LIMIT = new Map();
 
 const STORE_SYSTEM_PROMPT = [
   "You are the 343SHOP global shopping and brokerage marketplace assistant.",
@@ -70,6 +71,23 @@ function overRateLimit(ip) {
   if (AI_RATE_LIMIT.size > 3000) {
     for (const [key, value] of AI_RATE_LIMIT) {
       if (value.resetAt <= now) AI_RATE_LIMIT.delete(key);
+    }
+  }
+  return false;
+}
+
+function partnerApplicationRateLimited(ip) {
+  const now = Date.now();
+  const current = PARTNER_APPLICATION_RATE_LIMIT.get(ip);
+  if (current && current.resetAt > now) {
+    if (current.count >= 4) return true;
+    current.count += 1;
+  } else {
+    PARTNER_APPLICATION_RATE_LIMIT.set(ip, { count: 1, resetAt: now + 10 * 60_000 });
+  }
+  if (PARTNER_APPLICATION_RATE_LIMIT.size > 2000) {
+    for (const [key, value] of PARTNER_APPLICATION_RATE_LIMIT) {
+      if (value.resetAt <= now) PARTNER_APPLICATION_RATE_LIMIT.delete(key);
     }
   }
   return false;
@@ -1450,6 +1468,86 @@ async function ensureOwnerDashboardSchema(db) {
   }
 }
 
+const PARTNER_APPLICATION_SCHEMA_READY = new WeakMap();
+
+async function ensurePartnerApplicationsSchema(db) {
+  let ready = PARTNER_APPLICATION_SCHEMA_READY.get(db);
+  if (!ready) {
+    ready = (async () => {
+      await db.prepare("CREATE TABLE IF NOT EXISTS partner_applications (id TEXT PRIMARY KEY, shop_name TEXT NOT NULL CHECK(length(shop_name) BETWEEN 2 AND 100), location TEXT NOT NULL CHECK(length(location) BETWEEN 2 AND 100), contact_name TEXT NOT NULL CHECK(length(contact_name) BETWEEN 2 AND 80), phone TEXT NOT NULL CHECK(length(phone) BETWEEN 7 AND 25), phone_normalized TEXT NOT NULL CHECK(length(phone_normalized) BETWEEN 7 AND 18), categories TEXT NOT NULL CHECK(length(categories) BETWEEN 2 AND 220), catalogue_url TEXT, status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'contacted', 'approved', 'rejected')), owner_note TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, updated_at TEXT NOT NULL, reviewed_at TEXT)").run();
+      await db.prepare("CREATE INDEX IF NOT EXISTS idx_partner_applications_status_created ON partner_applications(status, created_at DESC)").run();
+      await db.prepare("CREATE INDEX IF NOT EXISTS idx_partner_applications_phone ON partner_applications(phone_normalized, created_at DESC)").run();
+    })();
+    PARTNER_APPLICATION_SCHEMA_READY.set(db, ready);
+  }
+  try { await ready; }
+  catch (error) {
+    PARTNER_APPLICATION_SCHEMA_READY.delete(db);
+    throw new Error("partner_application_schema_failed: " + String(error?.message || "D1 schema error").slice(0, 120));
+  }
+}
+
+function cleanPartnerApplicationText(value, maxLength) {
+  if (typeof value !== "string") return "";
+  return value.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, maxLength);
+}
+
+async function handlePublicPartnerApplication(request, env, url) {
+  if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+  const origin = request.headers.get("Origin");
+  if (!origin || origin !== url.origin) return json({ error: "origin_not_allowed" }, 403);
+  if (!request.headers.get("Content-Type")?.includes("application/json")) {
+    return json({ error: "json_required" }, 415);
+  }
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  if (partnerApplicationRateLimited(ip)) return json({ error: "rate_limited" }, 429);
+
+  let raw;
+  try { raw = await request.text(); }
+  catch { return json({ error: "invalid_request" }, 400); }
+  if (raw.length > 6000) return json({ error: "request_too_large" }, 413);
+  let body;
+  try { body = JSON.parse(raw); }
+  catch { return json({ error: "invalid_json" }, 400); }
+  if (!body || typeof body !== "object" || Array.isArray(body)) return json({ error: "invalid_payload" }, 400);
+  if (cleanPartnerApplicationText(body.website, 200)) return json({ ok: true, accepted: true }, 202);
+
+  const shopName = cleanPartnerApplicationText(body.shop_name, 100);
+  const location = cleanPartnerApplicationText(body.location, 100);
+  const contactName = cleanPartnerApplicationText(body.contact_name, 80);
+  const phone = cleanPartnerApplicationText(body.phone, 25);
+  const phoneNormalized = phone.replace(/\D/g, "");
+  const categories = cleanPartnerApplicationText(body.categories, 220);
+  const catalogueInput = cleanPartnerApplicationText(body.catalogue_url, 300);
+  if (shopName.length < 2) return json({ error: "shop_name_invalid" }, 400);
+  if (location.length < 2) return json({ error: "location_invalid" }, 400);
+  if (contactName.length < 2) return json({ error: "contact_name_invalid" }, 400);
+  if (phoneNormalized.length < 7 || phoneNormalized.length > 18) return json({ error: "phone_invalid" }, 400);
+  if (!/^[+()\d\s.-]+$/.test(phone)) return json({ error: "phone_invalid" }, 400);
+  if (categories.length < 2) return json({ error: "categories_invalid" }, 400);
+  const catalogueUrl = catalogueInput ? safeHttpsLink(catalogueInput) : null;
+  if (catalogueInput && (!catalogueUrl || catalogueUrl.length > 300)) return json({ error: "catalogue_url_must_be_https" }, 400);
+
+  if (!env?.DB || typeof env.DB.prepare !== "function") return json({ error: "product_database_not_configured" }, 503);
+  try {
+    await ensurePartnerApplicationsSchema(env.DB);
+    const duplicate = await env.DB.prepare(
+      "SELECT id, status FROM partner_applications WHERE phone_normalized = ? AND lower(shop_name) = lower(?) AND status IN ('pending', 'contacted', 'approved') ORDER BY created_at DESC LIMIT 1"
+    ).bind(phoneNormalized, shopName).first();
+    if (duplicate) {
+      return json({ ok: true, duplicate: true, application_id: duplicate.id, status: duplicate.status });
+    }
+    const id = crypto.randomUUID();
+    const now = new Date().toISOString();
+    await env.DB.prepare(
+      "INSERT INTO partner_applications (id, shop_name, location, contact_name, phone, phone_normalized, categories, catalogue_url, status, owner_note, created_at, updated_at, reviewed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', '', ?, ?, NULL)"
+    ).bind(id, shopName, location, contactName, phone, phoneNormalized, categories, catalogueUrl, now, now).run();
+    return json({ ok: true, accepted: true, application_id: id, status: "pending" }, 201);
+  } catch {
+    return json({ error: "application_storage_unavailable" }, 503);
+  }
+}
+
 function validateOwnerProduct(body) {
   if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("product_payload_required");
   const name = typeof body.product_name === "string" ? body.product_name.trim() : "";
@@ -1488,16 +1586,56 @@ async function handleOwnerDashboard(request, env, url) {
   try {
     await ensureProductSchema(db);
     await ensureOwnerDashboardSchema(db);
+    await ensurePartnerApplicationsSchema(db);
     const path = url.pathname;
     if (path === "/api/admin/status") {
       if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
       return json({
         ok: true, owner_authenticated: true, database_configured: true,
-        products: true,
+        products: true, partner_applications: true,
         ai: { gemini: Boolean(env.GEMINI_API_KEY), openai: Boolean(env.OPENAI_API_KEY), claude: Boolean(env.ANTHROPIC_API_KEY) },
         payments: { ledger: true, selcom_api_configured: Boolean(env.SELCOM_API_KEY && env.SELCOM_API_SECRET && env.SELCOM_VENDOR_ID), live_checkout: false },
         payment_note: "Wallet screen is a manual reconciliation ledger. It does not hold funds or initiate mobile-money transfers."
       });
+    }
+    if (path === "/api/admin/partner-applications") {
+      if (request.method !== "GET") return json({ error: "method_not_allowed" }, 405);
+      const statusFilter = url.searchParams.get("status") || "";
+      if (statusFilter && !["pending", "contacted", "approved", "rejected"].includes(statusFilter)) {
+        return json({ error: "application_status_invalid" }, 400);
+      }
+      const query = statusFilter
+        ? "SELECT id, shop_name, location, contact_name, phone, categories, catalogue_url, status, owner_note, created_at, updated_at, reviewed_at FROM partner_applications WHERE status = ? ORDER BY created_at DESC LIMIT 100"
+        : "SELECT id, shop_name, location, contact_name, phone, categories, catalogue_url, status, owner_note, created_at, updated_at, reviewed_at FROM partner_applications ORDER BY created_at DESC LIMIT 100";
+      const result = statusFilter
+        ? await db.prepare(query).bind(statusFilter).all()
+        : await db.prepare(query).all();
+      return json({ ok: true, applications: result.results || [] });
+    }
+    const applicationMatch = path.match(/^\/api\/admin\/partner-applications\/([a-f0-9-]{36})$/i);
+    if (applicationMatch) {
+      if (request.method !== "PATCH") return json({ error: "method_not_allowed" }, 405);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
+      const id = applicationMatch[1];
+      const nextStatus = body?.status;
+      const note = body?.owner_note === undefined ? null : cleanPartnerApplicationText(body.owner_note, 500);
+      if (!["pending", "contacted", "approved", "rejected"].includes(nextStatus)) {
+        return json({ error: "application_status_invalid" }, 400);
+      }
+      if (body?.owner_note !== undefined && typeof body.owner_note !== "string") {
+        return json({ error: "application_note_invalid" }, 400);
+      }
+      const current = await db.prepare("SELECT id, owner_note FROM partner_applications WHERE id = ?").bind(id).first();
+      if (!current) return json({ error: "partner_application_not_found" }, 404);
+      const now = new Date().toISOString();
+      await db.prepare(
+        "UPDATE partner_applications SET status = ?, owner_note = ?, updated_at = ?, reviewed_at = ? WHERE id = ?"
+      ).bind(nextStatus, note === null ? current.owner_note : note, now, nextStatus === "pending" ? null : now, id).run();
+      const updated = await db.prepare(
+        "SELECT id, shop_name, location, contact_name, phone, categories, catalogue_url, status, owner_note, created_at, updated_at, reviewed_at FROM partner_applications WHERE id = ?"
+      ).bind(id).first();
+      return json({ ok: true, application: updated });
     }
     if (path === "/api/admin/products") {
       if (request.method === "GET") {
@@ -1973,6 +2111,10 @@ export default {
 
     if (url.pathname === "/api/mcp/status") {
       return json(mcpStatus(env));
+    }
+
+    if (url.pathname === "/api/partner/applications") {
+      return handlePublicPartnerApplication(request, env, url);
     }
 
     if (url.pathname.startsWith("/api/admin/")) {
