@@ -136,7 +136,7 @@ function textValue(value){return String(value==null?"":value).trim()}
 function safeUrl(value){const s=textValue(value);return s.startsWith("https://")?s:""}
 function productName(p){return textValue(p.name||p.product_name||p.title||"Product listing")}
 function productSource(p){return textValue(p.source_shop||p.source_marketplace||p.source_type||p.marketplace||"Marketplace")}
-function productPrice(p){const n=Number(p.price!=null?p.price:p.source_price);if(!Number.isFinite(n))return "";const c=textValue(p.currency||"");return new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(n)+(c?" "+c:"")}
+function productPrice(p){const raw=p.price!=null?p.price:p.source_price;if(raw==null||raw==="")return "";const n=Number(raw);if(!Number.isFinite(n))return "";const c=textValue(p.currency||"");return new Intl.NumberFormat("en-US",{maximumFractionDigits:2}).format(n)+(c?" "+c:"")}
 function productCategory(p){return textValue(p.category||p.category_name||"").toLowerCase()}
 function isInStock(p){return p.availability==="in_stock"||p.availability==="available"||p.in_stock===true}
 function makeNode(tag,className,content){const n=document.createElement(tag);if(className)n.className=className;if(content!=null)n.textContent=content;return n}
@@ -224,11 +224,16 @@ function renderSourceLinks(){
 async function loadPublished(){
  try{
   const response=await fetch("/api/store/products",{headers:{"Accept":"application/json"},cache:"no-store"});
-  if(!response.ok)return;
+  if(!response.ok)throw new Error("catalogue_unavailable");
   const data=await response.json();
   const items=Array.isArray(data.products)?data.products:[];
-  if(items.length){state.products=items.map(mapPublished);setStatus("Published seller listings from the 343SHOP catalogue. Confirm all final details with each seller.");render()}
- }catch(error){/* The live search remains available if the published catalogue is offline. */}
+  state.products=items.map(mapPublished);
+  state.query="";
+  setStatus(items.length?"Published seller listings from the 343SHOP catalogue. Confirm all final details with each seller.":"No published catalogue listings yet. Search connected marketplaces or use the official seller links below.");
+  render();
+ }catch(error){
+  state.products=[];state.query="";render();setStatus("Published catalogue is unavailable right now. Live marketplace search remains available.");
+ }
 }
 $("searchForm").addEventListener("submit",event=>{event.preventDefault();const q=$("searchInput").value.trim();if(q.length>=2){state.category="all";document.querySelector('input[name="department"][value="all"]').checked=true;document.querySelectorAll(".deal-chip").forEach((b,i)=>b.classList.toggle("active",i===0));searchProducts(q,$("sourceFilter").value)}});
 document.querySelectorAll(".deal-chip").forEach(button=>button.addEventListener("click",()=>{
