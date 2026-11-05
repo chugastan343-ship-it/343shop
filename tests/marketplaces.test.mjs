@@ -838,6 +838,30 @@ test("owner dashboard and dedicated Gift Cards page scripts parse and stay separ
   assert.doesNotMatch(homepage, /id="giftcards"/);
 });
 
+test("343SHOP neon identity, original book covers and discovery cards are present", async () => {
+  const homepage = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  const admin = await readFile(new URL("../public/admin.html", import.meta.url), "utf8");
+  const logo = await readFile(new URL("../public/images/343shop-logo.svg", import.meta.url), "utf8");
+  const icon = await readFile(new URL("../public/images/343shop-icon.svg", import.meta.url), "utf8");
+  const hero = await readFile(new URL("../public/images/marketplace-hero.svg", import.meta.url), "utf8");
+  const covers = await Promise.all(["storybook.svg", "paperback.svg", "ebook.svg"].map(name =>
+    readFile(new URL("../public/images/" + name, import.meta.url), "utf8")
+  ));
+
+  assert.match(homepage, /src="\/images\/343shop-logo\.svg"/);
+  assert.match(homepage, /src="\/images\/marketplace-hero\.svg"/);
+  assert.match(homepage, /class="discovery-grid"/);
+  assert.match(homepage, /--shop-ink:#edf5ff/);
+  assert.match(admin, /class="owner-hero"/);
+  assert.match(admin, /class="owner-shortcuts"/);
+  assert.match(admin, /src="\/images\/343shop-icon\.svg"/);
+  assert.match(admin, /color-scheme:dark/);
+  for (const asset of [logo, icon, hero, ...covers]) {
+    assert.match(asset, /<svg[\s>]/);
+    assert.match(asset, /viewBox=/);
+  }
+});
+
 test("customer print portfolio embeds a verified WebP directly for reliable rendering", async () => {
   const html = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const match = html.match(/const PRINT_PORTFOLIO_WEBP="([A-Za-z0-9+/=]+)";/);

@@ -2,17 +2,98 @@
 <html lang="sw">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#102b20">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#03050B"><link rel="icon" type="image/svg+xml" href="/images/343shop-icon.svg">
 <title>343SHOP Owner Console</title>
 <style>
 :root{color-scheme:light;--forest:#102b20;--forest2:#1c4432;--gold:#d9b775;--ink:#18251e;--muted:#758078;--line:#e6e9e3;--paper:#f5f6f1;--white:#fff;--red:#9d3c35;--green:#286b49;--shadow:0 18px 55px #183a2810}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button,a{touch-action:manipulation}a{color:inherit;text-decoration:none}.hidden{display:none!important}.topbar{height:66px;background:var(--forest);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:8;box-shadow:0 5px 18px #102b2022}.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.06em}.brand-badge{width:38px;height:38px;border:1px solid #d9b775;border-radius:11px;display:grid;place-items:center;background:linear-gradient(140deg,#285640,#0b2118);color:#f3dba6;font:bold 13px Georgia;box-shadow:inset 0 1px #fff3,0 5px 12px #0003}.brand small{display:block;color:#c9d5ca;font-size:9px;letter-spacing:.16em;font-weight:700}.top-right{display:flex;align-items:center;gap:14px;color:#d6e1d6;font-size:11px}.top-right a{border:1px solid #ffffff2a;border-radius:30px;padding:8px 12px}.shell{max-width:1450px;margin:auto;display:grid;grid-template-columns:230px minmax(0,1fr);min-height:calc(100vh - 66px)}.sidebar{padding:26px 16px;background:#fff;border-right:1px solid var(--line)}.side-label{padding:0 11px 13px;color:#a1a99e;font-size:9px;font-weight:900;letter-spacing:.16em}.side-nav{display:grid;gap:6px}.side-nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;border-radius:12px;background:transparent;padding:12px;color:#647168;text-align:left;font-weight:750;font-size:12px;cursor:pointer}.side-nav button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}.side-nav button.active{background:#edf2ed;color:var(--forest);box-shadow:inset 3px 0 var(--gold)}.side-note{margin:28px 7px;padding:13px;border:1px solid var(--line);border-radius:13px;color:var(--muted);font-size:10px;line-height:1.65}.side-note b{display:block;color:var(--forest);font-size:11px;margin-bottom:4px}.main{padding:30px clamp(18px,3vw,42px) 60px;min-width:0}.eyebrow{display:inline-flex;align-items:center;gap:7px;color:#977b4d;font-size:9px;font-weight:900;letter-spacing:.17em}.dot{width:7px;height:7px;border-radius:50%;background:#c2a05e;box-shadow:0 0 0 4px #c2a05e20}.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:25px}.page-head h1{margin:8px 0 5px;color:var(--forest);font:500 clamp(28px,4vw,39px)/1.07 Georgia,serif;letter-spacing:-.04em}.page-head p{margin:0;color:var(--muted);font-size:12px}.status-pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:30px;padding:8px 11px;color:#5e6c61;font-size:10px;font-weight:800}.status-pill i{width:7px;height:7px;border-radius:50%;background:#c39b57}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:var(--shadow)}.stat span{display:block;color:var(--muted);font-size:10px;font-weight:700}.stat strong{display:block;margin-top:8px;color:var(--forest);font:500 25px Georgia,serif}.stat small{display:block;margin-top:5px;color:#9aa39a;font-size:9px}.grid-main{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr);gap:15px}.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:var(--shadow);min-width:0}.panel h2{margin:0 0 5px;color:var(--forest);font:500 20px Georgia,serif}.panel p.sub{margin:0 0 16px;color:var(--muted);font-size:10px;line-height:1.7}.health-list{display:grid;gap:11px}.health{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #eef0eb}.health:last-child{border:0}.health b{font-size:11px}.health span{color:var(--muted);font-size:10px}.health em{font-style:normal;border-radius:20px;padding:5px 8px;background:#f2f3ef;color:#657168;font-size:9px;font-weight:800}.health em.good{background:#eaf3ec;color:#2b6946}.health em.warn{background:#fff4df;color:#9a6c25}.notice{padding:13px 14px;border:1px solid #eee1c7;border-radius:12px;background:#fbf7ed;color:#776341;font-size:10px;line-height:1.7}.notice strong{color:#554322}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:10px;color:#647168;font-weight:800}.field input,.field textarea,.field select,.login-input{width:100%;min-width:0;background:#fbfcf9;border:1px solid #dfe5dd;border-radius:10px;padding:11px 12px;color:var(--ink);outline:none}.field input:focus,.field textarea:focus,.field select:focus,.login-input:focus{border-color:#b99b62;box-shadow:0 0 0 3px #c7a76a20}.field textarea{min-height:76px;resize:vertical}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:11px 15px;background:var(--forest);color:#fff;font-size:11px;font-weight:850;cursor:pointer;transition:transform .18s,box-shadow .18s,filter .18s}.btn:hover{filter:brightness(1.12);box-shadow:0 8px 18px #102b2021}.btn:active{transform:scale(.97)}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.gold{background:linear-gradient(135deg,#e7cf9c,#bb9656);color:#1d3023}.btn.ghost{background:#fff;border-color:var(--line);color:var(--forest)}.btn.danger{background:#fff3f1;color:#963d36;border-color:#f1d6d3}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.products-list,.transactions{display:grid;gap:10px}.product-row,.tx-row{display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px;border:1px solid var(--line);border-radius:12px}.product-thumb{width:58px;height:58px;border-radius:9px;object-fit:cover;background:#eef1e9}.product-row h3,.tx-row h3{margin:0;color:var(--forest);font-size:12px}.product-row p,.tx-row p{margin:3px 0 0;color:var(--muted);font-size:9px;line-height:1.5}.product-right{text-align:right}.product-right b{display:block;font-size:11px}.badge{display:inline-flex;margin-top:5px;padding:4px 7px;border-radius:20px;background:#f1f3ee;color:#657168;font-size:8px;font-weight:850}.badge.published,.badge.confirmed{background:#e8f2e9;color:#2c6a45}.badge.pending,.badge.draft{background:#fff4df;color:#946824}.badge.archived,.badge.rejected{background:#f4e9e7;color:#95544c}.section{display:none}.section.active{display:block}.wallet-total{display:flex;justify-content:space-between;align-items:center;gap:15px;background:linear-gradient(135deg,#173e2b,#0e281d);color:#fff;border:1px solid #315b41;border-radius:17px;padding:22px;margin-bottom:15px}.wallet-total span{display:block;color:#d1ddd0;font-size:10px}.wallet-total strong{display:block;font:500 clamp(28px,4vw,38px) Georgia,serif;color:#f2d99f;margin-top:5px}.wallet-total small{color:#b9cabc;font-size:9px}.wallet-mark{width:54px;height:54px;border:1px solid #d5b36f;border-radius:15px;display:grid;place-items:center;color:#eed8a4;font:26px Georgia}.login-cover{position:fixed;inset:0;background:linear-gradient(140deg,#0e281d,#1a4030);z-index:20;display:grid;place-items:center;padding:20px}.login-card{width:min(440px,100%);border:1px solid #ffffff20;border-radius:23px;padding:29px;background:#fff;box-shadow:0 28px 90px #0005}.login-card h1{margin:13px 0 7px;color:var(--forest);font:500 30px Georgia,serif}.login-card p{color:var(--muted);font-size:11px;line-height:1.8;margin:0 0 17px}.login-card label{display:block;color:#647168;font-size:10px;font-weight:800;margin:0 0 6px}.login-card .btn{width:100%;margin-top:12px}.login-help{margin-top:15px;border-top:1px solid var(--line);padding-top:12px;font-size:9px;color:#818a80;line-height:1.7}.login-error{color:#9c3b35;font-size:10px;margin-top:9px;min-height:16px}.toast{position:fixed;bottom:22px;right:22px;background:#102b20;color:#fff;padding:12px 15px;border-radius:11px;box-shadow:0 12px 30px #0003;font-size:11px;z-index:30;max-width:min(90vw,420px)}.empty{padding:22px;text-align:center;border:1px dashed #dfe5dd;border-radius:13px;color:#89948a;font-size:10px}.section-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.section-toolbar h2{margin:0;color:var(--forest);font:500 23px Georgia,serif}.tiny{font-size:9px;color:var(--muted);line-height:1.7}.nav-toggle{display:none;border:1px solid #ffffff2d;background:transparent;color:#fff;border-radius:8px;padding:7px 10px}.partner-applications{display:grid;gap:11px}.partner-application{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:15px;padding:15px;border:1px solid var(--line);border-radius:13px;background:#fff}.partner-application h3{margin:0;color:var(--forest);font-size:13px}.partner-application p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.7;overflow-wrap:anywhere}.partner-application .application-meta{margin-top:9px;color:#5e6d61}.partner-application .application-actions{display:flex;flex-direction:column;gap:7px;min-width:118px}.partner-application .application-actions .btn{width:100%;padding:8px 10px}.partner-application .application-status{display:inline-flex;padding:4px 8px;border-radius:20px;background:#f2f3ef;color:#657168;font-size:8px;font-weight:900;text-transform:uppercase}.partner-application .application-status.pending{background:#fff4df;color:#946824}.partner-application .application-status.approved{background:#e8f2e9;color:#2c6a45}.partner-application .application-status.rejected{background:#f4e9e7;color:#95544c}.partner-application .application-status.contacted{background:#eaf0f8;color:#466486}.partner-filter{border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#fbfcf9;color:var(--forest);font-size:10px}
 @media(max-width:1000px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.shell{grid-template-columns:190px minmax(0,1fr)}.grid-main{grid-template-columns:1fr}}
 @media(max-width:720px){.topbar{height:60px;padding:0 14px}.top-right span{display:none}.nav-toggle{display:block}.shell{display:block}.sidebar{display:none;position:fixed;top:60px;bottom:0;left:0;width:250px;z-index:10;box-shadow:10px 0 35px #102b2020}.sidebar.open{display:block}.main{padding:23px 14px 45px}.page-head{align-items:flex-start;flex-direction:column}.stats{gap:9px}.stat{padding:13px}.stat strong{font-size:22px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.product-row,.tx-row{grid-template-columns:47px minmax(0,1fr)}.product-thumb{width:47px;height:47px}.product-right{grid-column:2;text-align:left}.wallet-total{padding:17px}.product-row .actions{grid-column:1/-1}.topbar .brand{font-size:12px}}
+
+/* 343SHOP OWNER CONTROL CENTER — neon black private workspace */
+:root{color-scheme:dark;--forest:#edf7ff;--forest2:#102a4b;--gold:#ffd43b;--ink:#edf5ff;--muted:#9aadc5;--line:#1d2e47;--paper:#050810;--white:#0b1321;--red:#ff5e92;--green:#32e5a4;--shadow:0 18px 55px #0009}
+html,body{background:#03050b!important;color:#edf5ff!important}
+body{background:radial-gradient(ellipse at 74% -10%,#102345 0,transparent 36%),#03050b!important}
+.topbar{background:rgba(3,5,11,.97)!important;border-bottom:1px solid #203957;box-shadow:0 12px 36px #000a!important}
+.brand-badge{width:44px;height:44px;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:10px;overflow:hidden}
+.brand-badge img{display:block;width:100%;height:100%;object-fit:contain}
+.brand small{color:#7fdfff!important}.top-right{color:#b7cbe4!important}
+.top-right a,.top-right button{border-color:#2c4361!important;color:#dcecff!important}
+.sidebar{background:#060b14!important;border-right:1px solid #1d2e47!important}
+.side-label{color:#6f87a6!important}.side-nav button{color:#a8bad2!important}
+.side-nav button svg{color:#58d6ff}
+.side-nav button:hover{background:#0d1a2c!important;color:#f4f9ff!important}
+.side-nav button.active{background:linear-gradient(100deg,#0d2a4a,#12152a)!important;color:#67dcff!important;box-shadow:inset 3px 0 #21c7ff,0 8px 22px #001a3a55!important}
+.side-store-label{margin-top:22px}
+.side-store-nav a{display:flex;align-items:center;gap:11px;width:100%;border-radius:12px;padding:11px;color:#9db4cf;font-size:11px;font-weight:750;transition:.2s}
+.side-store-nav a span{width:18px;color:#ff75b9;font-size:16px;text-align:center}
+.side-store-nav a:hover{background:#11192b;color:#fff;border-left:2px solid #ffd43b}
+.side-note{background:#090f1b!important;border-color:#203653!important;color:#92a8c2!important}
+.side-note b{color:#ffd84a!important}.main{background:transparent!important}
+.eyebrow{color:#ffd94e!important}.dot{background:#21c8ff!important;box-shadow:0 0 0 4px #21c8ff26}
+.page-head h1{color:#f4f8ff!important}.page-head p{color:#9fb1c8!important}
+.status-pill{background:#0a1423!important;border-color:#27415f!important;color:#c8dcf2!important}
+.status-pill i{background:#20dba0!important}
+.owner-hero{position:relative;isolation:isolate;display:flex;align-items:center;min-height:205px;overflow:hidden;margin:0 0 18px;padding:26px 30px;border:1px solid #1b4b78;border-radius:20px;background:linear-gradient(100deg,#06162b 0%,#07152a 45%,#150d21 100%);box-shadow:0 18px 45px #0008}
+.owner-hero:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,#06101f 0%,rgba(6,16,31,.94) 36%,rgba(6,16,31,.12) 100%)}
+.owner-hero-copy{position:relative;z-index:1;max-width:560px}
+.owner-hero-copy>span{color:#53dcff;font-size:9px;font-weight:900;letter-spacing:.19em}
+.owner-hero-copy h2{margin:10px 0 8px;color:#f6f9ff;font:700 clamp(25px,3vw,36px)/1.05 Arial,sans-serif;letter-spacing:-.04em}
+.owner-hero-copy p{margin:0 0 14px;color:#aec2db;max-width:540px;font-size:11px;line-height:1.7}
+.owner-hero-art{position:absolute;z-index:-2;right:0;top:0;width:62%;height:100%;overflow:hidden}
+.owner-hero-art img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:.9}
+.owner-hero .btn{display:inline-flex}.stats{gap:13px}
+.stat{position:relative;overflow:hidden;background:linear-gradient(155deg,#0e1829,#080d17)!important;border:1px solid #233b5a!important;box-shadow:0 15px 32px #0006!important}
+.stat:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:#20bfff}
+.stat:nth-child(2):before{background:#ff3d9b}.stat:nth-child(3):before{background:#ffd43b}.stat:nth-child(4):before{background:#a66cff}.stat:nth-child(5):before{background:#35e5a4}
+.stat span{color:#a7bbd3!important}.stat strong{color:#f5f9ff!important}.stat small{color:#8198b5!important}
+.grid-main{gap:16px}
+.panel{background:linear-gradient(160deg,#0c1422,#080d17)!important;border:1px solid #203550!important;box-shadow:0 16px 40px #0007!important}
+.panel h2,.section-toolbar h2{color:#f3f8ff!important}.panel p.sub{color:#98abc2!important}
+.health{border-color:#20324a!important}.health b{color:#e7f3ff!important}.health span{color:#92a9c5!important}
+.health em{background:#111d2e!important;color:#a9bdd5!important}
+.health em.good{background:#063729!important;color:#5ef0b4!important;border:1px solid #16644b}
+.health em.warn{background:#39270d!important;color:#ffdb72!important;border:1px solid #73501a}
+.notice{background:#0b1a2c!important;border-color:#245275!important;color:#b0c9e2!important}.notice strong{color:#63ddff!important}
+.field label{color:#b7cbe1!important}
+.field input,.field textarea,.field select,.login-input,.partner-filter{background:#070e19!important;border-color:#263d5c!important;color:#edf6ff!important}
+.field input::placeholder,.field textarea::placeholder,.login-input::placeholder{color:#687f9d!important}
+.field input:focus,.field textarea:focus,.field select:focus,.login-input:focus{border-color:#21c5ff!important;box-shadow:0 0 0 3px #21c5ff22!important}
+.btn{background:linear-gradient(120deg,#0878f5,#12c7f5)!important;color:#fff!important;border-color:#159ef5!important;box-shadow:0 8px 24px #007bff26}
+.btn.gold{background:linear-gradient(120deg,#ffe36b,#ffb91c)!important;color:#171300!important;border-color:#ffd43b!important;box-shadow:0 8px 22px #ffd43b24}
+.btn.ghost{background:#0a1524!important;color:#66dfff!important;border-color:#244b71!important}
+.btn.danger{background:#35101e!important;color:#ff91ad!important;border-color:#71304a!important}
+.product-row,.tx-row,.partner-application{background:#0a1321!important;border-color:#20344f!important;color:#edf6ff!important}
+.product-thumb{background:#101d31!important}
+.product-row h3,.tx-row h3,.partner-application h3{color:#f0f7ff!important}
+.product-row p,.tx-row p,.partner-application p{color:#9cb0c8!important}
+.badge{background:#102038!important;color:#b5d0eb!important}
+.badge.published,.badge.confirmed{background:#063727!important;color:#5ae6ad!important}
+.badge.pending,.badge.draft{background:#3a2a0b!important;color:#ffdd79!important}
+.badge.archived,.badge.rejected{background:#391626!important;color:#ff98b7!important}
+.wallet-total{background:linear-gradient(115deg,#071c39,#11142b 58%,#26102b)!important;border-color:#20507a!important;box-shadow:0 15px 38px #0007}
+.wallet-total strong{color:#ffd94b!important}.wallet-total span,.wallet-total small{color:#bdd4ec!important}
+.wallet-mark{border-color:#1e9dd5!important;color:#55d9ff!important}
+.login-cover{background:radial-gradient(circle at 15% 12%,#0d3a73,#03050b 58%,#17091a)!important}
+.login-card{background:linear-gradient(155deg,#0d1727,#070b13)!important;border:1px solid #244367!important;box-shadow:0 32px 100px #000b!important;color:#eff6ff}
+.login-card h1{color:#f5f9ff!important}.login-card p,.login-help{color:#9db1ca!important}
+.login-card label{color:#bcd2e9!important}.login-help{border-color:#243b59!important}.login-error{color:#ff82aa!important}
+.toast{background:#10213a!important;color:#eef7ff!important;border:1px solid #2a4a6c}
+.empty{background:#091321!important;border-color:#294362!important;color:#93aac4!important}
+.section-toolbar h2{color:#f5f8ff!important}.tiny{color:#93a9c3!important}
+.owner-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:17px}
+.owner-shortcuts a{display:flex;flex-direction:column;gap:7px;min-width:0;padding:15px;border:1px solid #203b5b;border-radius:15px;background:linear-gradient(150deg,#0d1727,#080c15);transition:transform .2s,border-color .2s,box-shadow .2s}
+.owner-shortcuts a:hover{transform:translateY(-4px);border-color:#20bfff;box-shadow:0 15px 34px #007bff20}
+.owner-shortcuts a>span{font-size:22px;color:#45d6ff}.owner-shortcuts a:nth-child(2)>span{color:#ff57a8}.owner-shortcuts a:nth-child(3)>span{color:#ffd43b}.owner-shortcuts a:nth-child(4)>span{color:#b28aff}
+.owner-shortcuts b{font-size:11px;color:#f2f7ff}.owner-shortcuts small{font-size:9px;line-height:1.55;color:#96aac2}
+.owner-shortcuts em{margin-top:auto;font-size:9px;font-style:normal;font-weight:900;color:#5ad9ff}
+@media(max-width:1000px){.owner-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.topbar{padding:0 14px}.owner-hero{min-height:220px;padding:20px}.owner-hero-art{width:100%;opacity:.5}.owner-hero:after{background:linear-gradient(90deg,#06101f 0%,rgba(6,16,31,.86) 55%,rgba(6,16,31,.45) 100%)}.owner-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}.brand-badge{width:38px;height:38px}}
+
 </style>
 </head>
 <body>
 <header class="topbar">
- <div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER CONTROL CENTER</small></span></div>
+ <div class="brand"><span class="brand-badge"><img src="/images/343shop-icon.svg" alt=""></span><span>343SHOP <small>OWNER CONTROL CENTER</small></span></div>
  <div class="top-right"><span>PRIVATE · BOSS ACCESS</span><button id="logoutBtn" type="button" style="border:1px solid #ffffff2a;background:transparent;color:#fff;border-radius:30px;padding:8px 12px;font-size:11px;cursor:pointer">Toka</button><a href="/">← Duka la umma</a><button class="nav-toggle" id="navToggle" type="button">☰</button></div>
 </header>
 <div class="shell">
@@ -25,11 +106,22 @@
    <button data-section="wallet"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="15" rx="3"/><path d="M2 9h20M16 15h2"/></svg> Wallet / Malipo</button>
    <button data-section="ai"><svg viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg> AI & Connections</button>
   </nav>
+  <div class="side-label side-store-label">STORE SHORTCUTS</div>
+  <nav class="side-nav side-store-nav" aria-label="Public store shortcuts">
+   <a href="/#marketplaces"><span>◎</span> Global Marketplace ↗</a>
+   <a href="/#print-studio"><span>▣</span> Print Studio ↗</a>
+   <a href="/#shop"><span>▤</span> Our Books ↗</a>
+   <a href="/gift-cards.html"><span>✦</span> Gift Cards ↗</a>
+  </nav>
   <div class="side-note"><b>Control ya mwenye duka</b> Password inathibitishwa server-side. Browser inapokea session cookie ya HttpOnly ya saa 8; password haikai kwenye local storage.</div>
  </aside>
  <main class="main">
   <section class="section active" id="sec-overview">
    <div class="page-head"><div><span class="eyebrow"><i class="dot"></i> 343SHOP PRIVATE WORKSPACE</span><h1>Habari Boss. Karibu kwenye control center.</h1><p>Usimamizi wa bidhaa zako, mapato yaliyorekodiwa na miunganisho ya AI.</p></div><span class="status-pill">OWNER ACCESS <i></i></span></div>
+   <section class="owner-hero">
+    <div class="owner-hero-copy"><span>PRIVATE WORKSPACE · BOSS FERISI</span><h2>Shop smart. Build your marketplace.</h2><p>Dhibiti bidhaa zako, maduka washirika, malipo yaliyothibitishwa na miunganisho ya AI sehemu moja.</p><a href="/" class="btn">Fungua duka la umma ↗</a></div>
+    <div class="owner-hero-art" aria-hidden="true"><img src="/images/marketplace-hero.svg" alt=""></div>
+   </section>
    <div class="stats">
     <article class="stat"><span>Bidhaa zako · zilizochapishwa</span><strong id="statPublished">—</strong><small>Catalogue ya 343SHOP</small></article>
     <article class="stat"><span>Bidhaa zinazopitiwa</span><strong id="statDrafts">—</strong><small>Drafts za kusubiri idhini</small></article>
@@ -40,6 +132,12 @@
    <div class="grid-main">
     <article class="panel"><h2>Muhtasari wa duka</h2><p class="sub">Taarifa za mfumo, zinatoka kwenye backend ya sasa.</p><div class="health-list" id="overviewHealth"><div class="empty">Inapakia taarifa...</div></div></article>
     <article class="panel"><h2>Hatua za mmiliki</h2><p class="sub">Mtiririko wa kazi wa kusimamia duka.</p><div class="health-list"><div class="health"><b>01 · Ongeza bidhaa</b><span>Hifadhi kama draft</span></div><div class="health"><b>02 · Kagua bei na stock</b><span>Thibitisha taarifa</span></div><div class="health"><b>03 · Publish</b><span>Weka kwenye duka</span></div><div class="health"><b>04 · Rekodi malipo</b><span>Kagua reference kwanza</span></div></div><div class="notice" style="margin-top:14px"><strong>Usalama:</strong> Dashboard haihifadhi Gemini key, payment secret, PIN au password. Keys ziwekwe Cloudflare Secrets.</div></article>
+   </div>
+   <div class="owner-shortcuts" aria-label="Store destinations">
+    <a href="/#marketplaces"><span>◎</span><b>Global Marketplace</b><small>Unganisha wateja na wauzaji wa nje</small><em>Explore ↗</em></a>
+    <a href="/#print-studio"><span>▣</span><b>Print Studio</b><small>Huduma zako za printing na branding</small><em>Open Studio ↗</em></a>
+    <a href="/#shop"><span>▤</span><b>Books & Originals</b><small>Vitabu na kazi zinazomilikiwa na 343SHOP</small><em>View Books ↗</em></a>
+    <a href="/gift-cards.html"><span>✦</span><b>Gift Cards Hub</b><small>Kituo maalum cha gift cards</small><em>Open Hub ↗</em></a>
    </div>
   </section>
   <section class="section" id="sec-products">
@@ -98,7 +196,7 @@
   </section>
  </main>
 </div>
-<div class="login-cover" id="loginCover"><div class="login-card"><div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER ACCESS ONLY</small></span></div><h1>Karibu Boss.</h1><p>Ingia kwa password yako binafsi ya dashboard. Hii si password ya wateja na inathibitishwa na server.</p><label for="ownerPassword">OWNER_PASSWORD</label><input class="login-input" id="ownerPassword" type="password" autocomplete="current-password" spellcheck="false" placeholder="Weka password ya mmiliki"><button class="btn gold" id="loginBtn" type="button">Fungua dashboard ↗</button><div class="login-error" id="loginError"></div><div class="login-help">Kama bado hujaweka password: Cloudflare → Workers & Pages → 343shop → Settings → Variables and Secrets → Add Secret → <b>OWNER_PASSWORD</b>. Tumia password yenye angalau herufi 8; herufi nyingi zaidi ni salama zaidi. <b>MCP_WRITE_TOKEN</b> ibaki tofauti kwa AI/MCP plugin. Usitume password au token kwenye chat.</div></div></div>
+<div class="login-cover" id="loginCover"><div class="login-card"><div class="brand"><span class="brand-badge"><img src="/images/343shop-icon.svg" alt=""></span><span>343SHOP <small>OWNER ACCESS ONLY</small></span></div><h1>Karibu Boss.</h1><p>Ingia kwa password yako binafsi ya dashboard. Hii si password ya wateja na inathibitishwa na server.</p><label for="ownerPassword">OWNER_PASSWORD</label><input class="login-input" id="ownerPassword" type="password" autocomplete="current-password" spellcheck="false" placeholder="Weka password ya mmiliki"><button class="btn gold" id="loginBtn" type="button">Fungua dashboard ↗</button><div class="login-error" id="loginError"></div><div class="login-help">Kama bado hujaweka password: Cloudflare → Workers & Pages → 343shop → Settings → Variables and Secrets → Add Secret → <b>OWNER_PASSWORD</b>. Tumia password yenye angalau herufi 8; herufi nyingi zaidi ni salama zaidi. <b>MCP_WRITE_TOKEN</b> ibaki tofauti kwa AI/MCP plugin. Usitume password au token kwenye chat.</div></div></div>
 <div class="toast hidden" id="toast" role="status"></div>
 <script>
 (()=>{

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 850" role="img" aria-labelledby="t d">
+<title id="t">343SHOP global marketplace</title><desc id="d">Neon shopping bags, a cart, boxes and gift items on a black background.</desc>
+<defs>
+ <linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8CEBFF"/><stop offset=".5" stop-color="#16B9FF"/><stop offset="1" stop-color="#0868F5"/></linearGradient>
+ <linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FF8AC7"/><stop offset="1" stop-color="#FF238E"/></linearGradient>
+ <linearGradient id="y" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF39A"/><stop offset="1" stop-color="#FFC928"/></linearGradient>
+ <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#0F2849" stop-opacity=".92"/><stop offset="1" stop-color="#050812" stop-opacity=".98"/></linearGradient>
+ <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="25" stdDeviation="24" flood-color="#000" flood-opacity=".7"/></filter>
+ <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="16" result="s"/><feMerge><feMergeNode in="s"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1400" height="850" fill="#03050B"/>
+<circle cx="190" cy="80" r="300" fill="#007DFF" opacity=".11"/><circle cx="1230" cy="650" r="340" fill="#FF238E" opacity=".09"/>
+<path d="M-30 560 C250 425 350 760 655 610 S1070 400 1450 515" fill="none" stroke="#087DFF" stroke-width="70" opacity=".13" filter="url(#glow)"/>
+<path d="M0 710 C330 570 560 820 880 675 S1240 535 1460 620" fill="none" stroke="#FF238E" stroke-width="24" opacity=".2" filter="url(#glow)"/>
+<g transform="translate(220 160)" filter="url(#shadow)">
+ <path d="M75 180 H550 L492 545 Q310 610 122 545Z" fill="url(#glass)" stroke="#18B9FF" stroke-width="13" stroke-linejoin="round"/>
+ <path d="M170 185 V120 C170 -20 455 -20 455 120 V185" fill="none" stroke="url(#y)" stroke-width="24" stroke-linecap="round"/>
+ <path d="M110 235 H515" stroke="#FF3D9B" stroke-width="7" opacity=".9"/>
+ <text x="310" y="405" text-anchor="middle" font-family="Arial,sans-serif" font-size="142" font-weight="900" fill="#F7FBFF">343</text>
+ <text x="310" y="472" text-anchor="middle" font-family="Arial,sans-serif" font-size="43" font-weight="900" letter-spacing="8" fill="url(#b)">SHOP</text>
+</g>
+<g transform="translate(790 210)" filter="url(#shadow)">
+ <path d="M0 0 H44 L92 250 Q105 280 145 280 H420 Q455 280 468 245 L520 70 H112" fill="none" stroke="#D7E6FF" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+ <circle cx="177" cy="346" r="43" fill="#080E1A" stroke="url(#b)" stroke-width="18"/>
+ <circle cx="425" cy="346" r="43" fill="#080E1A" stroke="url(#p)" stroke-width="18"/>
+ <g transform="translate(142 107)"><rect width="145" height="142" rx="16" fill="#11264A" stroke="#18B9FF" stroke-width="7"/><path d="M20 40 H125 M74 15 V128" stroke="#74E7FF" stroke-width="6" opacity=".8"/></g>
+ <g transform="translate(305 42)"><rect width="140" height="205" rx="18" fill="#17152E" stroke="#FF3D9B" stroke-width="7"/><path d="M20 48 H120 M20 78 H100" stroke="#FFA0D1" stroke-width="7" stroke-linecap="round"/><path d="M44 0 V-34 C44 -85 96 -85 96 -34 V0" fill="none" stroke="#FFD84C" stroke-width="10" stroke-linecap="round"/></g>
+</g>
+<g transform="translate(1010 535)" filter="url(#shadow)">
+ <path d="M0 75 L150 0 L300 75 L150 155Z" fill="#143B68" stroke="#16B9FF" stroke-width="7"/>
+ <path d="M0 75 V225 L150 300 V155Z" fill="#0B1F3E" stroke="#16B9FF" stroke-width="7"/>
+ <path d="M300 75 V225 L150 300 V155Z" fill="#231231" stroke="#FF238E" stroke-width="7"/>
+ <path d="M150 0 V155" stroke="#FFD84C" stroke-width="7"/><text x="150" y="235" text-anchor="middle" font-family="Arial,sans-serif" font-size="54" font-weight="900" fill="#fff">343</text>
+</g>
+<text x="92" y="775" font-family="Arial,sans-serif" font-size="35" font-weight="900" letter-spacing="8" fill="#DDEBFF">SHOP SMART · LIVE BETTER</text>
+<text x="96" y="820" font-family="Arial,sans-serif" font-size="19" letter-spacing="4" fill="#9FB2D0">GLOBAL MARKETPLACE  /  PRINT STUDIO  /  ORIGINAL BOOKS</text>
+</svg>
