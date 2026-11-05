@@ -13,7 +13,7 @@
 <body>
 <header class="topbar">
  <div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER CONTROL CENTER</small></span></div>
- <div class="top-right"><span>PRIVATE · BOSS ACCESS</span><a href="/">← Duka la umma</a><button class="nav-toggle" id="navToggle" type="button">☰</button></div>
+ <div class="top-right"><span>PRIVATE · BOSS ACCESS</span><button id="logoutBtn" type="button" style="border:1px solid #ffffff2a;background:transparent;color:#fff;border-radius:30px;padding:8px 12px;font-size:11px;cursor:pointer">Toka</button><a href="/">← Duka la umma</a><button class="nav-toggle" id="navToggle" type="button">☰</button></div>
 </header>
 <div class="shell">
  <aside class="sidebar" id="sidebar">
@@ -25,7 +25,7 @@
    <button data-section="wallet"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="15" rx="3"/><path d="M2 9h20M16 15h2"/></svg> Wallet / Malipo</button>
    <button data-section="ai"><svg viewBox="0 0 24 24"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg> AI & Connections</button>
   </nav>
-  <div class="side-note"><b>Control ya mwenye duka</b> Token yako inatumika kwenye session hii tu. Haitahifadhiwa kwenye browser storage.</div>
+  <div class="side-note"><b>Control ya mwenye duka</b> Password inathibitishwa server-side. Browser inapokea session cookie ya HttpOnly ya saa 8; password haikai kwenye local storage.</div>
  </aside>
  <main class="main">
   <section class="section active" id="sec-overview">
@@ -98,21 +98,21 @@
   </section>
  </main>
 </div>
-<div class="login-cover" id="loginCover"><div class="login-card"><div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER ACCESS ONLY</small></span></div><h1>Karibu Boss.</h1><p>Ingia kwa owner secret iliyowekwa Cloudflare. Hii si password ya customer na haipaswi kuwekwa kwenye public website.</p><label for="ownerToken">MCP_WRITE_TOKEN</label><input class="login-input" id="ownerToken" type="password" autocomplete="off" spellcheck="false" placeholder="Bandika owner token yako"><button class="btn gold" id="loginBtn" type="button">Fungua dashboard ↗</button><div class="login-error" id="loginError"></div><div class="login-help">Kama token haijawekwa: Cloudflare → 343shop → Settings → Variables and Secrets → Add Secret → <b>MCP_WRITE_TOKEN</b>. Usinitumie token kwa chat na usiweke kwenye code.</div></div></div>
+<div class="login-cover" id="loginCover"><div class="login-card"><div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER ACCESS ONLY</small></span></div><h1>Karibu Boss.</h1><p>Ingia kwa password yako binafsi ya dashboard. Hii si password ya wateja na inathibitishwa na server.</p><label for="ownerPassword">OWNER_PASSWORD</label><input class="login-input" id="ownerPassword" type="password" autocomplete="current-password" spellcheck="false" placeholder="Weka password ya mmiliki"><button class="btn gold" id="loginBtn" type="button">Fungua dashboard ↗</button><div class="login-error" id="loginError"></div><div class="login-help">Kama bado hujaweka password: Cloudflare → Workers & Pages → 343shop → Settings → Variables and Secrets → Add Secret → <b>OWNER_PASSWORD</b>. Tumia password ndefu yenye angalau herufi 16. <b>MCP_WRITE_TOKEN</b> ibaki tofauti kwa AI/MCP plugin. Usitume password au token kwenye chat.</div></div></div>
 <div class="toast hidden" id="toast" role="status"></div>
 <script>
 (()=>{
 "use strict";
 const $=id=>document.getElementById(id);
-let ownerToken="",products=[],wallet={ledger_balance:0,transactions:[]},partnerApplications=[],status={};
+let products=[],wallet={ledger_balance:0,transactions:[]},partnerApplications=[],status={};
 const fmt=n=>new Intl.NumberFormat("en-TZ",{maximumFractionDigits:0}).format(Number(n)||0);
 const money=n=>"TSh "+fmt(n);
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 function toast(message){const el=$("toast");el.textContent=message;el.classList.remove("hidden");clearTimeout(window.__343toast);window.__343toast=setTimeout(()=>el.classList.add("hidden"),3000)}
 async function api(path,method="GET",body){
- const headers={"Accept":"application/json","Authorization":"Bearer "+ownerToken};
+ const headers={"Accept":"application/json"};
  if(body!==undefined)headers["Content-Type"]="application/json";
- const response=await fetch(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
+ const response=await fetch(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body),credentials:"same-origin"});
  const data=await response.json().catch(()=>({}));
  if(!response.ok)throw new Error(data.error||("HTTP "+response.status));
  return data;
@@ -131,21 +131,57 @@ document.querySelectorAll("[data-section]").forEach(btn=>btn.addEventListener("c
 $("navToggle").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
 $("partnerFilter").addEventListener("change",loadPartnerApplications);
 async function login(){
- const token=$("ownerToken").value.trim();
- if(!token){$("loginError").textContent="Weka owner token kwanza.";return}
- $("loginBtn").disabled=true;$("loginError").textContent="Inakagua token...";
- ownerToken=token;
+ const password=$("ownerPassword").value;
+ if(!password){$("loginError").textContent="Weka password ya owner kwanza.";return}
+ $("loginBtn").disabled=true;$("loginError").textContent="Inathibitisha password...";
+ try{
+  const response=await fetch("/api/admin/login",{
+   method:"POST",credentials:"same-origin",
+   headers:{"Accept":"application/json","Content-Type":"application/json"},
+   body:JSON.stringify({password})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||("HTTP "+response.status));
+  status=await api("/api/admin/status");
+  $("loginCover").classList.add("hidden");
+  $("ownerPassword").value="";
+  await loadOverview();
+  renderAI();
+ }catch(error){
+  const messages={
+   owner_password_not_configured:"OWNER_PASSWORD haijawekwa Cloudflare Production. Ongeza Secret hiyo kwanza.",
+   owner_password_too_short:"Password ya owner inahitaji angalau herufi 16.",
+   invalid_owner_password:"Password si sahihi. Jaribu tena.",
+   rate_limited:"Majaribio yamezidi. Subiri dakika 15 kisha ujaribu tena.",
+   product_database_not_configured:"Login imekubaliwa, lakini D1 database binding haipo. Kagua DB kwenye Cloudflare."
+  };
+  $("loginError").textContent=messages[error.message]||("Imeshindikana kufungua dashboard: "+error.message);
+ }
+ finally{$("loginBtn").disabled=false}
+}
+async function restoreSession(){
  try{
   status=await api("/api/admin/status");
   $("loginCover").classList.add("hidden");
-  $("ownerToken").value="";
   await loadOverview();
   renderAI();
- }catch(error){ownerToken="";$("loginError").textContent=error.message==="owner_secret_not_configured"?"MCP_WRITE_TOKEN haijawekwa production. Weka secret Cloudflare kwanza.":"Token au D1 setup haijakubaliwa: "+error.message}
- finally{$("loginBtn").disabled=false}
+ }catch{
+  $("loginCover").classList.remove("hidden");
+ }
+}
+async function logout(){
+ try{
+  await fetch("/api/admin/logout",{method:"POST",credentials:"same-origin",headers:{"Accept":"application/json"}});
+ }finally{
+  status={};
+  $("ownerPassword").value="";
+  $("loginError").textContent="Umetoka kwenye dashboard.";
+  $("loginCover").classList.remove("hidden");
+ }
 }
 $("loginBtn").addEventListener("click",login);
-$("ownerToken").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+$("ownerPassword").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+$("logoutBtn").addEventListener("click",logout);
 function renderHealth(){
  const rows=[
   ["Owner authentication",status.owner_authenticated],
@@ -264,6 +300,7 @@ function renderAI(){
  const items=[["Gemini 3.8 Flash",ai.gemini],["OpenAI",ai.openai],["Claude",ai.claude]];
  $("aiHealth").innerHTML=items.map(([name,enabled])=>'<div class="health"><b>'+name+'</b><em class="'+(enabled?"good":"warn")+'">'+(enabled?"API key imewekwa":"Key haijawekwa")+'</em></div>').join("");
 }
+restoreSession();
 })();
 </script>
 </body></html>

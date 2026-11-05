@@ -3,6 +3,17 @@ import assert from "node:assert/strict";
 import worker from "../worker/index.mjs";
 
 const origin = "https://343shop.chugastan343.workers.dev";
+const ownerPassword = "Mango-River-343SHOP-Owner-Access-2026!";
+
+async function ownerCookie(env, ip) {
+  const response = await worker.fetch(new Request(origin + "/api/admin/login", {
+    method: "POST",
+    headers: { Origin: origin, "Content-Type": "application/json", "CF-Connecting-IP": ip },
+    body: JSON.stringify({ password: ownerPassword })
+  }), env);
+  assert.equal(response.status, 200);
+  return (response.headers.get("set-cookie") || "").split(";")[0];
+}
 
 class FakeD1 {
   constructor() { this.applications = []; }
@@ -111,15 +122,22 @@ test("duplicate seller application is not inserted twice", async () => {
   assert.equal(DB.applications.length, 1);
 });
 
-test("public seller applications are only visible through owner-authenticated API", async () => {
+test("public seller applications are only visible through the separate owner password session", async () => {
   const DB = new FakeD1();
-  await submit(validApplication(), { DB }, "198.51.100.16");
-  const denied = await worker.fetch(new Request(origin + "/api/admin/partner-applications"), { DB, MCP_WRITE_TOKEN: "owner-secret" });
+  const env = { DB, MCP_WRITE_TOKEN: "owner-secret", OWNER_PASSWORD: ownerPassword };
+  await submit(validApplication(), env, "198.51.100.16");
+  const denied = await worker.fetch(new Request(origin + "/api/admin/partner-applications"), env);
   assert.equal(denied.status, 401);
 
-  const allowed = await worker.fetch(new Request(origin + "/api/admin/partner-applications", {
+  const mcpTokenDenied = await worker.fetch(new Request(origin + "/api/admin/partner-applications", {
     headers: { Authorization: "Bearer owner-secret" }
-  }), { DB, MCP_WRITE_TOKEN: "owner-secret" });
+  }), env);
+  assert.equal(mcpTokenDenied.status, 401);
+
+  const cookie = await ownerCookie(env, "198.51.100.41");
+  const allowed = await worker.fetch(new Request(origin + "/api/admin/partner-applications", {
+    headers: { Cookie: cookie }
+  }), env);
   assert.equal(allowed.status, 200);
   const payload = await allowed.json();
   assert.equal(payload.applications.length, 1);
@@ -128,13 +146,15 @@ test("public seller applications are only visible through owner-authenticated AP
 
 test("owner can review application without auto-connecting a seller catalogue", async () => {
   const DB = new FakeD1();
-  await submit(validApplication(), { DB }, "198.51.100.17");
+  const env = { DB, MCP_WRITE_TOKEN: "owner-secret", OWNER_PASSWORD: ownerPassword };
+  await submit(validApplication(), env, "198.51.100.17");
   const id = DB.applications[0].id;
+  const cookie = await ownerCookie(env, "198.51.100.42");
   const response = await worker.fetch(new Request(origin + "/api/admin/partner-applications/" + id, {
     method: "PATCH",
-    headers: { Authorization: "Bearer owner-secret", "Content-Type": "application/json" },
+    headers: { Cookie: cookie, "Content-Type": "application/json" },
     body: JSON.stringify({ status: "approved" })
-  }), { DB, MCP_WRITE_TOKEN: "owner-secret" });
+  }), env);
   const payload = await response.json();
   assert.equal(response.status, 200);
   assert.equal(payload.application.status, "approved");
