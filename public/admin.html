@@ -98,7 +98,7 @@
   </section>
  </main>
 </div>
-<div class="login-cover" id="loginCover"><div class="login-card"><div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER ACCESS ONLY</small></span></div><h1>Karibu Boss.</h1><p>Ingia kwa password yako binafsi ya dashboard. Hii si password ya wateja na inathibitishwa na server.</p><label for="ownerPassword">OWNER_PASSWORD</label><input class="login-input" id="ownerPassword" type="password" autocomplete="current-password" spellcheck="false" placeholder="Weka password ya mmiliki"><button class="btn gold" id="loginBtn" type="button">Fungua dashboard ↗</button><div class="login-error" id="loginError"></div><div class="login-help">Kama bado hujaweka password: Cloudflare → Workers & Pages → 343shop → Settings → Variables and Secrets → Add Secret → <b>OWNER_PASSWORD</b>. Tumia password ndefu yenye angalau herufi 16. <b>MCP_WRITE_TOKEN</b> ibaki tofauti kwa AI/MCP plugin. Usitume password au token kwenye chat.</div></div></div>
+<div class="login-cover" id="loginCover"><div class="login-card"><div class="brand"><span class="brand-badge">343</span><span>343SHOP <small>OWNER ACCESS ONLY</small></span></div><h1>Karibu Boss.</h1><p>Ingia kwa password yako binafsi ya dashboard. Hii si password ya wateja na inathibitishwa na server.</p><label for="ownerPassword">OWNER_PASSWORD</label><input class="login-input" id="ownerPassword" type="password" autocomplete="current-password" spellcheck="false" placeholder="Weka password ya mmiliki"><button class="btn gold" id="loginBtn" type="button">Fungua dashboard ↗</button><div class="login-error" id="loginError"></div><div class="login-help">Kama bado hujaweka password: Cloudflare → Workers & Pages → 343shop → Settings → Variables and Secrets → Add Secret → <b>OWNER_PASSWORD</b>. Tumia password yenye angalau herufi 8; herufi nyingi zaidi ni salama zaidi. <b>MCP_WRITE_TOKEN</b> ibaki tofauti kwa AI/MCP plugin. Usitume password au token kwenye chat.</div></div></div>
 <div class="toast hidden" id="toast" role="status"></div>
 <script>
 (()=>{
@@ -150,7 +150,7 @@ async function login(){
  }catch(error){
   const messages={
    owner_password_not_configured:"OWNER_PASSWORD haijawekwa Cloudflare Production. Ongeza Secret hiyo kwanza.",
-   owner_password_too_short:"Password ya owner inahitaji angalau herufi 16.",
+   owner_password_too_short:"Password ya owner inahitaji angalau herufi 8.",
    invalid_owner_password:"Password si sahihi. Jaribu tena.",
    rate_limited:"Majaribio yamezidi. Subiri dakika 15 kisha ujaribu tena.",
    product_database_not_configured:"Login imekubaliwa, lakini D1 database binding haipo. Kagua DB kwenye Cloudflare."
