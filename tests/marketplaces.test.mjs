@@ -838,25 +838,45 @@ test("owner dashboard and dedicated Gift Cards page scripts parse and stay separ
   assert.doesNotMatch(homepage, /id="giftcards"/);
 });
 
-test("343SHOP neon identity, original book covers and discovery cards are present", async () => {
+test("343SHOP restores the white and green storefront and displays real seller listings, not inspiration galleries", async () => {
   const homepage = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const admin = await readFile(new URL("../public/admin.html", import.meta.url), "utf8");
+  const deals = await readFile(new URL("../public/deals.html", import.meta.url), "utf8");
+  const giftCards = await readFile(new URL("../public/gift-cards.html", import.meta.url), "utf8");
   const logo = await readFile(new URL("../public/images/343shop-logo.svg", import.meta.url), "utf8");
   const icon = await readFile(new URL("../public/images/343shop-icon.svg", import.meta.url), "utf8");
-  const hero = await readFile(new URL("../public/images/marketplace-hero.svg", import.meta.url), "utf8");
   const covers = await Promise.all(["storybook.svg", "paperback.svg", "ebook.svg"].map(name =>
     readFile(new URL("../public/images/" + name, import.meta.url), "utf8")
   ));
 
-  assert.match(homepage, /src="\/images\/343shop-logo\.svg"/);
-  assert.match(homepage, /src="\/images\/marketplace-hero\.svg"/);
-  assert.match(homepage, /class="discovery-grid"/);
-  assert.match(homepage, /--shop-ink:#edf5ff/);
+  assert.match(homepage, /data-theme="light"/);
+  assert.match(homepage, /--forest:#176b3b/);
+  assert.match(homepage, /--shop-green:#16834b/);
+  assert.match(homepage, /--shop-ink:#1d2d22/);
+  assert.match(homepage, /JBL GO 4/);
+  assert.match(homepage, /JBL TUNE 310C/);
+  assert.match(homepage, /SanDisk 128GB/);
+  assert.match(homepage, /virginmegastore\.ae\/medias\/1000290-main\.jpg/);
+  assert.match(homepage, /empire\.co\.tz\/products\/jbl-go-4-portable-waterproof-speaker/);
+  assert.match(homepage, /empire\.co\.tz\/products\/jbl-tune-310c-wired-usb-c-in-ear-headphones/);
+  assert.match(homepage, /empire\.co\.tz\/products\/sandisk-128gb-ultra-micro-uhs-i-sdxc-card/);
+  assert.doesNotMatch(homepage, /id="styleSamples"|class="style-samples|class="inspiration-tile|class="gift-teaser-samples/);
+  assert.doesNotMatch(homepage, /marketplace-hero\.svg/);
+  assert.doesNotMatch(homepage, /class="[^"]*featured-local-placeholder/);
+  assert.match(homepage, /BOOK COVER PREVIEW/);
+  assert.match(homepage, /owner-store-no-image/);
+  assert.match(homepage, /no-image-note/);
+  assert.match(deals, /data-theme="light"/);
+  assert.match(deals, /--bg:#fff/);
+  assert.match(deals, /Seller has not supplied a product image/);
+  assert.match(giftCards, /data-theme="light"/);
+  assert.doesNotMatch(giftCards, /class="hero-showcase|class="gift-photo-strip/);
+  assert.match(giftCards, /OFFICIAL BRAND/);
+  assert.match(giftCards, /request categories/);
   assert.match(admin, /class="owner-hero"/);
   assert.match(admin, /class="owner-shortcuts"/);
   assert.match(admin, /src="\/images\/343shop-icon\.svg"/);
-  assert.match(admin, /color-scheme:dark/);
-  for (const asset of [logo, icon, hero, ...covers]) {
+  for (const asset of [logo, icon, ...covers]) {
     assert.match(asset, /<svg[\s>]/);
     assert.match(asset, /viewBox=/);
   }
@@ -875,17 +895,18 @@ test("customer print portfolio embeds a verified WebP directly for reliable rend
 });
 
 
-test("customer storefront keeps its approved design while adding theme, card-brand and gift-photo controls", async () => {
+test("customer storefront keeps the fixed white-green theme and preserves payment disclosures", async () => {
   const homepage = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const deals = await readFile(new URL("../public/deals.html", import.meta.url), "utf8");
   const gift = await readFile(new URL("../public/gift-cards.html", import.meta.url), "utf8");
 
   for (const [name, html] of [["homepage", homepage], ["deals", deals], ["gift cards", gift]]) {
-    assert.match(html, /data-theme-toggle/);
-    assert.match(html, /343shop-theme/);
+    assert.match(html, /data-theme="light"/);
+    assert.doesNotMatch(html, /data-theme-toggle/);
     const themeScripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
-    assert.ok(themeScripts.some(match => match[1].includes('localStorage.getItem(key)')),
-      name + " should include the theme preference script");
+    assert.ok(themeScripts.some(match => match[1].includes('document.documentElement.dataset.theme="light"')),
+      name + " should keep the white-green theme on every visit");
+    assert.doesNotMatch(html, /localStorage\.getItem\(["']343shop-theme/);
     for (const match of themeScripts) {
       assert.doesNotThrow(() => new Script(match[1], { filename: name + ".inline.js" }));
     }
@@ -895,7 +916,5 @@ test("customer storefront keeps its approved design while adding theme, card-bra
   assert.match(homepage, /payment-mastercard/);
   assert.match(homepage, /Card checkout is not connected yet/);
   assert.match(homepage, /Hatuombi wala kuhifadhi taarifa za kadi hapa/);
-  assert.match(gift, /gift-photo-strip/);
-  assert.match(gift, /cdn\.pixabay\.com\/photo\/2020\/12\/09/);
-  assert.match(gift, /images\.unsplash\.com\/photo-1518291043933-49e998050694/);
+  assert.doesNotMatch(gift, /<section class="gift-photo-strip"/);
 });

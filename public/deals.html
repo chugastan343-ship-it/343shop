@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="sw">
+<html lang="sw" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#03050b">
+<meta name="theme-color" content="#16834b">
 <meta name="description" content="343SHOP Deals — browse and filter real product listings from connected marketplace sources.">
 <link rel="icon" href="/images/343shop-icon.svg" type="image/svg+xml">
 <title>Deals & New Arrivals — 343SHOP</title>
@@ -59,6 +59,29 @@ html[data-theme="light"] .note{background:#fff;border-color:#e1e8f0;color:#64758
 html[data-theme="light"] .note b{color:#87651f}
 html[data-theme="light"] .theme-toggle{background:#fff;color:#24344b;border-color:#d6deea}
 
+
+/* 343SHOP Deals — restored white and bright-green theme */
+:root{color-scheme:light;--bg:#fff;--panel:#fff;--panel2:#f5faf5;--line:#dfe9df;--text:#1d2d22;--muted:#66766a;--blue:#16834b;--pink:#2b914f;--yellow:#b58b42}
+html,body{background:#fff!important;color:#1d2d22!important;color-scheme:light!important}
+body{background:linear-gradient(180deg,#fff,#f7fbf7)!important}
+.announcement{background:#16834b!important;color:#fff!important;border-color:#126c3e!important}
+.header{background:#fff!important;border-color:#dfe9df!important;box-shadow:0 5px 20px rgba(24,83,48,.07)!important}
+.nav{border-color:#e1ebe2!important;color:#4e6553!important}.nav a,.header-actions a{color:#45614c!important}
+.nav a:hover,.nav a.active{color:#16834b!important}
+.search{background:#f7fbf7!important;border-color:#d3e4d5!important}.search input{color:#1d2d22!important}.search input::placeholder{color:#839286!important}.search button{background:#16834b!important;color:#fff!important}
+.hero{background:linear-gradient(120deg,#f2f8f2,#fff 70%,#eaf5eb)!important;border-radius:16px}.hero h1{color:#176b3b!important}.hero h1 span{background:none!important;color:#16834b!important;-webkit-text-fill-color:#16834b!important}.hero p,.crumb,.status,.results-top p{color:#66766a!important}
+.hero-pill{background:#fff!important;border-color:#dbe8dc!important}.hero-pill strong{color:#16834b!important}
+.deal-chip{background:#fff!important;border-color:#dce8dd!important;color:#52675a!important}.deal-chip:hover,.deal-chip.active{background:#16834b!important;border-color:#16834b!important;color:#fff!important;box-shadow:0 5px 16px rgba(24,83,48,.12)!important}
+.filters,.filter-head,.filter-group{background:#fff!important;border-color:#e0e9e1!important;color:#1d2d22!important}.filter-head strong,.filter-group h3{color:#1d432a!important}.filter-head button{color:#16834b!important}.filter-option{color:#5f7264!important}
+.filter-group input[type="search"],.filter-group select,.sort select{background:#fff!important;border-color:#d2e2d4!important;color:#1d2d22!important}.results-top{border-color:#e0e9e1!important}.results-top strong{color:#1d432a!important}
+.product-card{background:#fff!important;border-color:#dfe9df!important;box-shadow:0 7px 20px rgba(24,83,48,.06)!important}.product-card:hover{border-color:#a8d2b0!important;box-shadow:0 14px 30px rgba(24,83,48,.12)!important}
+.product-image{background:linear-gradient(145deg,#f4faf5,#e9f4ea)!important}.product-image img{object-fit:contain!important;background:transparent!important}
+.product-placeholder{width:100%;height:100%;display:grid;place-items:center;padding:12px;text-align:center;font:800 10px/1.6 Arial,sans-serif;letter-spacing:.04em;color:#748378!important;text-shadow:none!important;background:#f5faf5!important}
+.product-copy h3{color:#1d432a!important}.product-copy p{color:#66766a!important}.product-source{color:#16834b!important}.price{color:#176b3b!important}.stock{color:#718074!important}.stock.good{color:#21834b!important}
+.product-actions a{background:#16834b!important;border-color:#16834b!important;color:#fff!important}.product-actions a.ask{background:#f2f8f3!important;border-color:#c9dfcc!important;color:#176b3b!important}
+.empty,.note{background:#f7fbf7!important;border-color:#dce9dd!important;color:#68786c!important}.empty strong{color:#1d432a!important}.empty a{color:#16834b!important}
+.source-links a{background:#fff!important;border-color:#dbe8dc!important;color:#176b3b!important}.footer{background:#145d35!important;border-color:#145d35!important;color:#eaf6ec!important}.footer a{color:#d5f0da!important}.theme-toggle{display:none!important}
+
 </style>
 </head>
 <body>
@@ -68,7 +91,7 @@ html[data-theme="light"] .theme-toggle{background:#fff;color:#24344b;border-colo
     <div class="header-main">
       <a class="brand" href="/" aria-label="343SHOP home"><img src="/images/343shop-logo.svg" alt="343SHOP"></a>
       <form class="search" id="searchForm" role="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" minlength="2" maxlength="100" placeholder="Tafuta simu, laptop, viatu, gadgets..." aria-label="Tafuta bidhaa"><button type="submit">TAFUTA ↗</button></form>
-      <div class="header-actions"><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a><button class="theme-toggle" type="button" data-theme-toggle>☀ Light</button></div>
+      <div class="header-actions"><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a></div>
     </div>
     <nav class="nav" aria-label="Main navigation">
       <a href="/">Home</a><a class="active" href="/deals.html">Today's Deals</a><a href="/#departments">Makundi yote</a><a href="/#marketplaces">Soko la Dunia</a><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a><a href="/gift-cards.html">Gift Cards</a>
@@ -143,9 +166,7 @@ html[data-theme="light"] .theme-toggle{background:#fff;color:#24344b;border-colo
   </div>
 </main>
 <footer class="footer"><div class="wrap footer-row"><a href="/"><img src="/images/343shop-logo.svg" alt="343SHOP"></a><span>© 2026 343SHOP · <a href="/privacy.html">Privacy</a></span><span>Shopping from Tanzania · <a href="https://wa.me/255695981035" target="_blank" rel="noopener noreferrer">WhatsApp support ↗</a></span></div></footer>
-<script>
-(()=>{const key="343shop-theme";const root=document.documentElement;let theme="dark";try{theme=localStorage.getItem(key)||"dark"}catch{};const apply=()=>{root.dataset.theme=theme;document.querySelectorAll("[data-theme-toggle]").forEach(b=>{b.textContent=theme==="dark"?"☀ Light":"☾ Dark";b.setAttribute("aria-label",theme==="dark"?"Switch to light mode":"Switch to dark mode");b.setAttribute("aria-pressed",String(theme==="dark"))})};apply();document.addEventListener("click",e=>{const b=e.target.closest("[data-theme-toggle]");if(!b)return;theme=theme==="dark"?"light":"dark";try{localStorage.setItem(key,theme)}catch{}apply()});})();
-</script>
+<script>document.documentElement.dataset.theme="light";</script>
 <script>
 (function(){
 "use strict";
@@ -186,7 +207,7 @@ function render(){
   const visual=makeNode("div","product-image");
   const imageUrl=safeUrl(product.image_url);
   if(imageUrl){const image=makeNode("img");image.src=imageUrl;image.alt=productName(product);image.loading="lazy";image.referrerPolicy="no-referrer";visual.appendChild(image)}
-  else visual.appendChild(makeNode("span","product-placeholder","343"));
+  else visual.appendChild(makeNode("span","product-placeholder",tr("Picha halisi haijatolewa na muuzaji","Seller has not supplied a product image")));
   const discountPrice=Number(product.price!=null?product.price:product.source_price);
   const original=Number(product.original_price||product.compare_at_price||product.list_price);
   if(Number.isFinite(discountPrice)&&Number.isFinite(original)&&original>discountPrice){
