@@ -873,3 +873,29 @@ test("customer print portfolio embeds a verified WebP directly for reliable rend
   assert.match(html, /data-print-sample="right"/);
   assert.match(html, /id="printWorkTitle"/);
 });
+
+
+test("customer storefront keeps its approved design while adding theme, card-brand and gift-photo controls", async () => {
+  const homepage = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
+  const deals = await readFile(new URL("../public/deals.html", import.meta.url), "utf8");
+  const gift = await readFile(new URL("../public/gift-cards.html", import.meta.url), "utf8");
+
+  for (const [name, html] of [["homepage", homepage], ["deals", deals], ["gift cards", gift]]) {
+    assert.match(html, /data-theme-toggle/);
+    assert.match(html, /343shop-theme/);
+    const themeScripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
+    assert.ok(themeScripts.some(match => match[1].includes('localStorage.getItem(key)')),
+      name + " should include the theme preference script");
+    for (const match of themeScripts) {
+      assert.doesNotThrow(() => new Script(match[1], { filename: name + ".inline.js" }));
+    }
+  }
+
+  assert.match(homepage, /payment-visa/);
+  assert.match(homepage, /payment-mastercard/);
+  assert.match(homepage, /Card checkout is not connected yet/);
+  assert.match(homepage, /Hatuombi wala kuhifadhi taarifa za kadi hapa/);
+  assert.match(gift, /gift-photo-strip/);
+  assert.match(gift, /cdn\\.pixabay\\.com\\/photo\\/2020\\/12\\/09/);
+  assert.match(gift, /images\\.unsplash\\.com\\/photo-1518291043933-49e998050694/);
+});
