@@ -838,25 +838,45 @@ test("owner dashboard and dedicated Gift Cards page scripts parse and stay separ
   assert.doesNotMatch(homepage, /id="giftcards"/);
 });
 
-test("343SHOP neon identity, original book covers and discovery cards are present", async () => {
+test("343SHOP restores the white and green storefront and displays real seller listings, not inspiration galleries", async () => {
   const homepage = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const admin = await readFile(new URL("../public/admin.html", import.meta.url), "utf8");
+  const deals = await readFile(new URL("../public/deals.html", import.meta.url), "utf8");
+  const giftCards = await readFile(new URL("../public/gift-cards.html", import.meta.url), "utf8");
   const logo = await readFile(new URL("../public/images/343shop-logo.svg", import.meta.url), "utf8");
   const icon = await readFile(new URL("../public/images/343shop-icon.svg", import.meta.url), "utf8");
-  const hero = await readFile(new URL("../public/images/marketplace-hero.svg", import.meta.url), "utf8");
   const covers = await Promise.all(["storybook.svg", "paperback.svg", "ebook.svg"].map(name =>
     readFile(new URL("../public/images/" + name, import.meta.url), "utf8")
   ));
 
-  assert.match(homepage, /src="\/images\/343shop-logo\.svg"/);
-  assert.match(homepage, /src="\/images\/marketplace-hero\.svg"/);
-  assert.match(homepage, /class="discovery-grid"/);
-  assert.match(homepage, /--shop-ink:#edf5ff/);
+  assert.match(homepage, /data-theme="light"/);
+  assert.match(homepage, /--forest:#176b3b/);
+  assert.match(homepage, /--shop-green:#16834b/);
+  assert.doesNotMatch(homepage, /--shop-ink:#edf5ff/);
+  assert.match(homepage, /JBL GO 4/);
+  assert.match(homepage, /JBL TUNE 310C/);
+  assert.match(homepage, /SanDisk 128GB/);
+  assert.match(homepage, /virginmegastore\.ae\/medias\/1000290-main\.jpg/);
+  assert.match(homepage, /empire\.co\.tz\/products\/jbl-go-4-portable-waterproof-speaker/);
+  assert.match(homepage, /empire\.co\.tz\/products\/jbl-tune-310c-wired-usb-c-in-ear-headphones/);
+  assert.match(homepage, /empire\.co\.tz\/products\/sandisk-128gb-ultra-micro-uhs-i-sdxc-card/);
+  assert.doesNotMatch(homepage, /id="styleSamples"|class="style-samples|class="inspiration-tile|gift-teaser-samples/);
+  assert.doesNotMatch(homepage, /marketplace-hero\.svg/);
+  assert.doesNotMatch(homepage, /featured-local-placeholder/);
+  assert.match(homepage, /BOOK COVER PREVIEW/);
+  assert.match(homepage, /owner-store-no-image/);
+  assert.match(homepage, /no-image-note/);
+  assert.match(deals, /data-theme="light"/);
+  assert.match(deals, /--bg:#fff/);
+  assert.match(deals, /Seller has not supplied a product image/);
+  assert.match(giftCards, /data-theme="light"/);
+  assert.doesNotMatch(giftCards, /class="hero-showcase|class="gift-photo-strip/);
+  assert.match(giftCards, /OFFICIAL BRAND/);
+  assert.match(giftCards, /Sample categories/);
   assert.match(admin, /class="owner-hero"/);
   assert.match(admin, /class="owner-shortcuts"/);
   assert.match(admin, /src="\/images\/343shop-icon\.svg"/);
-  assert.match(admin, /color-scheme:dark/);
-  for (const asset of [logo, icon, hero, ...covers]) {
+  for (const asset of [logo, icon, ...covers]) {
     assert.match(asset, /<svg[\s>]/);
     assert.match(asset, /viewBox=/);
   }
