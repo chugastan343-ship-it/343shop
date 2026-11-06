@@ -759,7 +759,7 @@ test("Gemini API status and chat use server-side secret with the official Genera
     assert.deepEqual(body.contents, [
       { role: "user", parts: [{ text: "Habari 343SHOP" }] }
     ]);
-    assert.equal(body.generationConfig.maxOutputTokens, 350);
+    assert.equal(body.generationConfig.maxOutputTokens, 500);
     assert.deepEqual(body.generationConfig, { maxOutputTokens: 350 }, "Gemini 3.8 Flash should not receive deprecated sampling parameters");
     return new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: "Karibu 343SHOP." }] } }]
@@ -772,7 +772,7 @@ test("Gemini API status and chat use server-side secret with the official Genera
       body: JSON.stringify({ provider: "gemini", messages: [{ role: "user", content: "Habari 343SHOP" }] })
     }), { GEMINI_API_KEY: "gemini-test-secret" });
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { reply: "Karibu 343SHOP.", provider: "gemini" });
+    assert.deepEqual(await response.json(), { reply: "Karibu 343SHOP.", provider: "gemini", mode: "shopping" });
     assert.equal(calls.length, 1);
   } finally {
     globalThis.fetch = originalFetch;
