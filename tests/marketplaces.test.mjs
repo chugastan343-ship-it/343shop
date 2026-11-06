@@ -347,7 +347,7 @@ test("AI assistant receives live global brokerage context without claiming live 
     assert.equal(response.status, 200);
     assert.equal((await response.json()).reply, "Use the Global Market search to check connected listings.");
     assert.match(upstreamBody.instructions, /global shopping and brokerage marketplace/i);
-    assert.match(upstreamBody.instructions, /The chat assistant itself does not run live product searches/i);
+    assert.match(upstreamBody.instructions, /In Product Finder mode, the Worker supplies a verified search snapshot/i);
     assert.match(upstreamBody.instructions, /Approved partner catalogue count: 1/);
     assert.match(upstreamBody.instructions, /Marketplace APIs with credentials configured: none/);
     assert.match(upstreamBody.instructions, /external marketplace listings/i);
@@ -738,12 +738,12 @@ test("Alibaba search only includes explicitly seller-authorised GGS partner cata
 test("Gemini API status and chat use server-side secret with the official GenerateContent endpoint", async () => {
   const statusMissing = await get("/api/ai/status");
   assert.deepEqual(await statusMissing.json(), {
-    providers: { openai: false, claude: false, gemini: false }
+    providers: { cloudflare: false, openai: false, claude: false, gemini: false }
   });
 
   const statusReady = await get("/api/ai/status", { GEMINI_API_KEY: "gemini-test-secret" });
   assert.deepEqual(await statusReady.json(), {
-    providers: { openai: false, claude: false, gemini: true }
+    providers: { cloudflare: false, openai: false, claude: false, gemini: true }
   });
 
   const originalFetch = globalThis.fetch;
@@ -759,8 +759,8 @@ test("Gemini API status and chat use server-side secret with the official Genera
     assert.deepEqual(body.contents, [
       { role: "user", parts: [{ text: "Habari 343SHOP" }] }
     ]);
-    assert.equal(body.generationConfig.maxOutputTokens, 350);
-    assert.deepEqual(body.generationConfig, { maxOutputTokens: 350 }, "Gemini 3.8 Flash should not receive deprecated sampling parameters");
+    assert.equal(body.generationConfig.maxOutputTokens, 500);
+    assert.deepEqual(body.generationConfig, { maxOutputTokens: 500 }, "Gemini 3.8 Flash should not receive deprecated sampling parameters");
     return new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: "Karibu 343SHOP." }] } }]
     }), { status: 200, headers: { "content-type": "application/json" } });
@@ -772,7 +772,7 @@ test("Gemini API status and chat use server-side secret with the official Genera
       body: JSON.stringify({ provider: "gemini", messages: [{ role: "user", content: "Habari 343SHOP" }] })
     }), { GEMINI_API_KEY: "gemini-test-secret" });
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { reply: "Karibu 343SHOP.", provider: "gemini" });
+    assert.deepEqual(await response.json(), { reply: "Karibu 343SHOP.", provider: "gemini", mode: "shopping" });
     assert.equal(calls.length, 1);
   } finally {
     globalThis.fetch = originalFetch;
