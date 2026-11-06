@@ -42,6 +42,23 @@
 @media(max-width:650px){.wrap{width:calc(100% - 26px)}.header-main{min-height:0;grid-template-columns:1fr auto;padding:9px 0;gap:8px}.brand img{width:137px;height:39px}.header-actions a{padding:8px 9px;font-size:8px}.search{grid-column:1/-1;grid-row:2;height:40px}.search button{padding:0 13px}.nav{display:none}.mobile-nav{display:flex;gap:16px;overflow:auto;min-height:39px;border-top:1px solid #17283e;scrollbar-width:none}.mobile-nav a{display:flex;align-items:center;white-space:nowrap;color:#b7cbe2;font-size:9px;font-weight:850}.mobile-nav a.active{color:var(--blue)}.hero{padding:27px 0 15px}.hero-row{align-items:start}.hero h1{font-size:36px}.hero p{font-size:10px}.deal-links{padding:14px 0}.page-layout{display:flex;flex-direction:column;padding-bottom:45px}.filters{position:static;width:100%}.filter-head{padding:12px 14px}.filter-body{display:grid;grid-template-columns:1fr 1fr}.filter-group{padding:12px;border-bottom:1px solid #182940}.filter-group h3{margin-bottom:8px}.filter-option{margin:7px 0;font-size:9px}.results{width:100%}.results-top{align-items:flex-start}.results-top strong{font-size:11px}.sort{font-size:8px}.sort select{padding:8px 7px;max-width:125px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.product-image{height:140px}.product-copy{padding:9px}.product-copy h3{font-size:10px;min-height:43px}.product-copy p{font-size:8px;min-height:43px}.price{font-size:12px}.product-actions{flex-direction:column}.product-actions a{min-height:30px}.footer-row{align-items:flex-start;flex-direction:column}}
 @media(max-width:370px){.filter-body{grid-template-columns:1fr}.product-grid{grid-template-columns:1fr}.product-image{height:175px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.theme-toggle{border:1px solid #2b4260;border-radius:999px;padding:8px 11px;background:#081322;color:#dcecff;font-size:9px;font-weight:900;cursor:pointer}
+html[data-theme="light"] body{background:#f3f6fb;color:#19283b}
+html[data-theme="light"] .announcement,html[data-theme="light"] .footer{background:#101b2c;color:#dbe7f6}
+html[data-theme="light"] .header{background:#fff;border-color:#e0e7f0}
+html[data-theme="light"] .nav a,html[data-theme="light"] .mobile-nav a{color:#52647c}
+html[data-theme="light"] .hero{background:linear-gradient(120deg,#e7eef8,#f7f9fc 65%,#e8edf8);border-color:#dfe7f1}
+html[data-theme="light"] .hero h1,html[data-theme="light"] .results-top strong{color:#14243b}
+html[data-theme="light"] .hero p,html[data-theme="light"] .results-top p{color:#65768c}
+html[data-theme="light"] .filters,html[data-theme="light"] .product-card,html[data-theme="light"] .filter-head,html[data-theme="light"] .filter-group,html[data-theme="light"] .empty{background:#fff;border-color:#e1e8f0;color:#1b2c42}
+html[data-theme="light"] .filter-group h3,html[data-theme="light"] .product-copy h3,html[data-theme="light"] .empty strong{color:#1b2c42}
+html[data-theme="light"] .filter-option,html[data-theme="light"] .product-copy p,html[data-theme="light"] .status{color:#65768c}
+html[data-theme="light"] .filter-group input[type="search"],html[data-theme="light"] .filter-group select,html[data-theme="light"] .sort select{background:#f8fafd;color:#1b2c42;border-color:#dbe4ef}
+html[data-theme="light"] .note{background:#fff;border-color:#e1e8f0;color:#64758a}
+html[data-theme="light"] .note b{color:#87651f}
+html[data-theme="light"] .theme-toggle{background:#fff;color:#24344b;border-color:#d6deea}
+
 </style>
 </head>
 <body>
@@ -51,7 +68,7 @@
     <div class="header-main">
       <a class="brand" href="/" aria-label="343SHOP home"><img src="/images/343shop-logo.svg" alt="343SHOP"></a>
       <form class="search" id="searchForm" role="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" minlength="2" maxlength="100" placeholder="Tafuta simu, laptop, viatu, gadgets..." aria-label="Tafuta bidhaa"><button type="submit">TAFUTA ↗</button></form>
-      <div class="header-actions"><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a></div>
+      <div class="header-actions"><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a><button class="theme-toggle" type="button" data-theme-toggle>☀ Light</button></div>
     </div>
     <nav class="nav" aria-label="Main navigation">
       <a href="/">Home</a><a class="active" href="/deals.html">Today's Deals</a><a href="/#departments">Makundi yote</a><a href="/#marketplaces">Soko la Dunia</a><a href="/#shop">Vitabu vyetu</a><a href="/#print-studio">Print Studio</a><a href="/gift-cards.html">Gift Cards</a>
@@ -126,6 +143,9 @@
   </div>
 </main>
 <footer class="footer"><div class="wrap footer-row"><a href="/"><img src="/images/343shop-logo.svg" alt="343SHOP"></a><span>© 2026 343SHOP · <a href="/privacy.html">Privacy</a></span><span>Shopping from Tanzania · <a href="https://wa.me/255695981035" target="_blank" rel="noopener noreferrer">WhatsApp support ↗</a></span></div></footer>
+<script>
+(()=>{const key="343shop-theme";const root=document.documentElement;let theme="dark";try{theme=localStorage.getItem(key)||"dark"}catch{};const apply=()=>{root.dataset.theme=theme;document.querySelectorAll("[data-theme-toggle]").forEach(b=>{b.textContent=theme==="dark"?"☀ Light":"☾ Dark";b.setAttribute("aria-label",theme==="dark"?"Switch to light mode":"Switch to dark mode");b.setAttribute("aria-pressed",String(theme==="dark"))})};apply();document.addEventListener("click",e=>{const b=e.target.closest("[data-theme-toggle]");if(!b)return;theme=theme==="dark"?"light":"dark";try{localStorage.setItem(key,theme)}catch{}apply()});})();
+</script>
 <script>
 (function(){
 "use strict";
