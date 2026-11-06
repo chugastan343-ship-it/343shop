@@ -872,7 +872,7 @@ test("343SHOP restores the white and green storefront and displays real seller l
   assert.match(giftCards, /data-theme="light"/);
   assert.doesNotMatch(giftCards, /class="hero-showcase|class="gift-photo-strip/);
   assert.match(giftCards, /OFFICIAL BRAND/);
-  assert.match(giftCards, /Sample categories/);
+  assert.match(giftCards, /request categories/);
   assert.match(admin, /class="owner-hero"/);
   assert.match(admin, /class="owner-shortcuts"/);
   assert.match(admin, /src="\/images\/343shop-icon\.svg"/);
