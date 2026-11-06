@@ -852,7 +852,7 @@ test("343SHOP restores the white and green storefront and displays real seller l
   assert.match(homepage, /data-theme="light"/);
   assert.match(homepage, /--forest:#176b3b/);
   assert.match(homepage, /--shop-green:#16834b/);
-  assert.doesNotMatch(homepage, /--shop-ink:#edf5ff/);
+  assert.match(homepage, /--shop-ink:#1d2d22/);
   assert.match(homepage, /JBL GO 4/);
   assert.match(homepage, /JBL TUNE 310C/);
   assert.match(homepage, /SanDisk 128GB/);
@@ -895,17 +895,18 @@ test("customer print portfolio embeds a verified WebP directly for reliable rend
 });
 
 
-test("customer storefront keeps its approved design while adding theme, card-brand and gift-photo controls", async () => {
+test("customer storefront keeps the fixed white-green theme and preserves payment disclosures", async () => {
   const homepage = await readFile(new URL("../public/index.html", import.meta.url), "utf8");
   const deals = await readFile(new URL("../public/deals.html", import.meta.url), "utf8");
   const gift = await readFile(new URL("../public/gift-cards.html", import.meta.url), "utf8");
 
   for (const [name, html] of [["homepage", homepage], ["deals", deals], ["gift cards", gift]]) {
-    assert.match(html, /data-theme-toggle/);
-    assert.match(html, /343shop-theme/);
+    assert.match(html, /data-theme="light"/);
+    assert.doesNotMatch(html, /data-theme-toggle/);
     const themeScripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
-    assert.ok(themeScripts.some(match => match[1].includes('localStorage.getItem(key)')),
-      name + " should include the theme preference script");
+    assert.ok(themeScripts.some(match => match[1].includes('document.documentElement.dataset.theme="light"')),
+      name + " should keep the white-green theme on every visit");
+    assert.doesNotMatch(html, /localStorage\.getItem\(["']343shop-theme/);
     for (const match of themeScripts) {
       assert.doesNotThrow(() => new Script(match[1], { filename: name + ".inline.js" }));
     }
@@ -915,7 +916,5 @@ test("customer storefront keeps its approved design while adding theme, card-bra
   assert.match(homepage, /payment-mastercard/);
   assert.match(homepage, /Card checkout is not connected yet/);
   assert.match(homepage, /Hatuombi wala kuhifadhi taarifa za kadi hapa/);
-  assert.match(gift, /gift-photo-strip/);
-  assert.match(gift, /cdn\.pixabay\.com\/photo\/2020\/12\/09/);
-  assert.match(gift, /images\.unsplash\.com\/photo-1518291043933-49e998050694/);
+  assert.doesNotMatch(gift, /gift-photo-strip|cdn\.pixabay\.com\/photo\/2020\/12\/09|images\.unsplash\.com\/photo-1518291043933-49e998050694/);
 });
