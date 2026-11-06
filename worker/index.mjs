@@ -194,12 +194,13 @@ async function handleAIChat(request, env, url, ownerOnly = false) {
         messages: [{ role: "system", content: systemPrompt }, ...messages],
         max_completion_tokens: 500
       });
-      const output = result?.response
-        ?? result?.choices?.[0]?.message?.content
-        ?? result?.output_text
-        ?? result?.result?.response
-        ?? result?.result
-        ?? "";
+      const output = [
+        result?.response,
+        result?.choices?.[0]?.message?.content,
+        result?.output_text,
+        result?.result?.response,
+        result?.result
+      ].find((value) => typeof value === "string" && value.trim());
       reply = typeof output === "string" ? output.trim() : "";
     } else {
       let upstream;
