@@ -760,7 +760,7 @@ test("Gemini API status and chat use server-side secret with the official Genera
       { role: "user", parts: [{ text: "Habari 343SHOP" }] }
     ]);
     assert.equal(body.generationConfig.maxOutputTokens, 500);
-    assert.deepEqual(body.generationConfig, { maxOutputTokens: 350 }, "Gemini 3.8 Flash should not receive deprecated sampling parameters");
+    assert.deepEqual(body.generationConfig, { maxOutputTokens: 500 }, "Gemini 3.8 Flash should not receive deprecated sampling parameters");
     return new Response(JSON.stringify({
       candidates: [{ content: { parts: [{ text: "Karibu 343SHOP." }] } }]
     }), { status: 200, headers: { "content-type": "application/json" } });
