@@ -192,9 +192,14 @@ async function handleAIChat(request, env, url, ownerOnly = false) {
     if (provider === "cloudflare") {
       const result = await env.AI.run("@cf/zai-org/glm-4.7-flash", {
         messages: [{ role: "system", content: systemPrompt }, ...messages],
-        max_tokens: 500
+        max_completion_tokens: 500
       });
-      const output = result?.response ?? result?.output_text ?? result?.result ?? "";
+      const output = result?.response
+        ?? result?.choices?.[0]?.message?.content
+        ?? result?.output_text
+        ?? result?.result?.response
+        ?? result?.result
+        ?? "";
       reply = typeof output === "string" ? output.trim() : "";
     } else {
       let upstream;
