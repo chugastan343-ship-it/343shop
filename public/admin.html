@@ -190,9 +190,21 @@ body{background:radial-gradient(ellipse at 74% -10%,#102345 0,transparent 36%),#
   <section class="section" id="sec-ai">
    <div class="page-head"><div><span class="eyebrow">343SHOP · PRIVATE AI SERVICES</span><h1>AI & Connections</h1><p>Usalama wa API keys na providers za chatbot.</p></div></div>
    <div class="grid-main">
-    <article class="panel"><h2>AI providers</h2><p class="sub">Status ya keys kutoka Cloudflare Worker Secrets.</p><div class="health-list" id="aiHealth"><div class="empty">Inapakia...</div></div></article>
-    <article class="panel"><h2>Weka Gemini API</h2><p class="sub">Key haitakiwi kuandikwa hapa. Iweke kama Secret kwenye Cloudflare.</p><ol class="tiny"><li>Fungua Google AI Studio na utengeneze Gemini API key.</li><li>Cloudflare → Workers & Pages → 343shop → Settings → Variables and Secrets.</li><li>Ongeza Secret yenye jina <b>GEMINI_API_KEY</b>.</li><li>Save, redeploy Worker, kisha refresh hii dashboard.</li></ol><a class="btn ghost" href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio ↗</a><div class="notice" style="margin-top:15px">343SHOP chatbot inatumia Gemini 3.8 Flash kupitia Worker. API key haionekani kwenye HTML wala browser. API usage inaweza kuwa na gharama kulingana na Google AI plan.</div></article>
+    <article class="panel"><h2>AI providers</h2><p class="sub">343 AI FREE hutumia Cloudflare Workers AI binding; haihitaji API key ya provider.</p><div class="health-list" id="aiHealth"><div class="empty">Inapakia...</div></div><div class="notice" style="margin-top:14px">Free allocation: 10,000 Neurons kwa siku. Ikifika kikomo, huduma ya AI itasubiri reset ya siku inayofuata; hakuna malipo ya ziada kwenye Workers Free plan.</div></article>
+    <article class="panel"><h2>343 AI FREE — Cloudflare</h2><p class="sub">Hakuna GEMINI_API_KEY, OPENAI_API_KEY au ANTHROPIC_API_KEY inayohitajika kwa matumizi ya kawaida.</p><ol class="tiny"><li>Cloudflare → Workers & Pages → 343shop → Settings → Bindings.</li><li>Thibitisha binding ya AI yenye variable name <b>AI</b>.</li><li>Wrangler config ina binding hii kwa deployment ijayo.</li><li>Refresh dashboard kuangalia status.</li></ol><div class="notice" style="margin-top:15px">Usiweke API key kwenye storefront au kwenye chat. AI ya wateja iko kwenye floating assistant; AI ya mmiliki inalindwa na login ya Owner Dashboard.</div></article>
    </div>
+   <article class="panel" style="margin-top:15px">
+    <h2>Private Owner AI Assistant</h2>
+    <p class="sub">Msaidizi wako binafsi wa biashara, suppliers, bidhaa, mauzo na mipango ya 343SHOP. Inapatikana baada ya kuingia kwenye Owner Dashboard.</p>
+    <div id="ownerAiMessages" aria-live="polite" style="height:240px;overflow:auto;background:#f6f8f4;border:1px solid var(--line);border-radius:12px;padding:13px;display:grid;align-content:start;gap:9px">
+     <div style="padding:10px 12px;border-radius:12px;background:#e9f0e9;color:#243c2e;font-size:12px">Karibu Boss. Uliza kuhusu uendeshaji wa duka, bidhaa, wauzaji au mauzo.</div>
+    </div>
+    <form id="ownerAiForm" style="display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px">
+     <textarea id="ownerAiInput" maxlength="1200" rows="2" required placeholder="Andika swali la Owner AI..." style="width:100%;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:11px;font:inherit"></textarea>
+     <button class="btn gold" id="ownerAiSend" type="submit">Tuma ↑</button>
+    </form>
+    <p class="tiny" style="margin:8px 0 0">Mazungumzo haya hayatunzi password, API keys au tokens. AI inaandaa ushauri na drafts; haitangazi bidhaa wala kutumia fedha bila hatua ya mmiliki.</p>
+   </article>
   </section>
  </main>
 </div>
@@ -202,7 +214,7 @@ body{background:radial-gradient(ellipse at 74% -10%,#102345 0,transparent 36%),#
 (()=>{
 "use strict";
 const $=id=>document.getElementById(id);
-let products=[],wallet={ledger_balance:0,transactions:[]},partnerApplications=[],status={};
+let products=[],wallet={ledger_balance:0,transactions:[]},partnerApplications=[],status={},ownerAiHistory=[],ownerAiBusy=false;
 const fmt=n=>new Intl.NumberFormat("en-TZ",{maximumFractionDigits:0}).format(Number(n)||0);
 const money=n=>"TSh "+fmt(n);
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
@@ -409,9 +421,31 @@ $("walletForm").addEventListener("submit",async e=>{
 });
 function renderAI(){
  const ai=status.ai||{};
- const items=[["Gemini 3.8 Flash",ai.gemini],["OpenAI",ai.openai],["Claude",ai.claude]];
- $("aiHealth").innerHTML=items.map(([name,enabled])=>'<div class="health"><b>'+name+'</b><em class="'+(enabled?"good":"warn")+'">'+(enabled?"API key imewekwa":"Key haijawekwa")+'</em></div>').join("");
+ const items=[["Cloudflare Workers AI · Free",ai.cloudflare],["Gemini API (optional)",ai.gemini],["OpenAI API (optional)",ai.openai],["Anthropic API (optional)",ai.claude]];
+ $("aiHealth").innerHTML=items.map(([name,enabled])=>'<div class="health"><b>'+name+'</b><em class="'+(enabled?"good":"warn")+'">'+(enabled?"Imeunganishwa":"Haijaunganishwa")+'</em></div>').join("");
 }
+function ownerAiBubble(role,message){
+ const el=document.createElement("div");
+ el.textContent=message;
+ el.style.cssText="max-width:92%;padding:10px 12px;border-radius:12px;font-size:12px;line-height:1.6;white-space:pre-wrap;background:"+(role==="user"?"#173d2b":"#e9f0e9")+";color:"+(role==="user"?"#fff":"#243c2e")+";justify-self:"+(role==="user"?"end":"start");
+ $("ownerAiMessages").appendChild(el);
+ $("ownerAiMessages").scrollTop=$("ownerAiMessages").scrollHeight;
+}
+$("ownerAiForm").addEventListener("submit",async event=>{
+ event.preventDefault();
+ const input=$("ownerAiInput"),button=$("ownerAiSend"),message=input.value.trim();
+ if(!message||ownerAiBusy)return;
+ ownerAiBusy=true;input.value="";input.disabled=true;button.disabled=true;
+ ownerAiBubble("user",message);ownerAiHistory.push({role:"user",content:message});
+ try{
+  const result=await api("/api/owner/ai/chat","POST",{provider:"cloudflare",mode:"owner",messages:ownerAiHistory.slice(-8)});
+  if(typeof result.reply!=="string"||!result.reply.trim())throw new Error("empty_ai_reply");
+  ownerAiHistory.push({role:"assistant",content:result.reply});
+  ownerAiBubble("assistant",result.reply);
+ }catch(error){
+  ownerAiBubble("assistant",error.message==="unauthorized"?"Session imeisha. Ingia tena kwenye dashboard.":"AI haipatikani kwa sasa. Kagua Cloudflare AI binding au free allowance.");
+ }finally{ownerAiBusy=false;input.disabled=false;button.disabled=false;input.focus()}
+});
 restoreSession();
 })();
 </script>
