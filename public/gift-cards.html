@@ -51,10 +51,39 @@ main{padding:36px 0 65px}
 @media(max-width:1000px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.wrap{width:min(100% - 28px,1240px)}.top-inner{min-height:60px}.top-links{gap:10px;font-size:9px}.hero{padding:37px 0}.hero-layout{grid-template-columns:1fr;gap:25px}.hero-showcase{max-width:540px;width:94%;margin:auto}.section-head{align-items:stretch;flex-direction:column}.search-box{width:100%}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.art{height:125px}.gift-face{height:82px;padding:11px}.gift-face strong{font-size:18px}.card-body{padding:10px}.card h3{font-size:16px}.card p{font-size:8px;min-height:55px}.card-action{align-items:flex-start;flex-direction:column}.card-action a{width:100%;justify-content:center}.custom-banner{grid-template-columns:1fr;padding:19px}.custom-banner h2{font-size:24px}.custom-banner a{justify-self:start}.footer-inner{align-items:flex-start;flex-direction:column}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+.theme-toggle{border:1px solid #38516d;border-radius:999px;padding:8px 11px;background:#071322;color:#e8f2ff;font-size:9px;font-weight:900;white-space:nowrap}
+.gift-photo-strip{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin:22px 0 24px}
+.gift-photo-strip article{position:relative;min-height:210px;overflow:hidden;border:1px solid #263b56;border-radius:16px;background:#0b1421}
+.gift-photo-strip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.gift-photo-strip article:hover img{transform:scale(1.035)}
+.gift-photo-strip article:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,6,13,.78),rgba(2,6,13,.05) 90%)}
+.gift-photo-strip article div{position:absolute;z-index:1;left:20px;bottom:18px;max-width:75%;display:grid;gap:6px;color:#fff}
+.gift-photo-strip small{color:#ffd94b;font-size:8px;font-weight:900;letter-spacing:.17em}
+.gift-photo-strip strong{font:500 clamp(17px,2.4vw,26px)/1.15 Georgia,serif}
+html[data-theme="dark"] body{background:#03060d;color:#edf4ff}
+html[data-theme="dark"] .top{background:#03060d;border-bottom:1px solid #20344e}
+html[data-theme="dark"] .top-links{color:#c3d4e8}
+html[data-theme="dark"] .hero{background:radial-gradient(ellipse at 80% 20%,#18365b 0%,transparent 38%),linear-gradient(115deg,#050c18,#0b1d34 68%,#19112a);color:#fff}
+html[data-theme="dark"] .hero h1{color:#f3f7ff}
+html[data-theme="dark"] .section-head h2,html[data-theme="dark"] .card h3{color:#f0f6ff}
+html[data-theme="dark"] .section-head p,html[data-theme="dark"] .card p{color:#a4b5ca}
+html[data-theme="dark"] .card{background:#0b1422;border-color:#233650;color:#edf4ff}
+html[data-theme="dark"] .card-action{border-color:#243852}
+html[data-theme="dark"] .notice{background:#101a29;border-color:#33445b;color:#b3c3d6}
+html[data-theme="dark"] .custom-banner{background:#101b2b;border-color:#2b405b;color:#eaf2ff}
+html[data-theme="dark"] .footer{background:#02050a;color:#94a8c0}
+html[data-theme="dark"] .search-box{background:#081321;border-color:#2a3f5b}
+html[data-theme="dark"] .search-box input{background:transparent;color:#eff6ff}
+html[data-theme="dark"] .filter{background:#091524;border-color:#2b405b;color:#c4d3e5}
+html[data-theme="dark"] .filter.active{background:#12355a;border-color:#36c9ff;color:#fff}
+html[data-theme="light"] .theme-toggle{background:#fff;color:#24344b;border-color:#d6deea}
+@media(max-width:700px){.gift-photo-strip{grid-template-columns:1fr}.gift-photo-strip article{min-height:175px}.top-links{gap:9px;flex-wrap:wrap;justify-content:flex-end}.top-links a{font-size:8px}}
+
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap top-inner"><a href="/" class="brand"><span class="logo">343</span><span>343SHOP<small>GLOBAL SHOPPING · LOCAL SERVICE</small></span></a><nav class="top-links"><a href="/">Home</a><a href="/#departments">Men & Women</a><a href="/#marketplaces">Global Market</a><a href="/#print-studio">Print Studio</a></nav></div></header>
+<header class="top"><div class="wrap top-inner"><a href="/" class="brand"><span class="logo">343</span><span>343SHOP<small>GLOBAL SHOPPING · LOCAL SERVICE</small></span></a><nav class="top-links"><a href="/">Home</a><a href="/#departments">Men & Women</a><a href="/#marketplaces">Global Market</a><a href="/#print-studio">Print Studio</a><button class="theme-toggle" type="button" data-theme-toggle>☀ Light</button></nav></div></header>
 <section class="hero"><div class="wrap hero-layout"><div><span class="eyebrow"><i></i> 343SHOP · GIFT CARDS HUB</span><h1>Give a little joy.<br><em>Make it personal.</em></h1><p>Explore digital gift cards, gaming, entertainment, physical gift cards and business vouchers. Tell us the brand and country you need; we will help check authorised sources, region restrictions and current availability before an order is confirmed.</p><div class="hero-actions"><a class="btn" href="#giftOptions">Explore gift cards ↘</a><a class="btn ghost" href="https://www.amazon.com/gift-cards/" target="_blank" rel="noopener noreferrer">Amazon official gift cards ↗</a></div></div><div class="hero-showcase"><div class="hero-sample sample-amazon"><small>343SHOP · DIGITAL</small><strong>GIFT CARD</strong><em>A thoughtful gift, made easy</em></div><div class="hero-sample sample-play"><small>GAMING · DIGITAL</small><strong>PLAY MORE</strong><em>Give them their next adventure</em></div><div class="hero-sample sample-occasion"><small>OCCASIONS · BUSINESS</small><strong>JUST FOR YOU</strong><em>Celebrate people and moments that matter</em></div></div></div></section>
 <main class="wrap" id="giftOptions">
  <div class="section-head"><div><span class="kicker">THE 343SHOP GIFT COLLECTION</span><h2>Find the right card for the moment.</h2><p>Sample categories, not a promise of live inventory. Each request is checked for country, currency, seller, redemption terms and delivery.</p></div><label class="search-box"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.4"/><path d="m16 16 4.4 4.4"/></svg><input id="giftSearch" type="search" placeholder="Search gift cards..." aria-label="Search gift cards"></label></div>
@@ -67,6 +96,7 @@ main{padding:36px 0 65px}
   <button class="filter" type="button" data-filter="occasion">Occasions</button>
   <button class="filter" type="button" data-filter="business">Business & print</button>
  </div>
+<section class="gift-photo-strip" aria-label="Gift inspiration photography"><article><img src="https://cdn.pixabay.com/photo/2020/12/09/13/59/gifts-5817555_1280.jpg" alt="Premium red and black wrapped gifts with ribbons" loading="lazy"><div><small>GIFT INSPIRATION</small><strong>Thoughtful gifts, beautifully presented</strong></div></article><article><img src="https://images.unsplash.com/photo-1518291043933-49e998050694?auto=format&fit=crop&fm=jpg&q=85&w=1400" alt="Gift wrapping and stationery flat lay" loading="lazy"><div><small>MAKE IT PERSONAL</small><strong>A little detail makes it memorable</strong></div></article></section>
  <div class="cards" id="giftCardsGrid">
   <article class="card" data-category="digital" data-search="amazon digital gift card online shopping"><div class="art amazon"><div class="gift-face"><small>SHOPPING · DIGITAL</small><strong>AMAZON</strong><em>For the things they love</em></div></div><div class="card-body"><div class="card-top"><small>DIGITAL · GLOBAL BRAND</small><span class="availability">Check region</span></div><h3>Amazon Gift Card</h3><p>Digital Amazon.com gift-card requests. Region and eligible purchases depend on the issuing marketplace.</p><div class="card-action"><span>Verified sourcing on request</span><a href="https://www.amazon.com/gift-cards/" target="_blank" rel="noopener noreferrer">Official page ↗</a></div></div></article>
   <article class="card" data-category="digital" data-search="apple app store apple music gift card"><div class="art apple"><div class="gift-face"><small>APPLE ECOSYSTEM</small><strong>APPLE</strong><em>For apps, services and more</em></div></div><div class="card-body"><div class="card-top"><small>DIGITAL · APPLE</small><span class="availability">Check region</span></div><h3>Apple Gift Card</h3><p>Apple balance and eligible digital purchases where the card's country and terms allow redemption.</p><div class="card-action"><span>Availability to be verified</span><a href="https://www.apple.com/shop/gift-cards" target="_blank" rel="noopener noreferrer">Official page ↗</a></div></div></article>
@@ -86,6 +116,9 @@ main{padding:36px 0 65px}
  <section class="custom-banner"><div><h2>Make your own branded gift voucher.</h2><p>Need a voucher with your company logo, colours and offer? 343SHOP Print Studio designs and prints business vouchers, coupons, invitation-linked gift cards and promotional cards. Send your artwork or brief for a quotation.</p></div><a class="btn" href="https://wa.me/255695981035?text=Habari%20343SHOP%2C%20nahitaji%20voucher%20ya%20biashara%20ibuniwe%20na%20kuchapishwa." target="_blank" rel="noopener noreferrer">Talk to Print Studio ↗</a></section>
 </main>
 <footer class="footer"><div class="wrap footer-inner"><span>© 2026 343SHOP · Gift Cards Hub</span><span><a href="/">Back to 343SHOP Home</a> · <a href="/privacy.html">Privacy</a></span></div></footer>
+<script>
+(()=>{const key="343shop-theme";const root=document.documentElement;let theme="dark";try{theme=localStorage.getItem(key)||"dark"}catch{};const apply=()=>{root.dataset.theme=theme;document.querySelectorAll("[data-theme-toggle]").forEach(b=>{b.textContent=theme==="dark"?"☀ Light":"☾ Dark";b.setAttribute("aria-label",theme==="dark"?"Switch to light mode":"Switch to dark mode");b.setAttribute("aria-pressed",String(theme==="dark"))})};apply();document.addEventListener("click",e=>{const b=e.target.closest("[data-theme-toggle]");if(!b)return;theme=theme==="dark"?"light":"dark";try{localStorage.setItem(key,theme)}catch{}apply()});})();
+</script>
 <script>
 (()=>{
 const buttons=[...document.querySelectorAll("[data-filter]")],cards=[...document.querySelectorAll(".card[data-category]")],search=document.getElementById("giftSearch");
