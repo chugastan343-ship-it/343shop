@@ -883,7 +883,7 @@ test("customer storefront keeps its approved design while adding theme, card-bra
   for (const [name, html] of [["homepage", homepage], ["deals", deals], ["gift cards", gift]]) {
     assert.match(html, /data-theme-toggle/);
     assert.match(html, /343shop-theme/);
-    const themeScripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
+    const themeScripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
     assert.ok(themeScripts.some(match => match[1].includes('localStorage.getItem(key)')),
       name + " should include the theme preference script");
     for (const match of themeScripts) {
@@ -896,6 +896,6 @@ test("customer storefront keeps its approved design while adding theme, card-bra
   assert.match(homepage, /Card checkout is not connected yet/);
   assert.match(homepage, /Hatuombi wala kuhifadhi taarifa za kadi hapa/);
   assert.match(gift, /gift-photo-strip/);
-  assert.match(gift, /cdn\\.pixabay\\.com\\/photo\\/2020\\/12\\/09/);
-  assert.match(gift, /images\\.unsplash\\.com\\/photo-1518291043933-49e998050694/);
+  assert.match(gift, /cdn\.pixabay\.com\/photo\/2020\/12\/09/);
+  assert.match(gift, /images\.unsplash\.com\/photo-1518291043933-49e998050694/);
 });
