@@ -8,22 +8,28 @@ Customers can order 343SHOP-owned books and approved original scripts through th
 
 ## AI shopping assistant
 
-The floating assistant supports two server-side API providers:
+The floating 343SHOP assistant uses **Cloudflare Workers AI** through a native Worker binding. The default model is `@cf/zai-org/glm-4.7-flash`; it does not require an OpenAI, Anthropic or Gemini API key.
 
-- OpenAI Responses API: `gpt-5.6-luna`
-- Anthropic Messages API: `claude-haiku-5-5`
+Configure the binding in `wrangler.jsonc`:
 
-Configure one or both secrets on the Cloudflare Worker named `343shop`:
+```json
+"ai": {
+  "binding": "AI"
+}
+```
 
-- `OPENAI_API_KEY`
-- `ANTHROPIC_API_KEY`
+The application uses the Worker binding as `env.AI`. In Cloudflare, verify **Workers & Pages → 343shop → Settings → Bindings → AI**. The Free plan currently includes 10,000 Neurons per day. The allocation resets daily at 00:00 UTC; requests stop when the free limit is reached and resume after reset. This is a limited free allowance, not unlimited AI capacity. Check Cloudflare's current [Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/) before changing plans or models.
 
-In Cloudflare: Workers & Pages → 343shop → Settings → Variables and Secrets → Add → Secret. Save each API key as a Secret, not as a plain text variable. Never add API keys to `public/index.html`, GitHub source files, or browser storage.
+### Assistant modes
 
-The assistant checks `/api/ai/status` and only enables configured providers. Chat requests are sent to `/api/ai/chat`; conversation content is not saved in a 343SHOP database. The Worker applies request-size, message-count and basic per-IP rate limits. Add Cloudflare WAF/rate-limiting rules for stronger production abuse protection.
+- **Shopping Assistant** — answers customer questions about the 343SHOP brokerage model and safe order steps.
+- **Product Finder** — searches currently configured live eBay/partner catalogue sources and returns official marketplace search links for sources without a live feed. A directory link is not presented as a live product result.
+- **Sales Assistant** — drafts honest Swahili/English descriptions, customer replies and promotion copy; it does not publish ads or spend money.
+- **Private Owner Assistant** — available only inside the authenticated Owner Dashboard. The endpoint `/api/owner/ai/chat` verifies the existing signed owner session before running a request.
 
-API usage is billed separately by OpenAI or Anthropic. A ChatGPT or Claude consumer subscription does not include API usage.
+The Worker enforces request-size, message-count and per-IP rate limits. AI conversations are not saved to the 343SHOP D1 database. The Cloudflare model page identifies GLM-4.7-Flash as zero-data-retention. Optional Gemini/OpenAI/Anthropic API integrations remain supported only when their respective secrets are intentionally configured; those providers may incur separate API charges. A consumer ChatGPT or Claude subscription does not include API usage.
 
+Never add API keys to `public/index.html`, GitHub source files, or browser storage. Never paste owner passwords or MCP tokens into the AI chat.
 
 ## 343SHOP Marketplace MCP connector
 
