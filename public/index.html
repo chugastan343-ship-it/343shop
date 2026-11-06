@@ -1848,19 +1848,16 @@ async function loadAiProviders(){
     const data=await response.json();aiProviders=data.providers||aiProviders;
     const cloudOption=aiProvider.querySelector('option[value="cloudflare"]'),geminiOption=aiProvider.querySelector('option[value="gemini"]'),openOption=aiProvider.querySelector('option[value="openai"]'),claudeOption=aiProvider.querySelector('option[value="claude"]');
     cloudOption.disabled=!aiProviders.cloudflare;geminiOption.disabled=!aiProviders.gemini;openOption.disabled=!aiProviders.openai;claudeOption.disabled=!aiProviders.claude;
-    if(aiProviders.cloudflare)aiProvider.value="cloudflare";
-    else if(aiProviders.gemini)aiProvider.value="gemini";
-    else if(aiProviders.openai)aiProvider.value="openai";
-    else if(aiProviders.claude)aiProvider.value="claude";
-    const ready=aiProviders.cloudflare||aiProviders.gemini||aiProviders.openai||aiProviders.claude;
+    aiProvider.value="cloudflare";
+    const ready=Boolean(aiProviders.cloudflare);
     aiInput.disabled=!ready;aiSend.disabled=!ready;
-    setAiStatus(ready?(aiProviders.cloudflare?tr("343 AI FREE iko tayari. Kiwango cha bure cha kila siku kinatumika.","343 AI FREE is ready. Daily free allowance applies."):tr("Msaidizi yuko tayari.","Assistant is ready.")):tr("AI haipatikani. Kagua Cloudflare AI binding.","AI is unavailable. Check the Cloudflare AI binding."));
+    setAiStatus(ready?tr("343 AI FREE iko tayari. Kiwango cha bure cha kila siku kinatumika.","343 AI FREE is ready. Daily free allowance applies."):tr("343 AI FREE haijaunganishwa. Chagua provider nyingine kwa hiari au kagua Cloudflare AI binding.","343 AI FREE is not connected. You may select another provider manually or check the Cloudflare AI binding."));
   }catch{setAiStatus(tr("Msaidizi hapatikani kwa sasa. Tumia WhatsApp kuwasiliana nasi.","Assistant is temporarily unavailable. Please use WhatsApp."))}
 }
 aiLaunch.onclick=()=>aiPanel.classList.contains("open")?closeAi():openAi();
 $("aiClose").onclick=closeAi;
 function resetAiConversation(){aiHistory=[];aiMessagesEl.innerHTML="";addAiBubble("assistant",tr("Habari! Nikusaidie vipi leo?","Hello! How can I help today?"))}
-aiProvider.onchange=resetAiConversation;
+aiProvider.onchange=()=>{resetAiConversation();const ready=Boolean(aiProviders[aiProvider.value]);aiInput.disabled=!ready;aiSend.disabled=!ready;};
 aiMode.onchange=resetAiConversation;
 $("aiForm").addEventListener("submit",async e=>{
   e.preventDefault();const message=aiInput.value.trim();if(!message||aiBusy)return;
