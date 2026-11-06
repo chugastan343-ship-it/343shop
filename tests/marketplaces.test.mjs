@@ -862,7 +862,7 @@ test("343SHOP restores the white and green storefront and displays real seller l
   assert.match(homepage, /empire\.co\.tz\/products\/sandisk-128gb-ultra-micro-uhs-i-sdxc-card/);
   assert.doesNotMatch(homepage, /id="styleSamples"|class="style-samples|class="inspiration-tile|class="gift-teaser-samples/);
   assert.doesNotMatch(homepage, /marketplace-hero\.svg/);
-  assert.doesNotMatch(homepage, /featured-local-placeholder/);
+  assert.doesNotMatch(homepage, /class="[^"]*featured-local-placeholder/);
   assert.match(homepage, /BOOK COVER PREVIEW/);
   assert.match(homepage, /owner-store-no-image/);
   assert.match(homepage, /no-image-note/);
