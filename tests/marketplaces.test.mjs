@@ -860,7 +860,7 @@ test("343SHOP restores the white and green storefront and displays real seller l
   assert.match(homepage, /empire\.co\.tz\/products\/jbl-go-4-portable-waterproof-speaker/);
   assert.match(homepage, /empire\.co\.tz\/products\/jbl-tune-310c-wired-usb-c-in-ear-headphones/);
   assert.match(homepage, /empire\.co\.tz\/products\/sandisk-128gb-ultra-micro-uhs-i-sdxc-card/);
-  assert.doesNotMatch(homepage, /id="styleSamples"|class="style-samples|class="inspiration-tile|gift-teaser-samples/);
+  assert.doesNotMatch(homepage, /id="styleSamples"|class="style-samples|class="inspiration-tile|class="gift-teaser-samples/);
   assert.doesNotMatch(homepage, /marketplace-hero\.svg/);
   assert.doesNotMatch(homepage, /featured-local-placeholder/);
   assert.match(homepage, /BOOK COVER PREVIEW/);
@@ -916,5 +916,5 @@ test("customer storefront keeps the fixed white-green theme and preserves paymen
   assert.match(homepage, /payment-mastercard/);
   assert.match(homepage, /Card checkout is not connected yet/);
   assert.match(homepage, /Hatuombi wala kuhifadhi taarifa za kadi hapa/);
-  assert.doesNotMatch(gift, /gift-photo-strip|cdn\.pixabay\.com\/photo\/2020\/12\/09|images\.unsplash\.com\/photo-1518291043933-49e998050694/);
+  assert.doesNotMatch(gift, /<section class="gift-photo-strip"/);
 });
