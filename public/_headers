@@ -4,6 +4,10 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   X-Robots-Tag: index, follow
+  Link: </amazon-skin.css>; rel=stylesheet
 
 /index.html
   Cache-Control: public, max-age=300, must-revalidate
+
+/*.html
+  Link: </amazon-skin.css>; rel=stylesheet
