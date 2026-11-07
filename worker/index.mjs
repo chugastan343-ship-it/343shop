@@ -17,11 +17,20 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/health") {
-      return json({ ok: true, app: "343SHOP", orderFlow: "whatsapp", note: "worker-restored-minimal" });
+      return json({
+        ok: true,
+        app: "343SHOP",
+        orderFlow: "whatsapp",
+        note: "worker-amazon-skin-v2",
+        skin: "amazon"
+      });
     }
 
     if (url.pathname.startsWith("/api/")) {
-      return json({ error: "temporarily_unavailable", message: "Full API restoring. Static storefront is available." }, 503);
+      return json({
+        error: "temporarily_unavailable",
+        message: "Full API restoring. Static storefront is available."
+      }, 503);
     }
 
     const response = await env.ASSETS.fetch(request);
@@ -30,20 +39,39 @@ export default {
       headers.set(key, value);
     }
     headers.set("X-Robots-Tag", "index, follow");
-    const contentType = response.headers.get("Content-Type") || "";
-    if (contentType.includes("text/html")) {
+    headers.set("Cache-Control", "no-store");
+
+    const contentType = (response.headers.get("Content-Type") || "").toLowerCase();
+    const path = url.pathname;
+    const isHtml =
+      contentType.includes("text/html") ||
+      path === "/" ||
+      path.endsWith(".html") ||
+      path === "";
+
+    if (isHtml && response.status === 200) {
       return new HTMLRewriter()
         .on("head", {
           element(element) {
-            element.append('<link rel="stylesheet" href="/amazon-skin.css">', { html: true });
+            element.append(
+              '<link rel="stylesheet" href="/amazon-skin.css?v=2">',
+              { html: true }
+            );
+            element.append(
+              '<meta name="theme-color" content="#131921">',
+              { html: true }
+            );
           }
         })
-        .transform(new Response(response.body, {
-          status: response.status,
-          statusText: response.statusText,
-          headers
-        }));
+        .transform(
+          new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers
+          })
+        );
     }
+
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,
