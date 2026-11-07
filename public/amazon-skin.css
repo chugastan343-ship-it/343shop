@@ -1,0 +1,168 @@
+/* ========== Amazon-inspired skin for 343SHOP ========== */
+:root{
+  --forest:#131921!important;
+  --forest2:#232f3e!important;
+  --cream:#eaeded!important;
+  --paper:#ffffff!important;
+  --ink:#0f1111!important;
+  --muted:#565959!important;
+  --line:#d5d9d9!important;
+  --gold:#ff9900!important;
+  --amazon-yellow:#febd69;
+  --amazon-btn:#ffd814;
+  --amazon-btn-hover:#f7ca00;
+  --radius:4px!important;
+  --shadow:0 2px 5px rgba(15,17,17,.08)!important;
+}
+html,body{background:#eaeded!important;color:#0f1111!important;font-family:Arial,"Amazon Ember",Helvetica,sans-serif!important}
+.announcement{background:#232f3e!important;color:#fff!important;letter-spacing:.04em!important;font-size:12px!important;padding:8px 16px!important}
+.announcement b{color:#febd69!important}
+.header{
+  height:60px!important;
+  background:#131921!important;
+  border-bottom:none!important;
+  color:#fff!important;
+  padding:0 12px!important;
+  gap:12px!important;
+}
+.brand{color:#fff!important;font-size:20px!important;letter-spacing:-.02em!important}
+.brand-mark{background:#febd69!important;color:#131921!important;border-radius:4px!important;font-family:Arial,sans-serif!important}
+.brand span:last-child{color:#febd69!important}
+.nav{gap:14px!important}
+.nav a{color:#fff!important;font-size:13px!important;font-weight:600!important}
+.nav a:hover{color:#febd69!important;text-decoration:underline}
+.lang,.cart-button{
+  border-radius:8px!important;
+  border:1px solid #565959!important;
+  background:#232f3e!important;
+  color:#fff!important;
+  font-weight:700!important;
+}
+.cart-button{
+  background:#febd69!important;
+  color:#0f1111!important;
+  border-color:#f3a847!important;
+}
+.count{background:#ff9900!important;color:#fff!important;font-weight:800!important}
+.hero{
+  background:#fff!important;
+  padding:28px 0 24px!important;
+  min-height:auto!important;
+  gap:24px!important;
+  border-bottom:1px solid #d5d9d9!important;
+}
+.eyebrow{color:#c45500!important}
+.eyebrow:before{background:#ff9900!important}
+h1,.section-top h2,.about h2,.drawer-head h2,.modal h2{
+  font-family:Arial,Helvetica,sans-serif!important;
+  color:#0f1111!important;
+  letter-spacing:-.02em!important;
+}
+h1 em{color:#c45500!important}
+.hero-copy{color:#565959!important}
+.btn{
+  background:#ffd814!important;
+  color:#0f1111!important;
+  border:1px solid #fcd200!important;
+  border-radius:20px!important;
+  box-shadow:0 2px 5px rgba(213,217,217,.5)!important;
+  font-weight:700!important;
+}
+.btn:hover{background:#f7ca00!important;transform:none!important}
+.btn-outline{
+  background:#fff!important;
+  color:#0f1111!important;
+  border:1px solid #d5d9d9!important;
+}
+.btn-outline:hover{background:#f7fafa!important;color:#0f1111!important}
+.hero-art{
+  border-radius:4px!important;
+  background:linear-gradient(145deg,#232f3e,#131921)!important;
+  box-shadow:none!important;
+}
+.art-card.main{background:#febd69!important;color:#131921!important;border-radius:4px!important}
+.art-card.side{background:#ff9900!important;color:#fff!important}
+.art-card.low{background:#fff!important;color:#ff9900!important}
+.art-caption{border-radius:4px!important;color:#0f1111!important}
+.trust{background:#fff!important;border-color:#d5d9d9!important}
+.trust-item{color:#565959!important}
+.trust-icon{background:#fff6e0!important;color:#c45500!important;border-radius:4px!important}
+.trust strong{color:#0f1111!important}
+.shop{padding:28px 0 40px!important;background:#eaeded!important}
+.section-kicker{color:#c45500!important}
+.section-top p{color:#565959!important}
+.search{
+  width:min(520px,100%)!important;
+  border-radius:8px!important;
+  border:2px solid #febd69!important;
+  background:#fff!important;
+  overflow:hidden!important;
+}
+.search input{font-size:14px!important;padding:12px 0!important}
+.chip{
+  border-radius:8px!important;
+  border:1px solid #d5d9d9!important;
+  background:#fff!important;
+  color:#0f1111!important;
+  font-weight:600!important;
+}
+.chip.active,.chip:hover{
+  background:#232f3e!important;
+  color:#fff!important;
+  border-color:#232f3e!important;
+}
+.grid{gap:14px!important}
+.product{
+  background:#fff!important;
+  border:1px solid #d5d9d9!important;
+  border-radius:4px!important;
+  box-shadow:none!important;
+}
+.product:hover{transform:none!important;box-shadow:0 4px 12px rgba(15,17,17,.12)!important;border-color:#bbb!important}
+.visual{margin:0!important;border-radius:0!important;height:220px!important;background:#fff!important}
+.visual:after{display:none!important}
+.tag{border-radius:2px!important;background:#cc0c39!important;color:#fff!important;font-weight:700!important}
+.product-info{padding:10px 12px 14px!important}
+.cat-label{color:#565959!important}
+.product h3{
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:14px!important;
+  font-weight:500!important;
+  color:#0f1111!important;
+  min-height:40px!important;
+  line-height:1.3!important;
+}
+.product p{color:#565959!important;font-size:12px!important}
+.product-bottom{border-top:1px solid #eee!important;margin-top:10px!important;padding-top:10px!important}
+.price{color:#0f1111!important;font-size:18px!important;font-weight:700!important}
+.add{
+  width:auto!important;
+  min-width:36px!important;
+  height:32px!important;
+  border-radius:20px!important;
+  background:#ffd814!important;
+  color:#0f1111!important;
+  font-size:16px!important;
+  border:1px solid #fcd200!important;
+}
+.add:hover{background:#f7ca00!important;color:#0f1111!important}
+.about{background:#fff!important;border-top:1px solid #d5d9d9!important}
+.about-mark{background:#131921!important;color:#febd69!important;border-radius:4px!important}
+.footer{background:#232f3e!important;color:#ddd!important}
+.footer .brand{color:#fff!important}
+.footer-contact{color:#febd69!important}
+.footer-bottom{border-color:rgba(255,255,255,.15)!important;color:#999!important}
+.drawer{border-radius:0!important}
+.drawer-head h2{font-family:Arial,sans-serif!important}
+.close{border-radius:4px!important}
+.cart-line strong{font-family:Arial,sans-serif!important;color:#0f1111!important}
+.total-row.grand{color:#0f1111!important}
+.modal-card{border-radius:8px!important}
+.field input,.field textarea{border-radius:4px!important;border-color:#888c8c!important}
+.field input:focus,.field textarea:focus{border-color:#e77600!important;box-shadow:0 0 0 3px rgba(228,121,17,.5)!important;outline:none!important}
+.global-departments{background:#232f3e!important;border:none!important}
+.audience-search-card{border-radius:4px!important;border-color:#d5d9d9!important;box-shadow:none!important}
+.audience-search-card:hover{border-color:#e77600!important}
+.audience-search-index,.audience-search-card>b{color:#c45500!important}
+.gift-teaser-status span{font-family:Arial,sans-serif!important}
+.hero-real-products,.ai-products{background:#fff!important}
