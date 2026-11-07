@@ -21,7 +21,7 @@ export default {
         ok: true,
         app: "343SHOP",
         orderFlow: "whatsapp",
-        note: "worker-amazon-skin-v2",
+        note: "worker-amazon-skin-v3",
         skin: "amazon"
       });
     }
@@ -50,26 +50,20 @@ export default {
       path === "";
 
     if (isHtml && response.status === 200) {
-      return new HTMLRewriter()
-        .on("head", {
-          element(element) {
-            element.append(
-              '<link rel="stylesheet" href="/amazon-skin.css?v=2">',
-              { html: true }
-            );
-            element.append(
-              '<meta name="theme-color" content="#131921">',
-              { html: true }
-            );
-          }
-        })
-        .transform(
-          new Response(response.body, {
-            status: response.status,
-            statusText: response.statusText,
-            headers
-          })
+      let html = await response.text();
+      if (!html.includes("amazon-skin.css")) {
+        html = html.replace(
+          "</head>",
+          '<link rel="stylesheet" href="/amazon-skin.css?v=3">\n</head>'
         );
+      }
+      html = html.replace(/content="#16834b"/g, 'content="#131921"');
+      headers.set("Content-Type", "text/html; charset=utf-8");
+      return new Response(html, {
+        status: response.status,
+        statusText: response.statusText,
+        headers
+      });
     }
 
     return new Response(response.body, {
